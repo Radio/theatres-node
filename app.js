@@ -1,16 +1,17 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 
-var month = require('./routes/month');
+require('dotenv').config();
+require('app-module-path').addPath('./app');
 
-var app = express();
+let app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
@@ -22,11 +23,21 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+if (!process.env.MONGO_URL) {
+    console.log('Mongo URL is not set in env variables.');
+    process.exit(1);
+}
+let mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGO_URL);
+
+
+let month = require('routes/month');
 app.use('/', month);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
