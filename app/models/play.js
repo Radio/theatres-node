@@ -36,12 +36,6 @@ playSchema.methods.absorbDuplicate = function(duplicate, callback) {
     this.save(function(err) {
         if (err) return callback(err);
         duplicate.remove(callback);
-        // todo: move to event handler
-        // let Show = require('./show');
-        // Show.update({ play: duplicate._id }, { play: this._id }, { multi: true }, function (err, raw) {
-        //     if (err) return callback(err);
-        //     callback();
-        // });
     });
 };
 

@@ -97,10 +97,10 @@ describe('Show', function() {
             });
             Show.replacePlay(play, newPlay, function(err, raw) {
                 if (err) return done(err);
-                Show.find({play: play._id}, function(err, missingShows) {
+                Show.find({play: play.id}, function(err, missingShows) {
                     if (err) return done(err);
                     assert.equal(missingShows.length, 0);
-                    Show.find({play: newPlay._id}, function(err, updatedShows) {
+                    Show.find({play: newPlay.id}, function(err, updatedShows) {
                         if (err) return done(err);
                         assert.isAbove(updatedShows.length, 0);
                         done();

@@ -82,13 +82,13 @@ describe('Play', function() {
 
     describe('absorb duplicate', function() {
         it('should absorb tags and remove duplicate', function(done) {
-            Play.findOne({_id: playDuplicate._id}, function(err, loadedDuplicate) {
+            Play.findOne({_id: playDuplicate.id}, function(err, loadedDuplicate) {
                 if (err) return done(err);
                 assert.isNotNull(loadedDuplicate);
                 play.absorbDuplicate(playDuplicate, function(err) {
                     if (err) return done(err);
                     assert.include(play.tags, playDuplicate.tags[0]);
-                    Play.findOne({_id: playDuplicate._id}, function(err, missingPlay) {
+                    Play.findOne({_id: playDuplicate.id}, function(err, missingPlay) {
                         if (err) return done(err);
                         assert.isNull(missingPlay);
                         done();

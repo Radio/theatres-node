@@ -27,7 +27,7 @@ showSchema.statics.findByHash = function(hash, callback) {
 };
 
 showSchema.statics.replacePlay = function(oldPlay, newPlay, callback) {
-    this.update({ play: oldPlay._id }, { play: newPlay._id }, { multi: true }, callback);
+    this.update({ play: oldPlay.id }, { play: newPlay.id }, { multi: true }, callback);
 };
 
 showSchema.methods.generateHash = function() {
