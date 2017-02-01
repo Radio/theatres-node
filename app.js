@@ -1,16 +1,24 @@
+"use strict";
+
+require('dotenv').config();
+require('app-module-path').addPath('./app');
+
 let express = require('express');
 let path = require('path');
 let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
-
-require('dotenv').config();
-require('app-module-path').addPath('./app');
+let mongoose = require('mongoose');
 
 let app = express();
 
+/**
+ * 1. Setup app.
+ */
+
 // view engine setup
+app.set('environment', process.env.ENVIRONMENT);
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'pug');
 
@@ -23,17 +31,28 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * 2. Setup mongo connection.
+ */
+
 if (!process.env.MONGO_URL) {
     console.log('Mongo URL is not set in env variables.');
     process.exit(1);
 }
-let mongoose = require('mongoose');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);
 
+/**
+ * 3. Setup app routes
+ */
 
 let month = require('routes/month');
 app.use('/', month);
+
+/**
+ * 4. Setup error handlers
+ */
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -52,5 +71,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+/**
+ * Done.
+ */
 
 module.exports = app;

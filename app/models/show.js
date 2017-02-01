@@ -13,7 +13,8 @@ let showSchema = new Schema({
     scene: {type: Schema.Types.ObjectId, ref: 'Scene'},
     date: Date,
     hash: String,
-    price: String
+    price: String,
+    buyTicketUrl: String
 });
 showSchema.set('toObject', { versionKey: false });
 
