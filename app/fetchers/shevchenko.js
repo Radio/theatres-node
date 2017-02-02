@@ -6,11 +6,10 @@ let s = require('underscore.string');
 let cheerio = require('cheerio');
 let url = require('url');
 let priceHelper = require('helpers/price');
+let async = require('async');
 
+const theatreKey = 'shevchenko';
 const sourceUrl = 'http://www.theatre-shevchenko.com.ua/repertuar/month.php?id=';
-
-const relevantContentStart = '<ul class="primer-list">';
-const relevantContentFinish = '</ul>';
 
 const defaultScene = 'big';
 const sceneMap = {
@@ -19,27 +18,48 @@ const sceneMap = {
     'Велика сцена': 'big',
 };
 
-let shevchenko = function(month, year, callback) {
+let shevchenko = function(callback) {
 
-    getRelevantContent(sourceUrl + month, function(err, content) {
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
+
+    let perMonthFetchers = [0, 1, 2].map(function(monthDelta) {
+        return function(callback) {
+            let yearToParse = year;
+            let monthToParse = month + monthDelta;
+            if (monthToParse > 11) {
+                monthToParse = 11 - monthToParse;
+                yearToParse += 1;
+            }
+            getRelevantContent(sourceUrl + (monthToParse + 1), function(err, content) {
+                if (err) return callback(err);
+                callback(null, getSchedule(content, monthToParse, yearToParse));
+            });
+        }
+    });
+    async.parallel(perMonthFetchers, function(err, results) {
         if (err) return callback(err);
-        callback(null, getSchedule(content));
+        callback(null, Array.prototype.concat.apply([], results));
     });
 
-    function getSchedule(content) {
-        return parseShows(content)
+    function getSchedule(content, month, year) {
+        return parseShows(content, month, year)
             .map(translateRawShow);
     }
 
-    function parseShows(content) {
+    function parseShows(content, month, year) {
         const TEXT_NODE_TYPE = 3;
         let $ = cheerio.load(content);
-        return $('li').map(function (index, li) {
+        return $('.primer-list li').map(function (index, li) {
             let $li = $(li);
             return {
+                theatre: theatreKey,
                 title: $li.find('h3').text(),
                 url: $li.find('h3 a').attr('href'),
                 date: $li.find('.date').text(),
+                month: month,
+                year: year,
                 scene: $li.find('em')
                     .contents()
                     .filter(function() { return this.nodeType === TEXT_NODE_TYPE; })
@@ -52,10 +72,11 @@ let shevchenko = function(month, year, callback) {
     function translateRawShow(rawShow) {
         const dateParts = /(\d+).+(\d\d)[.:](\d\d)/u.exec(rawShow.date);
         return {
+            theatre: rawShow.theatre,
             title: rawShow.title.replace(/\s+/, ' '),
             url: url.resolve(sourceUrl, rawShow.url),
             date: dateParts ?
-                new Date(year, month - 1, dateParts[1], dateParts[2], dateParts[3], 0) :
+                new Date(rawShow.year, rawShow.month, dateParts[1], dateParts[2], dateParts[3], 0) :
                 null,
             scene: sceneMap[rawShow.scene] || defaultScene,
             price: /\d/.test(rawShow.price) ?
@@ -77,13 +98,9 @@ let shevchenko = function(month, year, callback) {
                     'Server responded with ' + response.statusCode));
             }
 
-            let relevantHtmlInCP1251 = relevantContentStart +
-                s(body).strRight(relevantContentStart).strLeft(relevantContentFinish).value() +
-                relevantContentFinish;
+            let utf8BodyBuffer = encoding.convert(body, 'utf-8', 'cp1251');
 
-            let relevantHtmlBuffer = encoding.convert(relevantHtmlInCP1251, 'utf-8', 'cp1251');
-
-            callback(null, relevantHtmlBuffer.toString());
+            callback(null, utf8BodyBuffer.toString());
         });
     }
 };

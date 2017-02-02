@@ -5,16 +5,21 @@ let s = require('underscore.string');
 let cheerio = require('cheerio');
 let url = require('url');
 
+const theatreKey = 'beautiful-flowers';
 const sourceUrl = 'http://gobananas.com.ua/';
 
 const defaultTime = '19:00';
 
 const monthsMap = {
-    jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
-    jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
 };
 
-let pushkin = function(month, year, callback) {
+let pushkin = function(callback) {
+
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
 
     getRelevantContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
@@ -27,11 +32,11 @@ let pushkin = function(month, year, callback) {
     }
 
     function parseShows(content) {
-        const TEXT_NODE_TYPE = 3;
         let $ = cheerio.load(content);
         return $('.afisha .afisha-card').map(function (index, div) {
             let $div = $(div);
             let show = {};
+            show.theatre = theatreKey;
             show.title = $div.find('h2').text();
             show.url = $div.find('h2 a').attr('href');
             show.month = $div.find('.date .month').text();
@@ -43,10 +48,15 @@ let pushkin = function(month, year, callback) {
     }
 
     function translateRawShow(rawShow) {
+        let mappedMonth = monthsMap[rawShow.month.toLowerCase()];
+        if (typeof mappedMonth === 'undefined') {
+            mappedMonth = month;
+        }
         return {
+            theatre: rawShow.theatre,
             title: rawShow.title,
             url: url.resolve(sourceUrl, rawShow.url),
-            date: new Date(year, (monthsMap[rawShow.month.toLowerCase()] || month) - 1, rawShow.day, ...defaultTime.split(':')),
+            date: new Date(year, mappedMonth, rawShow.day, ...defaultTime.split(':')),
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl)
         };
     }

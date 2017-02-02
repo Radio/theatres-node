@@ -19,7 +19,7 @@ let showSchema = new Schema({
 showSchema.set('toObject', { versionKey: false });
 
 showSchema.pre('save', function(next) {
-    this.hash = this.generateHash();
+    this.hash = this.constructor.calculateHash(this.theatre, this.play, this.date);
     next();
 });
 
@@ -31,8 +31,8 @@ showSchema.statics.replacePlay = function(oldPlay, newPlay, callback) {
     this.update({ play: oldPlay.id }, { play: newPlay.id }, { multi: true }, callback);
 };
 
-showSchema.methods.generateHash = function() {
-    return hash([this.theatre, this.play, this.scene, this.date.toString()].join('-'));
+showSchema.statics.calculateHash = function(theatreKey, playKey, date) {
+    return hash([theatreKey, playKey, date.toString()].join('-'));
 };
 
 function hash(string) {

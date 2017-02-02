@@ -5,11 +5,16 @@ let s = require('underscore.string');
 let cheerio = require('cheerio');
 let url = require('url');
 
+const theatreKey = 'pushkin';
 const sourceUrl = 'http://rusdrama.com/afisha';
 
 const defaultScene = 'main';
 
-let pushkin = function(month, year, callback) {
+let pushkin = function(callback) {
+
+    const today = new Date();
+    const month = today.getMonth();
+    const year = today.getFullYear();
 
     getRelevantContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
@@ -28,6 +33,7 @@ let pushkin = function(month, year, callback) {
             let $li = $(li);
             let show = {};
 
+            show.theatre = theatreKey;
             show.date = $li.find('.date-afisha strong').text();
             show.time = $li.find('.name-perform b').text();
             show.image = $li.find('.date-afisha img').attr('src');
@@ -52,9 +58,10 @@ let pushkin = function(month, year, callback) {
 
     function translateRawShow(rawShow) {
         return {
+            theatre: rawShow.theatre,
             title: s.humanize(rawShow.title),
             url: url.resolve(sourceUrl, rawShow.url),
-            date: new Date(year, month - 1, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
+            date: new Date(year, month, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
             scene: rawShow.scene,
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
             image: url.resolve(sourceUrl, rawShow.image),

@@ -61,11 +61,11 @@ describe('Show', function() {
     describe('generate hash', function() {
         it('should generate the same hash for the same data', function() {
             let oldDate = show.date;
-            assert.equal(show.generateHash(), show.hash);
+            assert.equal(show.calculateHash(), show.hash);
             show.date = new Date('2012-05-05');
-            assert.notEqual(show.generateHash(), show.hash);
+            assert.notEqual(show.calculateHash(), show.hash);
             show.date = oldDate;
-            assert.equal(show.generateHash(), show.hash);
+            assert.equal(show.calculateHash(), show.hash);
         });
     });
 
