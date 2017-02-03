@@ -116,12 +116,12 @@ let reduceDuplicates = function(mappedShowsData) {
  * @return void
  */
 let updateSchedule = function(mappedShowsData, callback) {
-    // todo: implement me
     let Schedule = require('models/schedule');
 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
+    // todo: group show by month and update each schedule seprately
     Schedule.resolve(month, year, function(err, schedule) {
         if (err) return callback(err);
 

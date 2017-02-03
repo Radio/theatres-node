@@ -31,8 +31,8 @@ showSchema.statics.replacePlay = function(oldPlay, newPlay, callback) {
     this.update({ play: oldPlay.id }, { play: newPlay.id }, { multi: true }, callback);
 };
 
-showSchema.statics.calculateHash = function(theatreKey, playKey, date) {
-    return hash([theatreKey, playKey, date.toString()].join('-'));
+showSchema.statics.calculateHash = function(theatreId, playId, date) {
+    return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
 };
 
 function hash(string) {
