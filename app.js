@@ -48,7 +48,9 @@ mongoose.connect(process.env.MONGO_URL);
  */
 
 let month = require('routes/month');
+let admin = require('routes/admin');
 app.use('/', month);
+app.use('/admin', admin);
 
 /**
  * 4. Setup error handlers
