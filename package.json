@@ -11,6 +11,7 @@
     "app-module-path": "^2.2.0",
     "async": "^2.1.4",
     "body-parser": "~1.15.2",
+    "bootstrap": "^4.0.0-alpha.6",
     "cheerio": "^0.22.0",
     "cookie-parser": "~1.4.3",
     "cron": "^1.2.1",
@@ -28,6 +29,10 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.2.0"
   }
 }

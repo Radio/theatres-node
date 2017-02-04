@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    nav.navbar.navbar-toggleable-md
+      a.btn.btn-primary(href='/admin/theatres/create') Создать новый
+
+    table.table
+      thead
+        tr
+          th Название
+          th Аббревиатура
+          th Ключ
+      tbody
+        each theatre in theatres
+          tr
+            td
+              a(href='/admin/theatres/edit/' + theatre.key)= theatre.title
+            td= theatre.abbreviation
+            td= theatre.key

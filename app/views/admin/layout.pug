@@ -2,6 +2,14 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/node_modules/tether/dist/css/tether.min.css')
+    link(rel='stylesheet', href='/node_modules/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/admin.css')
   body
-    block content
+    include nav.pug
+    .content
+      block content
+    include footer.pug
+    script(src='/node_modules/jquery/dist/jquery.min.js')
+    script(src='/node_modules/tether/dist/js/tether.min.js')
+    script(src='/node_modules/bootstrap/dist/js/bootstrap.min.js')

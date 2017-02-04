@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    nav.navbar.navbar-toggleable-md
+      a.btn.btn-primary(href='/admin/scenes/create') Создать новую
+
+    table.table
+      thead
+        tr
+          th Название
+          th Ключ
+      tbody
+        each scene in scenes
+          tr
+            td
+              a(href='/admin/scenes/edit/' + scene.key)= scene.title
+            td= scene.key

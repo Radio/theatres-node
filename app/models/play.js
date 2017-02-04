@@ -7,11 +7,11 @@ let Scene = require('./scene');
 let Theatre = require('./theatre');
 
 let playSchema = new Schema({
-    key: String,
+    key: { type: String, required: true },
     // title: {type: String, set: setTitle },
-    title: String,
-    theatre: {type: Schema.Types.ObjectId, ref: 'Theatre'},
-    scene: {type: Schema.Types.ObjectId, ref: 'Scene'},
+    title: { type: String, required: true },
+    theatre: { type: Schema.Types.ObjectId, ref: 'Theatre', required: true },
+    scene: { type: Schema.Types.ObjectId, ref: 'Scene', required: true },
     url: String,
     director: String,
     author: String,

@@ -4,8 +4,8 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let theatreSchema = new Schema({
-    key: String,
-    title: String,
+    key: { type: String, required: true },
+    title: { type: String, required: true },
     abbreviation: String,
     url: String,
     hasFetcher: Boolean,
@@ -29,6 +29,17 @@ theatreSchema.statics.findByKey = function(key, callback) {
 
 theatreSchema.methods.isInHouse = function() {
     return !!this.houseSlug;
+};
+
+theatreSchema.methods.update = function(updateRequest, callback) {
+    this.title = updateRequest.title;
+    this.abbreviation = updateRequest.abbreviation;
+    this.key = updateRequest.key;
+    this.url = updateRequest.url;
+    this.houseSlug = updateRequest['house-slug'];
+    this.hasFetcher = updateRequest['has-fetcher'];
+
+    this.save(callback);
 };
 
 module.exports = mongoose.model('Theatre', theatreSchema);
