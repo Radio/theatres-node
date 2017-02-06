@@ -2,7 +2,8 @@
 
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let Show = require('./show');
+let Show = require('models/show');
+let versioning = require('models/schedule/versioning');
 
 let scheduleSchema = new Schema({
     shows: [Show.schema],
@@ -57,30 +58,60 @@ scheduleSchema.methods.update = function(newShows, callback) {
         // Pre-calculate hashes for new shows in order to find shows to be removed.
         show.hash = Show.calculateHash(show.theatre.id, show.play.id, show.date);
     });
+
+    const previousVersion = versioning.makeSnapshot(this);
+
     let existingHashes = this.shows.map(show => show.hash);
     let newHashes = newShows.map(show => show.hash);
     let hashesToRemove =  existingHashes.filter(hash => newHashes.indexOf(hash) < 0);
 
-    // todo: implement versioning
     // todo: Do not delete passed shows
     newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     hashesToRemove.forEach(hashToRemove => this.removeShowByHash(hashToRemove));
     this.sortShows();
-    this.save(callback);
+
+    this.saveIfHasChanges(previousVersion, callback);
 };
 
 /**
- * Update teh schedule with new shows.
+ * Compare the shows with previous snapshot and save the schedule if there are any relevant changes.
+ * Create a revision from the snapshot in this case.
+ *
+ * @param {Object} previousVersion
+ * @param {Function} callback
+ */
+scheduleSchema.methods.saveIfHasChanges = function(previousVersion, callback) {
+    let hasChanges = !versioning.compareWithSnapshot(this, previousVersion);
+    if (hasChanges) {
+        this.version++;
+        this.updated = new Date();
+        const Schedule = this.constructor;
+        this.save(function (err) {
+            if (err) return callback(err);
+            versioning.createRevision(previousVersion, Schedule, function (err, revision) {
+                if (err) return callback(err);
+                callback();
+            });
+        });
+        return;
+    }
+    callback();
+};
+
+/**
+ * Update the schedule with new shows.
  * Do not remove existing shops if they are not listed in newShops.
  *
  * @param {[{play: Play, theatre: Theatre, scene: Scene, date: Date, price: String, buyTicketUrl: String}]} newShows
  * @param {Function} callback
  */
 scheduleSchema.methods.addOrUpdateShows = function(newShows, callback) {
-    // todo: implement versioning
+    const previousVersion = versioning.makeSnapshot(this);
+
     newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     this.sortShows();
-    this.save(callback);
+
+    this.saveIfHasChanges(previousVersion, callback);
 };
 
 /**
