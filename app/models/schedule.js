@@ -3,14 +3,12 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let Show = require('models/show');
-let versioning = require('models/schedule/versioning');
+let versioned = require('models/schedule/versioned');
 
 let scheduleSchema = new Schema({
     shows: [Show.schema],
     month: Number,
     year: Number,
-    version: Number,
-    actual: Boolean,
     updated: Date
 });
 scheduleSchema.set('toObject', { versionKey: false });
@@ -25,24 +23,31 @@ scheduleSchema.set('toObject', { versionKey: false });
  */
 scheduleSchema.statics.resolve = function(month, year, callback) {
     let Schedule = this;
-    this.findOne({ month: month, year: year, actual: true }, function(err, schedule) {
-        if (err) return callback(err);
-        if (!schedule) {
-            schedule = new Schedule({
-                shows: [],
-                month: month,
-                year: year,
-                version: 1,
-                actual: true,
-                updated: new Date()
-            });
-            schedule.save(function(err) {
-                if (err) return callback(err);
-                callback(null, schedule);
-            });
-            return;
-        }
-        callback(null, schedule);
+    this.findByMonthAndYear(month, year)
+        .exec(function(err, schedule) {
+            if (err) return callback(err);
+            if (!schedule) {
+                schedule = Schedule.createForMonthAndYear(month, year, callback);
+                schedule.save(function(err) {
+                    if (err) return callback(err);
+                    callback(null, schedule);
+                });
+                return;
+            }
+            callback(null, schedule);
+        });
+};
+
+scheduleSchema.statics.findByMonthAndYear = function(month, year, callback) {
+    return this.findOne({ month: month, year: year }, callback);
+};
+
+scheduleSchema.statics.createForMonthAndYear = function(month, year) {
+    return new this({
+        shows: [],
+        month: month,
+        year: year,
+        updated: new Date()
     });
 };
 
@@ -59,43 +64,16 @@ scheduleSchema.methods.update = function(newShows, callback) {
         show.hash = Show.calculateHash(show.theatre.id, show.play.id, show.date);
     });
 
-    const previousVersion = versioning.makeSnapshot(this);
-
     let existingHashes = this.shows.map(show => show.hash);
     let newHashes = newShows.map(show => show.hash);
     let hashesToRemove =  existingHashes.filter(hash => newHashes.indexOf(hash) < 0);
 
     // todo: Do not delete passed shows
-    newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     hashesToRemove.forEach(hashToRemove => this.removeShowByHash(hashToRemove));
+    newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     this.sortShows();
-
-    this.saveIfHasChanges(previousVersion, callback);
-};
-
-/**
- * Compare the shows with previous snapshot and save the schedule if there are any relevant changes.
- * Create a revision from the snapshot in this case.
- *
- * @param {Object} previousVersion
- * @param {Function} callback
- */
-scheduleSchema.methods.saveIfHasChanges = function(previousVersion, callback) {
-    let hasChanges = !versioning.compareWithSnapshot(this, previousVersion);
-    if (hasChanges) {
-        this.version++;
-        this.updated = new Date();
-        const Schedule = this.constructor;
-        this.save(function (err) {
-            if (err) return callback(err);
-            versioning.createRevision(previousVersion, Schedule, function (err, revision) {
-                if (err) return callback(err);
-                callback();
-            });
-        });
-        return;
-    }
-    callback();
+    this.updated = new Date();
+    this.save(callback);
 };
 
 /**
@@ -106,12 +84,10 @@ scheduleSchema.methods.saveIfHasChanges = function(previousVersion, callback) {
  * @param {Function} callback
  */
 scheduleSchema.methods.addOrUpdateShows = function(newShows, callback) {
-    const previousVersion = versioning.makeSnapshot(this);
-
     newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     this.sortShows();
-
-    this.saveIfHasChanges(previousVersion, callback);
+    this.updated = new Date();
+    this.save(callback);
 };
 
 /**
@@ -155,5 +131,7 @@ scheduleSchema.methods.addOrUpdateShow = function(newShowData) {
         this.shows.push(new Show(newShowData));
     }
 };
+
+scheduleSchema = versioned(scheduleSchema);
 
 module.exports = mongoose.model('Schedule', scheduleSchema);
