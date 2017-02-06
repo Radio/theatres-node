@@ -26,9 +26,17 @@ block content
         tr
           th Название ↓
           th Ключ
+          th(width=100)
       tbody
         each scene in scenes
           tr
             td
               a(href='/admin/scenes/edit/' + scene.key)= scene.title
             td= scene.key
+            td
+              button.btn.btn-sm.btn-outline-danger(
+                data-action='remove'
+                data-url='/admin/scenes/remove/' + scene.key
+                data-id=scene.id
+                data-return-url='/admin/scenes'
+              ) Удалить

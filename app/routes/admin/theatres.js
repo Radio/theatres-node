@@ -40,6 +40,16 @@ router.post('/edit/:theatreKey', function(req, res, next) {
     });
 });
 
+router.post('/remove/:theatreKey', function(req, res, next) {
+    if (!req.theatre) return next();
+    if (req.theatre.id !== req.body.id) return next();
+    req.theatre.remove(function (err) {
+        if (err) return next(err);
+        req.flash('success', 'Театр удален.');
+        res.end();
+    });
+});
+
 router.get('/create', function(req, res, next) {
     let theatre = new Theatre();
     res.render('admin/theatres/edit', {

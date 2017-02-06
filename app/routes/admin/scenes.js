@@ -40,6 +40,16 @@ router.post('/edit/:sceneKey', function(req, res, next) {
     });
 });
 
+router.post('/remove/:sceneKey', function(req, res, next) {
+    if (!req.scene) return next();
+    if (req.scene.id !== req.body.id) return next();
+    req.scene.remove(function (err) {
+        if (err) return next(err);
+        req.flash('success', 'Сцена удалена.');
+        res.end();
+    });
+});
+
 router.get('/create', function(req, res, next) {
     let scene = new Scene();
     res.render('admin/scenes/edit', {
