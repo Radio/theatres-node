@@ -123,7 +123,6 @@ function collectFilter(filterQuery) {
 }
 
 function buildEditRequest(requestBody) {
-    // todo: add tags support.
     return {
         key: requestBody.key,
         title: requestBody.title,
@@ -135,7 +134,8 @@ function buildEditRequest(requestBody) {
         genre: requestBody.genre,
         duration: requestBody.duration,
         description: requestBody.description,
-        image: requestBody.image
+        image: requestBody.image,
+        tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
     };
 }
 

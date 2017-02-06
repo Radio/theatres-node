@@ -30,8 +30,13 @@ playSchema.statics.findByTag = function(tag, callback) {
     return this.findOne({ tags: tag }, callback);
 };
 
+playSchema.methods.addTag = function(tag) {
+    if (this.tags.indexOf(tag) < 0) {
+        this.tags.push(tag);
+    }
+};
 playSchema.methods.addTags = function(tags) {
-    this.tags = [...this.tags, ...tags];
+    tags.forEach(tag => this.addTag(tag));
 };
 
 playSchema.methods.absorbDuplicate = function(duplicate, callback) {
@@ -43,6 +48,9 @@ playSchema.methods.absorbDuplicate = function(duplicate, callback) {
 };
 
 playSchema.methods.edit = function(editRequest, callback) {
+
+    const oldTitle = this.title;
+
     this.key = editRequest.key;
     this.title = editRequest.title;
     this.theatre = editRequest.theatre;
@@ -54,8 +62,10 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.duration = editRequest.duration;
     this.description = editRequest.description;
     this.image = editRequest.image;
-
-    // todo: add tags support.
+    this.tags = editRequest.tags;
+    if (oldTitle !== editRequest.title) {
+        this.addTags([oldTitle, editRequest.title]);
+    }
 
     this.save(callback);
 };

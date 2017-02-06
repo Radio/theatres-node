@@ -68,6 +68,10 @@ block content
           input.form-control(type='text' id='image' name='image' value=play.image)
           if play.image
             img(src=play.image width=300)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='tags') Теги
+        .col-sm-10
+          textarea.form-control(id='tags' name='tags')= play.tags.join("\n")
 
       hr
       button.btn.btn-primary(type='submit') Сохранить
