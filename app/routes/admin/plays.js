@@ -49,7 +49,7 @@ router.get('/edit/:playKey', function(req, res, next) {
     if (!req.play) return next();
     res.render('admin/plays/edit', {
         title: 'Управление — Спектакли — ­' + req.play.title,
-        play: req.play,
+        play: getFormData(req.play, req),
         theatres: req.options.theatres,
         scenes: req.options.scenes,
     });
@@ -78,7 +78,7 @@ router.post('/remove/:playKey', function(req, res, next) {
 router.get('/create', function(req, res) {
     res.render('admin/plays/edit', {
         title: 'Управление — Спектакли — Новый­',
-        play: {},
+        play: getFormData(new Play, req),
         theatres: req.options.theatres,
         scenes: req.options.scenes,
     });
@@ -92,6 +92,10 @@ router.post('/create', function(req, res, next) {
         res.redirect('/admin/plays/edit/' + play.key);
     });
 });
+
+function getFormData(play, req) {
+    return req.flash('body')[0] || play.toObject({depopulate: true});
+}
 
 function loadOptionsData(callback) {
     async.parallel({

@@ -27,7 +27,7 @@ router.get('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
     res.render('admin/theatres/edit', {
         title: 'Управление — Театры — ­' + req.theatre.title,
-        theatre: req.theatre
+        theatre: getFormData(req.theatre, req)
     });
 });
 
@@ -54,7 +54,7 @@ router.get('/create', function(req, res, next) {
     let theatre = new Theatre();
     res.render('admin/theatres/edit', {
         title: 'Управление — Театры — Новый­',
-        theatre: theatre
+        theatre: getFormData(theatre, req)
     });
 });
 
@@ -66,6 +66,10 @@ router.post('/create', function(req, res, next) {
         res.redirect('/admin/theatres/edit/' + theatre.key);
     });
 });
+
+function getFormData(theatre, req) {
+    return req.flash('body')[0] || theatre.toObject({depopulate: true});
+}
 
 function buildEditRequest(requestBody) {
     return {

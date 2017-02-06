@@ -27,7 +27,7 @@ router.get('/edit/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
     res.render('admin/scenes/edit', {
         title: 'Управление — Сцены — ­' + req.scene.title,
-        scene: req.scene
+        scene: getFormData(req.scene, req)
     });
 });
 
@@ -54,7 +54,7 @@ router.get('/create', function(req, res, next) {
     let scene = new Scene();
     res.render('admin/scenes/edit', {
         title: 'Управление — Сцены — Новая­',
-        scene: scene
+        scene: getFormData(scene, req)
     });
 });
 
@@ -66,6 +66,10 @@ router.post('/create', function(req, res, next) {
         res.redirect('/admin/scenes/edit/' + scene.key);
     });
 });
+
+function getFormData(scene, req) {
+    return req.flash('body')[0] || scene.toObject({depopulate: true});
+}
 
 function buildEditRequest(requestBody) {
     return {

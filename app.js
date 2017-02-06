@@ -72,6 +72,16 @@ app.use('/admin', admin);
  * 4. Setup error handlers
  */
 
+app.use(function(err, req, res, next) {
+    if (err instanceof Error) {
+        if (err.name === 'ValidationError') {
+            req.flash('error', String(err));
+            req.flash('body', req.body);
+            res.redirect(req.originalUrl);
+        }
+    }
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   let err = new Error('Not Found');

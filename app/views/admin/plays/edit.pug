@@ -26,14 +26,14 @@ block content
           select.form-control(id='theatre' name='theatre')
             option(value='') —
             each theatre in theatres
-              option(value=theatre.id selected= play.theatre && play.theatre.id == theatre.id)= theatre.title
+              option(value=theatre.id selected= play.theatre == theatre.id)= theatre.title
       .form-group.row
         label.col-sm-2.col-form-label(for='scene') Сцена
         .col-sm-10
           select.form-control(id='scene' name='scene')
             option(value='') —
             each scene in scenes
-              option(value=scene.id selected= play.scene && play.scene.id == scene.id)= scene.title
+              option(value=scene.id selected= play.scene == scene.id)= scene.title
       .form-group.row
         label.col-sm-2.col-form-label(for='key') Ключ
         .col-sm-10
