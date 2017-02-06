@@ -23,6 +23,9 @@ let playSchema = new Schema({
 });
 playSchema.set('toObject', { versionKey: false });
 
+playSchema.statics.findByKey = function(key, callback) {
+    return this.findOne({ key: key }, callback);
+};
 playSchema.statics.findByTag = function(tag, callback) {
     return this.findOne({ tags: tag }, callback);
 };
@@ -37,6 +40,24 @@ playSchema.methods.absorbDuplicate = function(duplicate, callback) {
         if (err) return callback(err);
         duplicate.remove(callback);
     });
+};
+
+playSchema.methods.edit = function(editRequest, callback) {
+    this.key = editRequest.key;
+    this.title = editRequest.title;
+    this.theatre = editRequest.theatre;
+    this.scene = editRequest.scene;
+    this.url = editRequest.url;
+    this.director = editRequest.director;
+    this.author = editRequest.author;
+    this.genre = editRequest.genre;
+    this.duration = editRequest.duration;
+    this.description = editRequest.description;
+    this.image = editRequest.image;
+
+    // todo: add tags support.
+
+    this.save(callback);
 };
 
 

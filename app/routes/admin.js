@@ -3,12 +3,9 @@
 let express = require('express');
 let router = express.Router();
 
-let index = require('./admin/index');
-let theatres = require('./admin/theatres');
-let scenes = require('./admin/scenes');
-
-router.use('/', index);
-router.use('/theatres', theatres);
-router.use('/scenes', scenes);
+router.use('/', require('./admin/index'));
+router.use('/theatres', require('./admin/theatres'));
+router.use('/scenes', require('./admin/scenes'));
+router.use('/plays', require('./admin/plays'));
 
 module.exports = router;

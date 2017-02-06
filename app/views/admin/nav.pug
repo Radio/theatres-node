@@ -1,8 +1,16 @@
-nav.container
-  ul.nav
-    li.nav-item
-      a.nav-link(href='/admin/') Главная
-    li.nav-item
-      a.nav-link(href='/admin/theatres') Театры
-    li.nav-item
-      a.nav-link(href='/admin/scenes') Сцены
+.container
+  nav.navbar.navbar-toggleable-md.navbar-light
+    button.navbar-toggler.navbar-toggler-right(
+      type="button"
+      data-toggle="collapse"
+      data-target="#main-nav"
+    )
+      span.navbar-toggler-icon
+    div#main-nav.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item
+          a.nav-link(href='/admin/theatres') Театры
+        li.nav-item
+          a.nav-link(href='/admin/scenes') Сцены
+        li.nav-item
+          a.nav-link(href='/admin/plays') Спектакли

@@ -8,6 +8,8 @@ let path = require('path');
 let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
+let session = require('express-session');
+let flash = require('connect-flash');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 
@@ -30,6 +32,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    cookie: { maxAge: 60000 },
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET
+}));
+app.use(flash());
+app.use(function(req, res, next){
+    res.locals.flash = {
+        success: req.flash('success'),
+        error: req.flash('error'),
+    };
+    next();
+});
 
 /**
  * 2. Setup mongo connection.

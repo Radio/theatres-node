@@ -62,6 +62,7 @@ scheduleSchema.methods.update = function(newShows, callback) {
     let hashesToRemove =  existingHashes.filter(hash => newHashes.indexOf(hash) < 0);
 
     // todo: implement versioning
+    // todo: Do not delete passed shows
     newShows.forEach(newShow => this.addOrUpdateShow(newShow));
     hashesToRemove.forEach(hashToRemove => this.removeShowByHash(hashToRemove));
     this.sortShows();

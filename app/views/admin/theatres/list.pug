@@ -4,14 +4,27 @@ block content
   .container
     .jumbotron
       h1= title
+      p
+        +pluralizeItemsNumber(theatres.length)
 
-    nav.navbar.navbar-toggleable-md
-      a.btn.btn-primary(href='/admin/theatres/create') Создать новый
+    include ../flash
+
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
+      button.navbar-toggler.navbar-toggler-right(
+      type="button"
+      data-toggle="collapse"
+      data-target="#plays-list-nav"
+      )
+        span.navbar-toggler-icon
+      div#plays-list-nav.collapse.navbar-collapse
+        div.mr-auto
+        div
+          a.btn.btn-sm.btn-primary(href='/admin/theatres/create') Создать новый
 
     table.table
       thead
         tr
-          th Название
+          th Название ↓
           th Аббревиатура
           th Ключ
       tbody

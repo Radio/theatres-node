@@ -13,10 +13,9 @@ sceneSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
 };
 
-// todo: looks like 'update' is reserved.
-sceneSchema.methods.update = function(updateRequest, callback) {
-    this.title = updateRequest.title;
-    this.key = updateRequest.key;
+sceneSchema.methods.edit = function(editRequest, callback) {
+    this.title = editRequest.title;
+    this.key = editRequest.key;
 
     this.save(callback);
 };

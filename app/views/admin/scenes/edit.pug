@@ -8,7 +8,14 @@ block content
     p
       a(href='/admin/scenes') ← Назад
 
+    include ../flash
+
     form(action='' method='post')
+      if (scene.id)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='title') ID
+          .col-sm-10
+            p.form-control-static= scene.id
       .form-group.row
         label.col-sm-2.col-form-label(for='title') Название
         .col-sm-10

@@ -1,0 +1,8 @@
+mixin pluralizeItemsNumber(number)
+  - var modulo = number % 10 || 10
+  if ((number >= 10 && number < 20) || modulo >= 5)
+    = number + ' штук'
+  else if (modulo == 1)
+    = number + ' штука'
+  else
+    = number + ' штуки'

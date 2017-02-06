@@ -1,0 +1,68 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+      p
+        +pluralizeItemsNumber(plays.length)
+
+    include ../flash
+
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
+      button.navbar-toggler.navbar-toggler-right(
+        type="button"
+        data-toggle="collapse"
+        data-target="#plays-list-nav"
+      )
+        span.navbar-toggler-icon
+      div#plays-list-nav.collapse.navbar-collapse
+        form.form-inline.mr-auto
+          input.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(
+            type="search"
+            name="query"
+            placeholder="Название, ключ"
+            value=filter.query
+          )
+          label(for='filter-theatre').mr-sm-2 Театр:
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
+          label(for='filter-scene').mr-sm-2 Сцена:
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-scene' name='scene')
+            option(value='') —
+            each scene in scenes
+              option(value=scene.id selected= filter.scene == scene.id)= scene.title
+          button.btn.btn-sm.btn-outline-success.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0 Искать
+          if (filter.query || filter.scene || filter.theatre)
+            button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters') Сбросить
+
+        div
+          a.btn.btn-sm.btn-primary(href='/admin/plays/create') Создать новый
+
+    table.table
+      thead
+        tr
+          th Название ↓
+          th Театр
+          th Сцена
+          th
+      tbody
+        each play in plays
+          tr
+            td
+              a(href='/admin/plays/edit/' + play.key)= play.title
+            td
+              if (play.theatre)
+                = play.theatre.title
+            td
+              if (play.scene)
+                = play.scene.title
+            td
+              button.btn.btn-sm.btn-outline-danger(
+                data-action='remove'
+                data-url='/admin/plays/remove/' + play.key
+                data-id=play.id
+                data-return-url='/admin/plays'
+              ) Удалить

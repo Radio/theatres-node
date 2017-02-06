@@ -7,7 +7,7 @@ let Theatre = require('models/theatre');
 
 router.param('theatreKey', function(req, res, next, key) {
     Theatre.findByKey(key, function(err, theatre) {
-        if (err) return callback(err);
+        if (err) return next(err);
         req.theatre = theatre;
         next();
     });
@@ -15,7 +15,7 @@ router.param('theatreKey', function(req, res, next, key) {
 
 router.get('/', function(req, res, next) {
     Theatre.find({}).sort({title: 1}).exec(function(err, theatres) {
-        if (err) return callback(err);
+        if (err) return next(err);
         res.render('admin/theatres/list', {
             title: 'Управление — Театры',
             theatres: theatres
@@ -33,8 +33,9 @@ router.get('/edit/:theatreKey', function(req, res, next) {
 
 router.post('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
-    req.theatre.update(req.body, function(err) {
-        if (err) return callback(err);
+    req.theatre.edit(buildEditRequest(req.body), function(err) {
+        if (err) return next(err);
+        req.flash('success', 'Театр сохранен.');
         res.redirect('/admin/theatres/edit/' + req.theatre.key);
     });
 });
@@ -49,9 +50,22 @@ router.get('/create', function(req, res, next) {
 
 router.post('/create', function(req, res, next) {
     let theatre = new Theatre();
-    theatre.update(req.body, function(err) {
-        if (err) return callback(err);
+    theatre.edit(buildEditRequest(req.body), function(err) {
+        if (err) return next(err);
+        req.flash('success', 'Театр сохранен.');
         res.redirect('/admin/theatres/edit/' + theatre.key);
     });
 });
+
+function buildEditRequest(requestBody) {
+    return {
+        key: requestBody.key,
+        title: requestBody.title,
+        abbreviation: requestBody.abbreviation,
+        url: requestBody.url,
+        houseSlug: requestBody['house-slug'],
+        hasFetcher: requestBody['has-fetcher'],
+    };
+}
+
 module.exports = router;

@@ -31,13 +31,13 @@ theatreSchema.methods.isInHouse = function() {
     return !!this.houseSlug;
 };
 
-theatreSchema.methods.update = function(updateRequest, callback) {
-    this.title = updateRequest.title;
-    this.abbreviation = updateRequest.abbreviation;
-    this.key = updateRequest.key;
-    this.url = updateRequest.url;
-    this.houseSlug = updateRequest['house-slug'];
-    this.hasFetcher = updateRequest['has-fetcher'];
+theatreSchema.methods.edit = function(editRequest, callback) {
+    this.title = editRequest.title;
+    this.abbreviation = editRequest.abbreviation;
+    this.key = editRequest.key;
+    this.url = editRequest.url;
+    this.houseSlug = editRequest.houseSlug;
+    this.hasFetcher = editRequest.hasFetcher;
 
     this.save(callback);
 };
