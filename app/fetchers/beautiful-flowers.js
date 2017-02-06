@@ -8,7 +8,8 @@ let url = require('url');
 const theatreKey = 'beautiful-flowers';
 const sourceUrl = 'http://gobananas.com.ua/';
 
-const defaultTime = '19:00';
+const defaultTime = '19:00'; // todo: there might be two same plays at different time.
+const defaultScene = 'main';
 
 const monthsMap = {
     jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
@@ -37,6 +38,7 @@ let pushkin = function(callback) {
             let $div = $(div);
             let show = {};
             show.theatre = theatreKey;
+            show.scene = defaultScene;
             show.title = $div.find('h2').text();
             show.url = $div.find('h2 a').attr('href');
             show.month = $div.find('.date .month').text();
@@ -54,6 +56,7 @@ let pushkin = function(callback) {
         }
         return {
             theatre: rawShow.theatre,
+            scene: rawShow.scene,
             title: rawShow.title,
             url: url.resolve(sourceUrl, rawShow.url),
             date: new Date(year, mappedMonth, rawShow.day, ...defaultTime.split(':')),
