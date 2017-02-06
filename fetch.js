@@ -43,7 +43,7 @@ let mapRawShowsData = function(rawShowsData, callback) {
     function mapPlaysAsync(rawShowsData, callback) {
         let mapPlay = require('fetching/mappers/play');
         async.mapSeries(rawShowsData, function (rawShowData, callback) {
-            mapPlay(rawShowData.title, rawShowData, function (err, play) {
+            mapPlay(rawShowData.title, rawShowData.theatre.id, rawShowData, function (err, play) {
                 if (err) return callback(err);
                 rawShowData.play = play;
                 delete rawShowData.title;
