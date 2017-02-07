@@ -1,0 +1,77 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    p
+      a(href='/admin/plays') ← Назад
+
+    include ../flash
+
+    form(action='' method='post')
+      if (play.id)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='title') ID
+          .col-sm-10
+            p.form-control-static= play.id
+      .form-group.row
+        label.col-sm-2.col-form-label(for='title') Название
+        .col-sm-10
+          input.form-control(type='text' id='title' name='title' value=play.title)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='theatre') Театр
+        .col-sm-10
+          select.form-control(id='theatre' name='theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= play.theatre == theatre.id)= theatre.title
+      .form-group.row
+        label.col-sm-2.col-form-label(for='scene') Сцена
+        .col-sm-10
+          select.form-control(id='scene' name='scene')
+            option(value='') —
+            each scene in scenes
+              option(value=scene.id selected= play.scene == scene.id)= scene.title
+      .form-group.row
+        label.col-sm-2.col-form-label(for='key') Ключ
+        .col-sm-10
+          input.form-control(type='text' id='key' name='key' value=play.key)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='url')
+          if (play.url)
+            a(href=play.url title='открыть' target='_blank') Url ↗
+          else
+            | Url
+        .col-sm-10
+          input.form-control(type='text' id='url' name='url' value=play.url)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='director') Режисер
+        .col-sm-10
+          input.form-control(type='text' id='director' name='director' value=play.director)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='author') Автор
+        .col-sm-10
+          input.form-control(type='text' id='author' name='author' value=play.author)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='genre') Жанр
+        .col-sm-10
+          input.form-control(type='text' id='genre' name='genre' value=play.genre)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='description') Описание
+        .col-sm-10
+          textarea.form-control(id='description' name='description')=play.description
+      .form-group.row
+        label.col-sm-2.col-form-label(for='image') Картинка
+        .col-sm-10
+          input.form-control(type='text' id='image' name='image' value=play.image)
+          if play.image
+            img(src=play.image width=300)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='tags') Теги
+        .col-sm-10
+          textarea.form-control(id='tags' name='tags')= play.tags.join("\n")
+
+      hr
+      button.btn.btn-primary(type='submit') Сохранить

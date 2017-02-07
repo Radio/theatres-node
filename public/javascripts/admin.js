@@ -37,6 +37,11 @@
         }
     });
 
+    $(document).ready(function() {
+        const path = location.pathname.replace(/^(\/.*?\/.*?)\/.*/, '$1');
+        $('#main-nav').find('a[href^="' + path + '"]').addClass('active');
+    });
+
     $('[data-action="reset-filters"]').click(function(event) {
         actions.resetFilters($(event.target.form));
     });
