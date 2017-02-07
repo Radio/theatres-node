@@ -22,10 +22,13 @@ block content
         span.navbar-toggler-icon
       div#filter-nav.collapse.navbar-collapse
         form.form-inline.mr-auto
-          - for (var firstMonthKey in months) break;
-          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-month' name='month' data-starting-value=firstMonthKey)
-            each month, key in months
-              option(value=key selected= filter.month == key)= month
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(
+            id='filter-month'
+            name='month'
+            data-starting-value=months[0].key
+          )
+            each month in months
+              option(value=month.key selected= filter.month == month.key)= month.value
           label(for='filter-theatre').mr-sm-2 Театр:
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') —
@@ -36,8 +39,10 @@ block content
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= filter.scene == scene.id)= scene.title
-          //if (filter.month || filter.scene || filter.theatre)
-          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters' hidden) Сбросить
+          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
+            data-action='reset-filters'
+            hidden
+          ) Сбросить
 
         div
           a.btn.btn-sm.btn-primary(href='/admin/schedule/add') Добавить
@@ -58,7 +63,7 @@ block content
             tr
               td #{moment(show.date).format('D MMM HH:mm')}
               td
-                a(href='/admin/schedule/show/edit/' + show.id)= show.play.title
+                a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)= show.play.title
               td
                 if (show.theatre)
                   = show.theatre.title
@@ -68,7 +73,7 @@ block content
               td
                 button.btn.btn-sm.btn-outline-danger(
                   data-action='remove'
-                  data-url='/admin/schedule/show/remove/' + show.id
+                  data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
                   data-id=show.id
                   data-return-url='/admin/schedule'
                 ) Удалить

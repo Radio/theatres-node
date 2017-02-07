@@ -59,6 +59,10 @@ block content
         .col-sm-10
           input.form-control(type='text' id='genre' name='genre' value=play.genre)
       .form-group.row
+        label.col-sm-2.col-form-label(for='duration') Продолжительность
+        .col-sm-10
+          input.form-control(type='text' id='duration' name='duration' value=play.duration)
+      .form-group.row
         label.col-sm-2.col-form-label(for='description') Описание
         .col-sm-10
           textarea.form-control(id='description' name='description')=play.description

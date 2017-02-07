@@ -2,7 +2,7 @@
     "use strict";
 
     let actions = {
-        remove: (url, id) => $.post(url, {id: id}),
+        remove: (url, id) => $.ajax(url, {method:'delete', data: {id: id}}),
         resetFilters: function($form) {
             $form.find("input[type=text], input[type=search], select").each(function() {
                 const $element = $(this);
@@ -50,6 +50,37 @@
         this.form.submit();
     });
 
+    $('[data-optgroup-dependent-on]').each(function() {
+        let $element = $(this);
+        let $master = $($element.data('optgroup-dependent-on'));
+        $element.data('original-value', $element.val());
+        filterOptgroup();
+        $master.change(filterOptgroup);
+        function filterOptgroup() {
+            $element.find('optgroup').hide().find('option').attr('disabled', true);
+            $element.find('optgroup[data-dependency-id="' + $master.val() + '"]').show()
+                    .find('option').attr('disabled', false);
+            if ($element.has('option[value="' + $element.data('original-value') + '"]:enabled').length) {
+                $element.val($element.data('original-value'));
+                return;
+            }
+            $element.val('');
+        }
+    });
+
+    $('[data-datetimepicker]').each(function() {
+        const $element = $(this);
+        $element.datetimepicker({
+            weekStart: 1,
+            autoclose: true,
+            startView: 'month',
+            minView: 'hour',
+            maxView: 'month',
+            language: 'ru',
+            startDate: $element.data('start-date'),
+            endDate: $element.data('end-date'),
+        })
+    });
 
 
 })(jQuery);

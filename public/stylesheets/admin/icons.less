@@ -1,0 +1,17 @@
+/*
+    Bootstrap v4 dropped support for glyphicons.
+    Font-awesome is used on the project instead of it.
+    This file is needed in order to support bootstrap v3 components using icons.
+ */
+@import "../../../node_modules/font-awesome/less/variables";
+@import "../../../node_modules/font-awesome/less/mixins";
+
+.glyphicon {
+    .fa-icon()
+}
+.glyphicon-arrow-left:before {
+    content: @fa-var-angle-left;
+}
+.glyphicon-arrow-right:before {
+    content: @fa-var-angle-right;
+}

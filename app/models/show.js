@@ -35,6 +35,15 @@ showSchema.statics.calculateHash = function(theatreId, playId, date) {
     return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
 };
 
+showSchema.methods.edit = function(editRequest) {
+    this.date = editRequest.date;
+    this.theatre = editRequest.theatre;
+    this.scene = editRequest.scene;
+    this.play = editRequest.play;
+    this.price = editRequest.price;
+    this.buyTicketUrl = editRequest.buyTicketUrl;
+};
+
 function hash(string) {
     return crypto.createHash('md5').update(string).digest("hex")
 }

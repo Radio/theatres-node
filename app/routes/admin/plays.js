@@ -63,7 +63,7 @@ router.post('/edit/:playKey', function(req, res, next) {
     });
 });
 
-router.post('/remove/:playKey', function(req, res, next) {
+router.delete('/remove/:playKey', function(req, res, next) {
     if (!req.play) return next();
     if (req.play.id !== req.body.id) return next();
     req.play.remove(function (err) {

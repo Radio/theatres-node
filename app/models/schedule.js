@@ -57,6 +57,8 @@ scheduleSchema.statics.createForMonthAndYear = function(month, year) {
  *
  * @param {[{play: Play, theatre: Theatre, scene: Scene, date: Date, price: String, buyTicketUrl: String}]} newShows
  * @param {Function} callback
+ *
+ * // todo: rename, 'update' is reserved.
  */
 scheduleSchema.methods.update = function(newShows, callback) {
     newShows.forEach(function(show) {
@@ -131,6 +133,42 @@ scheduleSchema.methods.addOrUpdateShow = function(newShowData) {
         this.shows.push(new Show(newShowData));
     }
 };
+
+/**
+ * Edit single show and save schedule.
+ *
+ * @param {String} showId
+ * @param {Object} editRequest
+ * @param {Function} callback
+ */
+scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
+    let show = this.shows.find(show => String(show._id) === String(showId));
+    if (!show) {
+        callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
+    }
+    show.edit(editRequest);
+    this.save(callback);
+};
+
+/**
+ * Remove single show and save schedule.
+ *
+ * @param {String} showId
+ * @param {Function} callback
+ */
+scheduleSchema.methods.removeShow = function(showId, callback) {
+    console.log(showId);
+    let showIndex = this.shows.findIndex(show => String(show._id) === String(showId));
+    if (showIndex < 0) {
+        return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
+    }
+    this.shows.splice(showIndex, 1);
+    this.save(callback);
+};
+
+scheduleSchema.virtual('monthKey').get(function() {
+    return (this.month < 9 ? '0' : '') + (this.month + 1) + '-' + this.year;
+});
 
 scheduleSchema = versioned(scheduleSchema);
 

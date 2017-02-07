@@ -90,8 +90,10 @@ app.use(function(err, req, res, next) {
             req.flash('error', String(err));
             req.flash('body', req.body);
             res.redirect(req.originalUrl);
+            return;
         }
     }
+    next(err);
 });
 
 // catch 404 and forward to error handler

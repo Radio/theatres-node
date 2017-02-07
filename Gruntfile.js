@@ -24,6 +24,13 @@ module.exports = function(grunt) {
                         'node_modules/bootstrap/dist/js/*.js',
                         'node_modules/bootstrap/dist/css/*.css',
                         'node_modules/bootstrap/dist/css/*.map',
+                        'node_modules/bootstrap-datetime-picker/js/bootstrap-datetimepicker.js',
+                        'node_modules/bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.ru.js',
+                        'node_modules/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css',
+                        'node_modules/font-awesome/css/font-awesome.css',
+                        'node_modules/font-awesome/css/font-awesome.min.css',
+                        'node_modules/font-awesome/css/font-awesome.css.map',
+                        'node_modules/font-awesome/fonts/*',
                     ],
                     dest: 'public/'
                 }]

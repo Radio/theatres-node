@@ -40,7 +40,7 @@ router.post('/edit/:sceneKey', function(req, res, next) {
     });
 });
 
-router.post('/remove/:sceneKey', function(req, res, next) {
+router.delete('/remove/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
     if (req.scene.id !== req.body.id) return next();
     req.scene.remove(function (err) {
