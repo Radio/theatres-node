@@ -39,13 +39,20 @@ block content
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= filter.scene == scene.id)= scene.title
+          label(for='filter-version').mr-sm-2 Версия:
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-version' name='version')
+            option(value='') —
+            each version in versions
+              option(value=version.version selected= filter.version == version.version)
+                = version.version + (version.actual ? ' V' : '')
           button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
             data-action='reset-filters'
             hidden
           ) Сбросить
 
-        div
-          a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
+        if (schedule)
+          div
+            a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
     if (!schedule)
       .alert.alert-warning(role="alert") На этот месяц расписания нет.

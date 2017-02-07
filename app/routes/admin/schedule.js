@@ -15,7 +15,8 @@ let Show = require('models/show');
 const momentDateFormat = 'DD.MM.YYYY HH:mm';
 
 router.get(/\/.*/, function(req, res, next) {
-    loadOptionsData(function (err, options) {
+    const filter = collectFilter(req.query);
+    loadOptionsData(filter.month, filter.year, function (err, options) {
         if (err) return next(err);
         req.options = options;
         next();
@@ -53,6 +54,7 @@ router.get('/', function(req, res, next) {
                 theatres: req.options.theatres,
                 scenes: req.options.scenes,
                 months: req.options.months,
+                versions: req.options.versions,
             });
         });
 });
@@ -124,7 +126,7 @@ function filterScheduleShows(schedule, req) {
     });
 }
 
-function loadOptionsData(callback) {
+function loadOptionsData(month, year, callback) {
     let months = (function*(n) {
         let date = moment();
         while (n--) {
@@ -136,6 +138,8 @@ function loadOptionsData(callback) {
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
         plays: callback => Play.find({}).populate('theatre scene').sort({title: 1}).exec(callback),
+        versions: callback => Schedule.find({ month: month, year: year }, { version: 1, actual: 1, _id: 0 })
+            .sort({ version: -1 }).exec(callback),
         months: callback => callback(null, Array.from(months))
     }, callback);
 }
@@ -151,6 +155,7 @@ function groupPlaysByTheatre(plays) {
 function collectFilter(filterQuery) {
     const today = new Date();
     let filter = {
+        actual: true,
         month: today.getMonth(),
         year: today.getFullYear(),
     };
