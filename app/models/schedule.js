@@ -184,7 +184,7 @@ scheduleSchema.methods.sortShows = function() {
  */
 scheduleSchema.methods.addOrUpdateOneShow = function(show) {
     const sameShowIndex = this.shows.findIndex((existingShow) => existingShow._id === show._id);
-    if (sameShowIndex) {
+    if (sameShowIndex >= 0) {
         this.shows[sameShowIndex] = show;
         return this.shows[sameShowIndex];
     }
