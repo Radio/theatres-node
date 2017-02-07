@@ -4,6 +4,8 @@ block content
   .container
     .jumbotron
       h1= title
+      p
+        | #{s.capitalize(moment().format('MMMM YYYY'))}
 
     p
       a(href='/admin/schedule?month=' + schedule.monthKey)
@@ -16,12 +18,13 @@ block content
         label.col-sm-2.col-form-label(for='date') Дата/время
         .col-sm-10
           input.form-control(
-          type='text' id='date' name='date'
-          data-datetimepicker
-          data-date-format='dd.mm.yyyy hh:ii'
-          data-start-date=moment({day: 1, month: schedule.month, year: schedule.year}).format(momentDateFormat)
-          data-end-date=moment({month: schedule.month, year: schedule.year}).endOf('month').format(momentDateFormat)
-          value= moment(show.date).format(momentDateFormat))
+            type='text' id='date' name='date'
+            data-datetimepicker
+            data-date-format='dd.mm.yyyy hh:ii'
+            data-start-date=moment({day: 1, month: schedule.month, year: schedule.year}).format(momentDateFormat)
+            data-end-date=moment({month: schedule.month, year: schedule.year}).endOf('month').format(momentDateFormat)
+            value= show.date ? moment(show.date).format(momentDateFormat) : ''
+          )
       .form-group.row
         label.col-sm-2.col-form-label(for='theatre') Театр
         .col-sm-10
@@ -41,11 +44,17 @@ block content
             each theatreInfo, theatreId in plays
               optgroup(label=theatreInfo.title data-dependency-id=theatreId)
                 each play in theatreInfo.plays
-                  option(value=play.id selected= show.play == play.id)= play.title
+                  option(value=play.id selected= show.play == play.id data-scene-id=play.scene.id)
+                    =play.title + ' (' + play.scene.title + ')'
       .form-group.row
         label.col-sm-2.col-form-label(for='scene') Сцена
         .col-sm-10
-          select.form-control(id='scene' name='scene')
+          select.form-control(
+            id='scene'
+            name='scene'
+            data-default-option-dependent-on="#play"
+            data-default-option-dependent-on-data-attribute="scene-id"
+          )
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= show.scene == scene.id)= scene.title
@@ -61,7 +70,7 @@ block content
             | Купить билет (Url)
         .col-sm-10
           input.form-control(type='text' id='buy-ticket-url' name='buy-ticket-url' value=show.buyTicketUrl)
-      if (show._id)
+      if (show._id && show.date)
         .form-group.row
           label.col-sm-2.col-form-label(for='title') ID
           .col-sm-10

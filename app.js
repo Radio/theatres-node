@@ -87,7 +87,13 @@ app.use('/admin', admin);
 app.use(function(err, req, res, next) {
     if (err instanceof Error) {
         if (err.name === 'ValidationError') {
-            req.flash('error', String(err));
+            let errorMessage = err.message;
+            for (let fieldName in err.errors) {
+                if (err.errors.hasOwnProperty(fieldName)) {
+                    errorMessage += '<br>' + String(err.errors[fieldName])
+                }
+            }
+            req.flash('error', errorMessage);
             req.flash('body', req.body);
             res.redirect(req.originalUrl);
             return;

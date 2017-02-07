@@ -35,13 +35,15 @@ showSchema.statics.calculateHash = function(theatreId, playId, date) {
     return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
 };
 
-showSchema.methods.edit = function(editRequest) {
+showSchema.methods.edit = function(editRequest, callback) {
     this.date = editRequest.date;
     this.theatre = editRequest.theatre;
     this.scene = editRequest.scene;
     this.play = editRequest.play;
     this.price = editRequest.price;
     this.buyTicketUrl = editRequest.buyTicketUrl;
+
+    this.validate(callback);
 };
 
 function hash(string) {

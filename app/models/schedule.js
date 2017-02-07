@@ -119,8 +119,17 @@ scheduleSchema.methods.sortShows = function() {
  * @param {object} newShowData A plain object representing the show.
  */
 scheduleSchema.methods.addOrUpdateShow = function(newShowData) {
-    newShowData.hash = newShowData.hash ||
-        Show.calculateHash(newShowData.theatre.id, newShowData.play.id, newShowData.date);
+    if (!newShowData.hash) {
+        newShowData.hash = Show.calculateHash(
+            (typeof newShowData.theatre === 'object' && typeof newShowData.theatre.id !== 'undefined') ?
+                newShowData.theatre.id :
+                String(newShowData.theatre),
+            (typeof newShowData.play === 'object' && typeof newShowData.play.id !== 'undefined') ?
+                newShowData.play.id :
+                String(newShowData.play),
+            newShowData.date
+        );
+    }
     const index = this.shows.findIndex((show) => show.hash === newShowData.hash);
     if (index >= 0) {
         if (newShowData.buyTicketUrl) {
@@ -146,8 +155,30 @@ scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
     if (!show) {
         callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
-    show.edit(editRequest);
-    this.save(callback);
+    let schedule = this;
+    show.edit(editRequest, function(err) {
+        if (err) return callback(err);
+        schedule.sortShows();
+        schedule.save(callback);
+    });
+
+};
+
+/**
+ * Add single show and save schedule.
+ *
+ * @param {Object} editRequest
+ * @param {Function} callback
+ */
+scheduleSchema.methods.addShow = function(editRequest, callback) {
+    let show = new Show();
+    let schedule = this;
+    show.edit(editRequest, function(err) {
+        if (err) return callback(err);
+        schedule.shows.push(show);
+        schedule.sortShows();
+        schedule.save(callback);
+    });
 };
 
 /**

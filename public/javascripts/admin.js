@@ -68,6 +68,20 @@
         }
     });
 
+    $('[data-default-option-dependent-on]').each(function() {
+        let $element = $(this);
+        let $master = $($element.data('default-option-dependent-on'));
+        let dataAttribute = $element.data('default-option-dependent-on-data-attribute');
+        if (!$element.val()) {
+            $master.change(function () {
+                let $dependentOnValue = dataAttribute ? $master.find(':selected').data(dataAttribute) : $master.val();
+                $element.val($dependentOnValue);
+            });
+        }
+    });
+
+
+
     $('[data-datetimepicker]').each(function() {
         const $element = $(this);
         $element.datetimepicker({

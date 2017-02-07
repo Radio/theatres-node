@@ -10,6 +10,7 @@ let Schedule = require('models/schedule');
 let Theatre = require('models/theatre');
 let Scene = require('models/scene');
 let Play = require('models/play');
+let Show = require('models/show');
 
 const momentDateFormat = 'DD.MM.YYYY HH:mm';
 
@@ -65,11 +66,7 @@ router.get('/:scheduleId/show/edit/:showId', function(req, res, next) {
         show: getFormData(req.show, req),
         theatres: req.options.theatres,
         scenes: req.options.scenes,
-        plays: req.options.plays.reduce(function(groupped, play) {
-            groupped[play.theatre.id] = groupped[play.theatre.id] || { title: play.theatre.title, plays: [] };
-            groupped[play.theatre.id].plays.push(play);
-            return groupped;
-        }, {}),
+        plays: groupPlaysByTheatre(req.options.plays),
     });
 });
 
@@ -86,8 +83,30 @@ router.delete('/:scheduleId/show/remove/:showId', function(req, res, next) {
     if (!req.schedule || !req.show) return next();
     req.schedule.removeShow(req.show._id, function(err) {
         if (err) return next(err);
-        req.flash('success', 'Расписание обновлено.');
+        req.flash('success', 'Спектакль удален из расписания.');
         res.end();
+    });
+});
+
+router.get('/:scheduleId/show/add', function(req, res, next) {
+    if (!req.schedule) return next();
+    res.render('admin/schedule/edit-show', {
+        title: 'Управление — Расписание — Добавить',
+        momentDateFormat: momentDateFormat,
+        schedule: req.schedule,
+        show: getFormData(new Show(), req),
+        theatres: req.options.theatres,
+        scenes: req.options.scenes,
+        plays: groupPlaysByTheatre(req.options.plays),
+    });
+});
+
+router.post('/:scheduleId/show/add', function(req, res, next) {
+    if (!req.schedule) return next();
+    req.schedule.addShow(buildShowEditRequest(req.body), function(err) {
+        if (err) return next(err);
+        req.flash('success', 'Спектакль добавлен в расписание.');
+        res.redirect('/admin/schedule/?month=' + req.schedule.monthKey);
     });
 });
 
@@ -116,9 +135,17 @@ function loadOptionsData(callback) {
     async.parallel({
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
-        plays: callback => Play.find({}).populate('theatre').sort({title: 1}).exec(callback),
+        plays: callback => Play.find({}).populate('theatre scene').sort({title: 1}).exec(callback),
         months: callback => callback(null, Array.from(months))
     }, callback);
+}
+
+function groupPlaysByTheatre(plays) {
+    return plays.reduce(function(groupped, play) {
+        groupped[play.theatre.id] = groupped[play.theatre.id] || { title: play.theatre.title, plays: [] };
+        groupped[play.theatre.id].plays.push(play);
+        return groupped;
+    }, {})
 }
 
 function collectFilter(filterQuery) {

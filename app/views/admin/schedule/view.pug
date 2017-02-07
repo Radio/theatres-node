@@ -45,7 +45,7 @@ block content
           ) Сбросить
 
         div
-          a.btn.btn-sm.btn-primary(href='/admin/schedule/add') Добавить
+          a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
     if (!schedule)
       .alert.alert-warning(role="alert") На этот месяц расписания нет.
