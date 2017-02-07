@@ -18,11 +18,6 @@ let showSchema = new Schema({
 });
 showSchema.set('toObject', { versionKey: false });
 
-showSchema.pre('save', function(next) {
-    this.hash = this.constructor.calculateHash(this.theatre, this.play, this.date);
-    next();
-});
-
 showSchema.statics.findByHash = function(hash, callback) {
     return this.findOne({ hash: hash }, callback);
 };
@@ -33,6 +28,19 @@ showSchema.statics.replacePlay = function(oldPlay, newPlay, callback) {
 
 showSchema.statics.calculateHash = function(theatreId, playId, date) {
     return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
+};
+
+showSchema.pre('save', function(next) {
+    this.updateHash();
+    next();
+});
+
+showSchema.methods.updateHash = function() {
+    this.hash = this.constructor.calculateHash(
+        (this.theatre instanceof Theatre) ? this.theatre.id : String(this.theatre),
+        (this.play instanceof Play) ? this.play.id : String(this.play),
+        this.date
+    );
 };
 
 showSchema.methods.edit = function(editRequest, callback) {

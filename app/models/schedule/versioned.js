@@ -86,51 +86,55 @@ let versioned = function(scheduleSchema) {
         return schedule;
     };
 
+    /**
+     * Update 'updated' field with current date if actual is true.
+     */
+    scheduleSchema.methods.updateUpdated = function() {
+        if (this.actual) {
+            this.updated = new Date();
+        }
+    };
 
     /**
      * Updates the schedule with provided shows.
      * Remove existing shops if they are not listed in newShops.
+     * Save the schedule if shows were changed.
      *
-     * @param {[{play: Play, theatre: Theatre, scene: Scene, date: Date, price: String, buyTicketUrl: String}]} newShows
+     * @param {[Object]} newShowsData
      * @param {Function} callback
      */
-    scheduleSchema.methods.update = function(newShows, callback) {
-
+    scheduleSchema.methods.replaceShowsAndSave = function(newShowsData, callback) {
         const previousVersion = versioning.makeSnapshot(this);
-
-        newShows.forEach(function(show) {
-            // Pre-calculate hashes for new shows in order to find shows to be removed.
-            show.hash = Show.calculateHash(show.theatre.id, show.play.id, show.date);
-        });
-
-        let existingHashes = this.shows.map(show => show.hash);
-        let newHashes = newShows.map(show => show.hash);
-        let hashesToRemove =  existingHashes.filter(hash => newHashes.indexOf(hash) < 0);
-
-        // todo: Do not delete passed shows
-        hashesToRemove.forEach(hashToRemove => this.removeShowByHash(hashToRemove));
-        newShows.forEach(newShow => this.addOrUpdateShow(newShow));
-        this.sortShows();
-        this.updated = new Date();
+        this.replaceShows(newShowsData);
         this.saveIfHasChanges(previousVersion, callback);
     };
 
     /**
      * Update the schedule with new shows.
      * Do not remove existing shops if they are not listed in newShops.
+     * Save the schedule if shows were changed.
      *
-     * @param {[{play: Play, theatre: Theatre, scene: Scene, date: Date, price: String, buyTicketUrl: String}]} newShows
+     * @param {[Object]} newShowsData
      * @param {Function} callback
      */
-    scheduleSchema.methods.addOrUpdateShows = function(newShows, callback) {
+    scheduleSchema.methods.addOrUpdateShowsAndSave = function(newShowsData, callback) {
         const previousVersion = versioning.makeSnapshot(this);
-
-        newShows.forEach(newShow => this.addOrUpdateShow(newShow));
-        this.sortShows();
-        this.updated = new Date();
+        this.addOrUpdateShows(newShowsData);
         this.saveIfHasChanges(previousVersion, callback);
     };
 
+    /**
+     * Remove shows by ids.
+     * Save the schedule.
+     *
+     * @param {[String]} showsIds
+     * @param {Function} callback
+     */
+    scheduleSchema.methods.removeShowsAndSave = function(showsIds, callback) {
+        const previousVersion = versioning.makeSnapshot(this);
+        this.removeShows(showsIds);
+        this.saveIfHasChanges(previousVersion, callback);
+    };
 
     /**
      * Compare the shows with previous snapshot and save the schedule if there are any relevant changes.
@@ -142,8 +146,7 @@ let versioned = function(scheduleSchema) {
     scheduleSchema.methods.saveIfHasChanges = function(previousVersion, callback) {
         let previousSnapshotIsEmpty = previousVersion.version === 1 && !previousVersion.shows.length;
         if (previousSnapshotIsEmpty) {
-            this.save(callback);
-            return;
+            return this.save(callback);
         }
         let hasChanges = !versioning.compareWithSnapshot(this, previousVersion);
         if (hasChanges) {
@@ -167,7 +170,7 @@ let versioned = function(scheduleSchema) {
      * @param {Object} snapshot
      * @param {Function} callback
      */
-    scheduleSchema.methods.createRevision = function (snapshot, callback) {
+    scheduleSchema.statics.createRevision = function (snapshot, callback) {
         delete snapshot._id;
         snapshot.actual = false;
         let revision = new this(snapshot);

@@ -125,7 +125,7 @@ let updateSchedule = function(mappedShowsData, callback) {
     Schedule.resolve(month, year, function(err, schedule) {
         if (err) return callback(err);
 
-        schedule.update(mappedShowsData, callback);
+        schedule.replaceShowsAndSave(mappedShowsData, callback);
     });
 };
 
