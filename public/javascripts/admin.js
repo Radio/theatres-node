@@ -39,7 +39,7 @@
 
     $(document).ready(function() {
         const path = location.pathname.replace(/^(\/.*?\/.*?)\/.*/, '$1');
-        $('#main-nav').find('a[href^="' + path + '"]').addClass('active');
+        $('#main-nav').find('a[href^="' + path + '"]').closest('li').addClass('active');
     });
 
     $('[data-action="reset-filters"]').click(function(event) {
