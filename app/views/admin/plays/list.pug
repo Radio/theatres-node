@@ -9,14 +9,14 @@ block content
 
     include ../flash
 
-    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.mb-3
       button.navbar-toggler.navbar-toggler-right(
         type="button"
         data-toggle="collapse"
-        data-target="#plays-list-nav"
+        data-target="#filter-nav"
       )
         span.navbar-toggler-icon
-      div#plays-list-nav.collapse.navbar-collapse
+      div#filter-nav.collapse.navbar-collapse
         form.form-inline.mr-auto
           input.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(
             type="search"
@@ -24,6 +24,7 @@ block content
             placeholder="Название, ключ"
             value=filter.query
           )
+          button.btn.btn-sm.btn-outline-success.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0 Искать
           label(for='filter-theatre').mr-sm-2 Театр:
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') —
@@ -34,9 +35,7 @@ block content
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= filter.scene == scene.id)= scene.title
-          button.btn.btn-sm.btn-outline-success.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0 Искать
-          if (filter.query || filter.scene || filter.theatre)
-            button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters') Сбросить
+          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters' hidden) Сбросить
 
         div
           a.btn.btn-sm.btn-primary(href='/admin/plays/create') Создать новый

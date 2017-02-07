@@ -1,8 +1,14 @@
-mixin pluralizeItemsNumber(number)
+mixin pluralizeAbstractItemsNumber(number, single, several, many)
   - var modulo = number % 10 || 10
   if ((number >= 10 && number < 20) || modulo >= 5)
-    = number + ' штук'
+    = number + ' ' + many
   else if (modulo == 1)
-    = number + ' штука'
+    = number + ' ' + single
   else
-    = number + ' штуки'
+    = number + ' ' + several
+
+mixin pluralizeItemsNumber(number)
+  +pluralizeAbstractItemsNumber(number, 'штука', 'штуки', 'штук')
+
+mixin pluralizePlaysNumber(number)
+  +pluralizeAbstractItemsNumber(number, 'спектакль', 'спектакля', 'спектаклей')

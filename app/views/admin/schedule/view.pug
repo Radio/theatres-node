@@ -1,0 +1,74 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+      p
+        | #{s.capitalize(moment().format('MMMM YYYY'))} &nbsp;&middot;&nbsp;&nbsp;
+        if (schedule)
+          +pluralizePlaysNumber(schedule.shows.length)
+        else
+          | нет расписания
+
+    include ../flash
+
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.mb-3
+      button.navbar-toggler.navbar-toggler-right(
+        type="button"
+        data-toggle="collapse"
+        data-target="#filter-nav"
+      )
+        span.navbar-toggler-icon
+      div#filter-nav.collapse.navbar-collapse
+        form.form-inline.mr-auto
+          - for (var firstMonthKey in months) break;
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-month' name='month' data-starting-value=firstMonthKey)
+            each month, key in months
+              option(value=key selected= filter.month == key)= month
+          label(for='filter-theatre').mr-sm-2 Театр:
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
+          label(for='filter-scene').mr-sm-2 Сцена:
+          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-scene' name='scene')
+            option(value='') —
+            each scene in scenes
+              option(value=scene.id selected= filter.scene == scene.id)= scene.title
+          //if (filter.month || filter.scene || filter.theatre)
+          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters' hidden) Сбросить
+
+        div
+          a.btn.btn-sm.btn-primary(href='/admin/schedule/add') Добавить
+
+    if (!schedule)
+      .alert.alert-warning(role="alert") На этот месяц расписания нет.
+    else
+      table.table
+        thead
+          tr
+            th Дата/время ↓
+            th Спектакль
+            th Театр
+            th Сцена
+            th(width=100)
+        tbody
+          each show in schedule.shows
+            tr
+              td #{moment(show.date).format('D MMM HH:mm')}
+              td
+                a(href='/admin/schedule/show/edit/' + show.id)= show.play.title
+              td
+                if (show.theatre)
+                  = show.theatre.title
+              td
+                if (show.scene)
+                  = show.scene.title
+              td
+                button.btn.btn-sm.btn-outline-danger(
+                  data-action='remove'
+                  data-url='/admin/schedule/show/remove/' + show.id
+                  data-id=show.id
+                  data-return-url='/admin/schedule'
+                ) Удалить
