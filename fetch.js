@@ -108,6 +108,26 @@ let reduceDuplicates = function(mappedShowsData) {
 };
 
 /**
+ * Group plain array with shows by month.
+ *
+ * @param mappedShowsData
+ *
+ * @return {Object}
+ */
+let groupByMonth = function(mappedShowsData) {
+    return mappedShowsData.reduce(function(grouped, showData) {
+        const monthKey = showData.date.getMonth() + '-' + showData.date.getFullYear();
+        grouped[monthKey] = grouped[monthKey] || {
+                month: showData.date.getMonth(),
+                year: showData.date.getFullYear(),
+                shows: []
+            };
+        grouped[monthKey].shows.push(showData);
+        return grouped;
+    }, {});
+};
+
+/**
  * Update the schedule records with the new shows.
  *
  * @param {Array} mappedShowsData
@@ -117,16 +137,13 @@ let reduceDuplicates = function(mappedShowsData) {
  */
 let updateSchedule = function(mappedShowsData, callback) {
     let Schedule = require('models/schedule');
-
-    const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
-    // todo: group show by month and update each schedule seprately
-    Schedule.resolve(month, year, function(err, schedule) {
-        if (err) return callback(err);
-
-        schedule.replaceShowsAndSave(mappedShowsData, callback);
-    });
+    let groupedShowsData = groupByMonth(mappedShowsData);
+    async.each(groupedShowsData, function(monthlyScheduleData, callback) {
+        Schedule.resolve(monthlyScheduleData.month, monthlyScheduleData.year, function(err, schedule) {
+            if (err) return callback(err);
+            schedule.replaceShowsAndSave(monthlyScheduleData.shows, callback);
+        });
+    }, callback);
 };
 
 /**
