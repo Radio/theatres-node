@@ -1,0 +1,32 @@
+.col-md-1.play-image-col
+  if show.play.image
+    a.play-image.lightbox(data-imagelightbox='a' href=show.play.image title=show.play.title)
+      img.img-fluid(src=show.play.image alt=show.play.title)
+.col-md-11
+  if show.play.genre
+    p= show.play.genre
+  p
+    a(href=show.theatre.url title='Сайт театра')= show.theatre.title
+    if show.theatre.houseSlug
+      | , Дом Актера
+    span.show-separator &nbsp;·&nbsp;
+    span.nobr= show.scene.title
+    if show.price || show.buyTicketUrl
+      span.show-separator &nbsp;·&nbsp;
+      if show.price && !show.buyTicketUrl
+        span.price.nobr= show.price
+      if show.buyTicketUrl
+        a(href=show.buyTicketUrl, title='Купить билеты')
+          span.price.nobr= show.price || 'купить билеты'
+  if (show.play.director)
+    p
+      strong Постановщик:
+      = ' ' + show.play.director
+  if show.play.duration
+    p
+      strong Длительность:
+      = ' ' + show.play.duration
+  p.play-description
+    | !{show.play.description}
+  p
+    a(href=show.play.url) Описание на сайте театра ↗

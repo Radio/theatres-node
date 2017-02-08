@@ -1,6 +1,11 @@
-extends layout
+doctype html
+html
+  head
+    meta(charset="utf-8" lang="ru")
 
-block content
+    title= title
+
+body
   h1= message
   h2= error.status
   pre #{error.stack}

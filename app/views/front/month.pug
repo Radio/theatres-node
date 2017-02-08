@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  header.main-header
+    h1
+      a.first-title(href='/')= title.first
+      if title.currentMonth
+        span &nbsp;/&nbsp;
+          if isCurrentMonth()
+            strong.second-title= title.currentMonth
+          else
+            a.second-title.no-print(
+              href='/year/' + dateHelper.getCurrentYear() + '/month/' + dateHelper.getCurrentMonth()
+            )= title.currentMonth
+          span.no-print &nbsp;—&nbsp;
+          if isCurrentMonth()
+            a.second-subtitle.no-print(
+              href='/year/' + dateHelper.getNextMonthYear() + '/month/' + dateHelper.getNextMonth()
+            )= title.nextMonth
+          else
+            strong.second-subtitle= title.nextMonth
+      if title.theatre
+        span &nbsp;/&nbsp;
+          span.third-title= title.theatre
+
+  .scroll-top
+  .container-fluid.month-container
+    .filters-col
+      include month/filters
+    .poster
+      .row
+        .col-lg-10
+          .month
+            each date in days
+              - dateMoment = moment(date)
+              .day.row(
+                class='day-' + date.getDay() + ' date-' + date.getDate() +
+                  (!date.shows.length ? ' no-shows' : '') +
+                  (isToday(date) ? ' today' : '')
+                data-day=date.getDate()
+              )
+                .col-2
+                  p.day-number
+                    span.day-number-number= dateMoment.format('D')
+                    | &nbsp;
+                    span.day-of-week-name
+                      span.hidden-sm-down= dateMoment.format('dddd')
+                      span.hidden-md-up= dateMoment.format('ddd')
+                      if isToday(date)
+                        span.hidden-xs  (сегодня)
+                .shows.col-10
+                  each show in date.shows
+                    include month/show-brief
+
+      include month/footer

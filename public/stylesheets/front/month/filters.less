@@ -1,0 +1,49 @@
+.filters-col {
+    position: fixed;
+    z-index: 400;
+    width: 230px;
+}
+.scrolled {
+    .filters-col {
+        top: 80px;
+
+        @media (max-width: 992px) {
+            position: relative;
+            width: 100%;
+            top: 0;
+        }
+    }
+}
+
+.filter-block {
+    margin-bottom: 25px;
+}
+.calendar {
+    @media (max-width: 992px) {
+        font-size: 1.2em;
+    }
+    .week {
+        .day {
+            float: left;
+            width: 2em;
+            text-align: center;
+            padding: 0.2em 0;
+
+            &.out-of-month {
+                visibility: hidden;
+            }
+
+            &:hover {
+                background-color: #e5e5e5;
+            }
+
+            span {
+                cursor: pointer;
+            }
+
+        }
+        .today {
+            background-color: rgba(0, 139, 222, .2);
+        }
+    }
+}

@@ -1,0 +1,200 @@
+.month-container {
+    padding-top: 20px;
+}
+
+.scrolled {
+    .main-header {
+        position: fixed;
+        z-index: 500;
+        top: 0;
+        left: 0;
+        width: 100%;
+
+        text-align: left;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+        h1 {
+            font-size: 1.5em;
+            margin: 5px 0;
+
+            > span {
+                display: inline;
+            }
+        }
+    }
+    .scroll-top {
+        position: fixed;
+        z-index: 300;
+        right:0;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        background: url(/assets/img/icons/arrow-up.png) no-repeat scroll center center transparent;
+    }
+
+    .page-header {
+        display: none;
+    }
+}
+
+.poster {
+    position: relative;
+    padding-bottom: 300px;
+    padding-left: 280px;
+    margin-top: 60px;
+
+    @media (max-width: 992px) {
+        padding-left: 0;
+    }
+
+    .month {
+        .loading-text {
+            margin-left: 10px;
+            padding-left: 32px;
+            background: url(/assets/img/cat.png) no-repeat scroll left center transparent;
+        }
+    }
+    .overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: url(/assets/img/cat.png) no-repeat scroll 180px 60px  rgba(40, 164, 201, .1);
+        padding-top: 65px;
+        padding-left: 210px;
+    }
+    .day {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        border-top: 1px solid #eee;
+
+        &.no-shows {
+            padding-top: .5em;
+            padding-bottom: .5em;
+            opacity: .5;
+            font-size: .8em;
+            border-top: 1px solid #ddd
+        }
+        &:first-child {
+            border-top: 0 none;
+        }
+
+        &.previous,
+        &.next {
+            color: #ccc;
+        }
+
+        .day-number {
+            margin-bottom: .6em;
+
+            .day-number-number {
+                font-size: 1.8em;
+                margin-right: 5px;
+            }
+            .day-of-week-name {
+                font-size: 0.9em;
+                color: #888;
+                position: relative;
+                /*top: -1em;*/
+            }
+        }
+        &.day-0, &.day-6 {
+            .day-number {
+                border-left: 4px solid #dd7d70;
+                margin-left: -15px;
+                padding-left: 11px;
+                position: relative;
+            }
+        }
+        &.today {
+            .day-number {
+                border-left: 4px solid #28a4c9;
+                margin-left: -15px;
+                padding-left: 11px;
+                position: relative;
+            }
+        }
+    }
+    .show-row {
+        margin-bottom: 10px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .show-info {
+        clear: both;
+        overflow: hidden;
+    }
+    .show-time {
+        padding-top: .85em;
+    }
+    .show-title {
+        h4 {
+            margin: .15em 0 5px;
+            font-size: 1.571em;
+            font-weight: 400;
+            line-height: 1.5em;
+        }
+    }
+    .show-label {
+        font-size: .5em;
+        position: relative;
+        top: -1.2em;
+        padding: 2px 4px;
+    }
+    .show-scene {
+        margin-top: 0.7em;
+        font-size: 0.929em;
+        color: #666;
+    }
+    @media (min-width: 1200px) {
+        .show-scene {
+            font-size: 1em;
+            line-height: 1.7;
+        }
+    }
+    .show-theatre-title {
+        color: inherit;
+        border-bottom-color: rgba(96, 96, 96, 0.3);
+    }
+    .show-separator {
+        margin: 0 .2em;
+    }
+
+    .footer {
+        margin-top: 100px;
+    }
+}
+.small-viewport {
+    .poster {
+        margin-top: 0;
+    }
+}
+.show-details {
+    margin-top: .4em;
+    margin-bottom: 2em;
+    display: none;
+
+    .play-image-col {
+        padding-top: .2em;
+        padding-bottom: .7em;
+        @media (min-width: 992px) {
+            @extend: 12%;
+            //width: 8.33333333% + @extend;
+            //margin-left: -@extend;
+        }
+    }
+
+    .play-description {
+        max-width: 700px;
+    }
+}
+.detailed {
+    .show-scene {
+        display: none;
+    }
+    .show-details {
+        display: block;
+    }
+}
