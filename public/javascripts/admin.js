@@ -4,16 +4,21 @@
     let actions = {
         remove: (url, id) => $.ajax(url, {method:'delete', data: {id: id}}),
         resetFilters: function($form) {
-            $form.find("input[type=text], input[type=search], select").each(function() {
-                const $element = $(this);
-                $element.val($element.data('starting-value') || '');
-            });
-            $form.submit();
+            location.href = location.pathname;
+            // $form.find("input[type=text], input[type=search], select").each(function() {
+            //     const $element = $(this);
+            //     let startingValue = $element.data('starting-value') ||
+            //         $element.find('option[data-starting-value]').attr('value') || '';
+            //     $element.val(startingValue);
+            // });
+            // $form.submit();
         },
         displayResetButton: function($form) {
             const $changedElements = $form.find("input[type=text], input[type=search], select").filter(function() {
                 const $element = $(this);
-                return $element.val() !== ($element.data('starting-value') || '');
+                let startingValue = $element.data('starting-value') ||
+                    $element.find('option[data-starting-value]').attr('value') || '';
+                return $element.val() !== startingValue;
             });
             if ($changedElements.length) {
                 $form.find('[data-action="reset-filters"]').attr('hidden', false);

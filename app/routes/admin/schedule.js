@@ -129,13 +129,20 @@ function filterScheduleShows(schedule, req) {
 }
 
 function loadOptionsData(month, year, callback) {
-    let months = (function*(n) {
+    let months = (function*(passedMonths, followingMonths) {
+        let actualKey = moment().format('MM-YYYY');
         let date = moment();
-        while (n--) {
-            yield { key: date.format('MM-YYYY'), value: s.capitalize(date.format('MMMM YYYY')) };
+        date.add(followingMonths, 'months');
+        let totalMonths = passedMonths + followingMonths + 1;
+        while (totalMonths--) {
+            yield {
+                key: date.format('MM-YYYY'),
+                value: s.capitalize(date.format('MMMM YYYY')),
+                actual: date.format('MM-YYYY') === actualKey
+            };
             date.subtract(1, 'months');
         }
-    })(12);
+    })(11, 3);
     async.parallel({
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),

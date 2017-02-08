@@ -5,7 +5,9 @@ block content
     .jumbotron
       h1= title
       p
-        | #{s.capitalize(moment().format('MMMM YYYY'))} &nbsp;&middot;&nbsp;&nbsp;
+        - selectedMonthDate = moment({month: s.strLeft(filter.month, '-') - 1, year: s.strRight(filter.month, '-')})
+        | #{s.capitalize(selectedMonthDate.format('MMMM YYYY'))}
+        | &nbsp;&nbsp;&middot;&nbsp;&nbsp;
         if (schedule)
           +pluralizePlaysNumber(schedule.shows.length)
         else
@@ -25,10 +27,9 @@ block content
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(
             id='filter-month'
             name='month'
-            data-starting-value=months[0].key
           )
             each month in months
-              option(value=month.key selected= filter.month == month.key)= month.value
+              option(value=month.key selected=filter.month==month.key data-starting-value=month.actual)= month.value
           label(for='filter-theatre').mr-sm-2 Театр:
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') —
@@ -43,9 +44,10 @@ block content
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-version' name='version')
             each version in versions
               - var versionKey = version.actual ? '' : version.version
-              option(value=versionKey selected= filter.version == versionKey)
+              option(value=versionKey selected= filter.version == versionKey data-starting-value=!versionKey)
                 = version.version + (version.actual ? ' (актуальная)' : '')
           button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
+            type='button'
             data-action='reset-filters'
             hidden
           ) Сбросить

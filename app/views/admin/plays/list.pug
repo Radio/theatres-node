@@ -35,7 +35,11 @@ block content
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= filter.scene == scene.id)= scene.title
-          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(data-action='reset-filters' hidden) Сбросить
+          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
+            type='button'
+            data-action='reset-filters'
+            hidden
+          ) Сбросить
 
         div
           a.btn.btn-sm.btn-primary(href='/admin/plays/create') Создать новый
