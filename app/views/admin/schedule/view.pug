@@ -41,10 +41,10 @@ block content
               option(value=scene.id selected= filter.scene == scene.id)= scene.title
           label(for='filter-version').mr-sm-2 Версия:
           select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-version' name='version')
-            option(value='') —
             each version in versions
-              option(value=version.version selected= filter.version == version.version)
-                = version.version + (version.actual ? ' V' : '')
+              - var versionKey = version.actual ? '' : version.version
+              option(value=versionKey selected= filter.version == versionKey)
+                = version.version + (version.actual ? ' (актуальная)' : '')
           button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
             data-action='reset-filters'
             hidden
@@ -57,6 +57,12 @@ block content
     if (!schedule)
       .alert.alert-warning(role="alert") На этот месяц расписания нет.
     else
+      if (!schedule.actual)
+        .alert.alert-warning(role="alert")
+          | Это <strong>не актуальная</strong> версия расписания.&nbsp;
+          a.btn.btn-sm.btn-secondary(href='?month=' + filter.month +
+            '&theatre=' + filter.theatre + '&scene=' + filter.scene + '&version='
+          ) Смотреть актуальную
       table.table
         thead
           tr

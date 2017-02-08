@@ -47,10 +47,12 @@ router.get('/', function(req, res, next) {
             if (schedule) {
                 schedule.shows = filterScheduleShows(schedule, req);
             }
+            let viewFilter = req.query;
+            viewFilter.month = viewFilter.month || schedule.monthKey;
             res.render('admin/schedule/view', {
                 title: 'Управление — Расписание',
                 schedule: schedule,
-                filter: req.query,
+                filter: viewFilter,
                 theatres: req.options.theatres,
                 scenes: req.options.scenes,
                 months: req.options.months,
@@ -159,15 +161,13 @@ function collectFilter(filterQuery) {
         month: today.getMonth(),
         year: today.getFullYear(),
     };
+    if (filterQuery.version) {
+        delete filter.actual;
+        filter.version = filterQuery.version;
+    }
     if (filterQuery.month) {
         [filter.month, filter.year] = filterQuery.month.split('-');
         filter.month--;
-    }
-    if (filterQuery.theatre) {
-        // filter.theatre = filterQuery.theatre;
-    }
-    if (filterQuery.scene) {
-        // filter.scene = filterQuery.scene;
     }
     return filter;
 }
