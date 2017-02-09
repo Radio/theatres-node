@@ -134,6 +134,10 @@ function buildEditRequest(requestBody) {
         duration: requestBody.duration,
         description: requestBody.description,
         image: requestBody.image,
+        premiere: !!requestBody.premiere,
+        musical: !!requestBody.musical,
+        dancing: !!requestBody.dancing,
+        forKids: !!requestBody['for-kids'],
         tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
     };
 }

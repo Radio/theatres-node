@@ -19,6 +19,10 @@ let playSchema = new Schema({
     duration: String,
     description: String,
     image: String,
+    premiere: Boolean,
+    musical: Boolean,
+    dancing: Boolean,
+    forKids: Boolean,
     tags: [String]
 });
 playSchema.set('toObject', { versionKey: false });
@@ -62,6 +66,10 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.duration = editRequest.duration;
     this.description = editRequest.description;
     this.image = editRequest.image;
+    this.premiere = editRequest.premiere;
+    this.musical = editRequest.musical;
+    this.dancing = editRequest.dancing;
+    this.forKids = editRequest.forKids;
     this.tags = editRequest.tags;
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);

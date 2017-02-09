@@ -56,6 +56,15 @@ block content
           tr
             td
               a(href='/admin/plays/edit/' + play.key)= play.title
+              span.flag-icons
+                if play.premiere
+                  i.fa.fa-star(title='Премьера')
+                if play.musical
+                  i.fa.fa-music(title='Музыкальный')
+                if play.dancing
+                  i.fa.fa-slideshare(title='Танцевальный')
+                if play.forKids
+                  i.fa.fa-child(title='Детский')
             td
               if (play.theatre)
                 = play.theatre.title

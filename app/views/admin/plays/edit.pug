@@ -73,6 +73,24 @@ block content
           if play.image
             img(src=play.image width=300)
       .form-group.row
+        label.col-sm-2.col-form-label Флаги
+        .form-check.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='premiere' value='1' checked=play.premiere)
+            |  Премьера
+        .form-check.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='musical' value='1' checked=play.musical)
+            |  Музыкальный
+        .form-check.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='dancing' value='1' checked=play.dancing)
+            |  Танцевальный
+        .form-check.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='for-kids' value='1' checked=play.forKids)
+            |  Детский
+      .form-group.row
         label.col-sm-2.col-form-label(for='tags') Теги
         .col-sm-10
           textarea.form-control(id='tags' name='tags')= play.tags.join("\n")
