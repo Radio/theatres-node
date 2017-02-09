@@ -9,12 +9,11 @@ div
         .week.clearfix
           each day in week
             - isToday = day && today.isSame([filter.year, filter.month, day], 'day');
-            div(class='day' + (!day ? ' out-of-month' : '') + (isToday ? ' today' : ''))
-              if day
-                span(
-                  data-ng-click='dayClickHandler(day)',
-                  title=isToday ? 'Сегодня' : false
-                )= day
+            .day(
+              class=(!day ? ' out-of-month' : '') + (isToday ? ' today' : '')
+              title=isToday ? 'Сегодня' : false
+              data-day=day
+            )= day
 
   .filter-block.theatres-list
     h5 Спектакли
