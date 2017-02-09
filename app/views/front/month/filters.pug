@@ -1,0 +1,49 @@
+div
+  if filter.theatre
+    .filter-block
+      a(href='/year/' + filter.year + '/month/' + filter.month) ← Все театры
+  .filter-block
+    h5 Выберите день
+    .calendar
+      each week in options.calendar
+        .week.clearfix
+          each day in week
+            - isToday = day && today.isSame([filter.year, filter.month, day], 'day');
+            div(class='day' + (!day ? ' out-of-month' : '') + (isToday ? ' today' : ''))
+              if day
+                span(
+                  data-ng-click='dayClickHandler(day)',
+                  title=isToday ? 'Сегодня' : false
+                )= day
+
+  .filter-block.theatres-list
+    h5 Спектакли
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='is_for_adults' data-disabled-if-enabled="[name='is_for_children']")
+        |  для взрослых
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='is_for_children' data-disabled-if-enabled="[name='is_for_adults']")
+        |  для детей
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='is_musical')
+        |  музыкальные
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox', name='is_dance')
+        |  танцевальные
+  .filter-block.scenes-list
+    h5 Сцены
+    each scene in options.scenes
+      .form-check
+        label.form-check-label
+          input.form-check-input(type='checkbox' name='scenes[' + scene.id + ']')
+          = ' ' + scene.title
+  .filter-block
+    p
+      span.hidden-sm-down Присылайте замечания или пожелания Максиму на
+      span.hidden-md-up Для связи:
+      =' '
+      a(href='mailto:max@theatres.kh.ua') max@theatres.kh.ua

@@ -47,15 +47,12 @@ app.use(function(req, res, next){
     next();
 });
 
+let s = require('underscore.string');
 let moment = require('moment');
 moment.locale('ru');
 app.use(function(req, res, next) {
-    res.locals.moment = moment;
-    next();
-});
-let s = require('underscore.string');
-app.use(function(req, res, next) {
     res.locals.s = s;
+    res.locals.moment = moment;
     next();
 });
 

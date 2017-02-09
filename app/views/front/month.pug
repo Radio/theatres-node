@@ -3,25 +3,25 @@ extends layout
 block content
   header.main-header
     h1
-      a.first-title(href='/')= title.first
+      a.first-title(href='/') Все спектакли Харькова на одной странице
       if title.currentMonth
         span &nbsp;/&nbsp;
-          if isCurrentMonth()
-            strong.second-title= title.currentMonth
-          else
-            a.second-title.no-print(
-              href='/year/' + dateHelper.getCurrentYear() + '/month/' + dateHelper.getCurrentMonth()
-            )= title.currentMonth
-          span.no-print &nbsp;—&nbsp;
-          if isCurrentMonth()
-            a.second-subtitle.no-print(
-              href='/year/' + dateHelper.getNextMonthYear() + '/month/' + dateHelper.getNextMonth()
-            )= title.nextMonth
-          else
-            strong.second-subtitle= title.nextMonth
+        if today.month() === filter.month
+          strong.second-title= title.currentMonth
+        else
+          a.second-title.no-print(
+            href='/year/' + today.year() + '/month/' + (today.month() + 1)
+          )= title.currentMonth
+        span.no-print &nbsp;—&nbsp;
+        if today.month() === filter.month
+          a.second-subtitle.no-print(
+            href='/year/' + nextMonth.year() + '/month/' + (nextMonth.month() + 1)
+          )= title.nextMonth
+        else
+          strong.second-subtitle= title.nextMonth
       if title.theatre
         span &nbsp;/&nbsp;
-          span.third-title= title.theatre
+        span.third-title= title.theatre
 
   .scroll-top
   .container-fluid.month-container
@@ -32,24 +32,22 @@ block content
         .col-lg-10
           .month
             each date in days
-              - dateMoment = moment(date)
               .day.row(
-                class='day-' + date.getDay() + ' date-' + date.getDate() +
+                class='day-' + date.day() + ' date-' + date.date() +
                   (!date.shows.length ? ' no-shows' : '') +
-                  (isToday(date) ? ' today' : '')
-                data-day=date.getDate()
+                  (today.isSame(date, 'day') ? ' today' : '')
+                data-day=date.date()
               )
                 .col-2
                   p.day-number
-                    span.day-number-number= dateMoment.format('D')
+                    span.day-number-number= date.format('D')
                     | &nbsp;
                     span.day-of-week-name
-                      span.hidden-sm-down= dateMoment.format('dddd')
-                      span.hidden-md-up= dateMoment.format('ddd')
-                      if isToday(date)
+                      span.hidden-sm-down= date.format('dddd')
+                      span.hidden-md-up= date.format('ddd')
+                      if today.isSame(date, 'day')
                         span.hidden-xs  (сегодня)
                 .shows.col-10
-                  each show in date.shows
-                    include month/show-brief
+                  include month/shows
 
       include month/footer
