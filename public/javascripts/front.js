@@ -2,6 +2,7 @@
     "use strict";
 
     let scrolledToDay;
+    let filter = {};
     let actions = {
         toggleShowDetails: function($showRow) {
             $showRow.toggleClass('detailed');
@@ -18,11 +19,53 @@
         fixScrolledToDay: function() {
             if (scrolledToDay) {
                 if (!isSmallViewport()) {
-                    setTimeout(() => actions.scrollToDay(scrolledToDay), 300);
+                    setTimeout(() => actions.scrollToDay(scrolledToDay), 0);
                 }
             }
+        },
+        resetScrolledToDay: function() {
+            scrolledToDay = null;
+        },
+        toggleFilter: function(filterName, value, on) {
+            filter[filterName] = filter[filterName] || [];
+            if (on) {
+                filter[filterName].push(value);
+            } else {
+                const index = filter[filterName].indexOf(value);
+                if (index >= 0) {
+                    filter[filterName].splice(index, 1);
+                }
+            }
+            this.applyFilter();
+        },
+        applyFilter: function() {
+            let $rows = $('.show-row');
+            let groups = getFilterClassesGrouped();
+            if (!groups.length) {
+                $rows.show();
+            } else {
+                $rows.each(function () {
+                    let $showRow = $(this);
+                    $showRow.toggle(groups.every(selector => $showRow.is(selector)));
+                });
+            }
+            $('.month .day').each(function() {
+                $(this).toggleClass('no-shows', !$(this).has('.show-row:visible').length)
+            });
+            this.fixScrolledToDay();
         }
     };
+
+    function getFilterClassesGrouped() {
+        let groups = [];
+        for (let filterName in filter) {
+            if (!filter.hasOwnProperty(filterName)) continue;
+            if (filter[filterName].length) {
+                groups.push(filter[filterName].map(className => '.' + className).join(','))
+            }
+        }
+        return groups;
+    }
 
     function isSmallViewport() {
         return false; //ResponsiveBootstrapToolkit.is('xs') || ResponsiveBootstrapToolkit.is('sm');
@@ -50,6 +93,13 @@
 
     $('.calendar .day').click(function(event) {
         actions.scrollToDay($(event.target).data('day'));
+    });
+
+    $('.filter-block.play-types [type="checkbox"]').click(function(event) {
+        actions.toggleFilter('type', event.target.name, event.target.checked);
+    });
+    $('.filter-block.scenes [type="checkbox"]').click(function(event) {
+        actions.toggleFilter('scene', event.target.name, event.target.checked);
     });
 
 })(jQuery);

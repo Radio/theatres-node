@@ -29,7 +29,7 @@
         width: 50px;
         height: 50px;
         text-align: center;
-        background: url(/assets/img/icons/arrow-up.png) no-repeat scroll center center transparent;
+        background: url(/images/arrow-up.png) no-repeat scroll center center transparent;
     }
 
     .page-header {
@@ -47,23 +47,6 @@
         padding-left: 0;
     }
 
-    .month {
-        .loading-text {
-            margin-left: 10px;
-            padding-left: 32px;
-            background: url(/assets/img/cat.png) no-repeat scroll left center transparent;
-        }
-    }
-    .overlay {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: url(/assets/img/cat.png) no-repeat scroll 180px 60px  rgba(40, 164, 201, .1);
-        padding-top: 65px;
-        padding-left: 210px;
-    }
     .day {
         padding-top: 1em;
         padding-bottom: 1em;
@@ -164,6 +147,44 @@
 
     .footer {
         margin-top: 100px;
+    }
+}
+.filter-play-type-premiere,
+.filter-play-type-musical,
+.filter-play-type-dancing,
+.filter-play-type-for-kids,
+.filter-play-type-for-adults,
+.filter-scene-small,
+.filter-scene-big,
+.filter-scene-main,
+.filter-scene-exp {
+    .show-row {
+        display: none;
+    }
+}
+.filter-play-type-premiere {
+    .show-row.premiere {
+        display: block;
+    }
+}
+.filter-play-type-musical {
+    .show-row.musical {
+        display: block;
+    }
+}
+.filter-play-type-dancing {
+    .show-row.dancing {
+        display: block;
+    }
+}
+.filter-play-type-for-kids {
+    .show-row.for-kids {
+        display: block;
+    }
+}
+.filter-play-type-for-adults {
+    .show-row:not(.for-kids) {
+        display: block;
     }
 }
 .small-viewport {

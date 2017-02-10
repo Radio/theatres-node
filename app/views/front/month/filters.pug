@@ -15,34 +15,34 @@ div
               data-day=day
             )= day
 
-  .filter-block.theatres-list
+  .filter-block.play-types
     h5 Спектакли
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='is_for_adults' data-disabled-if-enabled="[name='is_for_children']")
+        input.form-check-input(type='checkbox' name='for-adults' data-disabled-if-enabled="[name='is_for_children']")
         |  для взрослых
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='is_for_children' data-disabled-if-enabled="[name='is_for_adults']")
+        input.form-check-input(type='checkbox' name='for-kids' data-disabled-if-enabled="[name='is_for_adults']")
         |  для детей
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='is_musical')
+        input.form-check-input(type='checkbox' name='musical')
         |  музыкальные
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox', name='is_dance')
+        input.form-check-input(type='checkbox', name='dancing')
         |  танцевальные
-  .filter-block.scenes-list
+  .filter-block.scenes
     h5 Сцены
     each scene in options.scenes
       .form-check
         label.form-check-label
-          input.form-check-input(type='checkbox' name='scenes[' + scene.id + ']')
+          input.form-check-input(type='checkbox' name='scene-' + scene.key)
           = ' ' + scene.title
   .filter-block
     p
       span.hidden-sm-down Присылайте замечания или пожелания Максиму на
       span.hidden-md-up Для связи:
       =' '
-      a(href='mailto:max@theatres.kh.ua') max@theatres.kh.ua
+      a(href='mailto:max@theatres.kh.ua') max.gopey@gmail.com

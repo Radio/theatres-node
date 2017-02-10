@@ -1,6 +1,12 @@
 each show in date.shows
   - showDateMoment = moment(show.date)
-  .show-row
+  .show-row(
+    class='scene-' + show.scene.key +
+          (show.play.premiere ? ' premiere' : '') +
+          (show.play.musical ? ' musical' : '') +
+          (show.play.dancing ? ' dancing' : '') +
+          (show.play.forKids ? ' for-kids' : ' for-adults')
+  )
     .row.show-info.show-brief(
       class='{{ show.theatre_key }}'
       data-ng-class='getShowClass(show)'
