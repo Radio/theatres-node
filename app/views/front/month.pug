@@ -27,6 +27,7 @@ block content
   .container-fluid.month-container
     .filters-col
       include month/filters
+      script window.filter = !{JSON.stringify(filter)};
     .poster
       .row
         .col-lg-10

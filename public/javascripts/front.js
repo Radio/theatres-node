@@ -101,5 +101,13 @@
     $('.filter-block.scenes [type="checkbox"]').click(function(event) {
         actions.toggleFilter('scene', event.target.name, event.target.checked);
     });
+    $(document).ready(function() {
+        if (typeof window.filter === 'undefined') {
+            return;
+        }
+        if (typeof window.filter.theatre !== 'undefined') {
+            actions.toggleFilter('theatre', 'theatre-' + window.filter.theatre, true);
+        }
+    })
 
 })(jQuery);

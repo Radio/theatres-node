@@ -2,6 +2,7 @@ each show in date.shows
   - showDateMoment = moment(show.date)
   .show-row(
     class='scene-' + show.scene.key +
+          ' theatre-' + show.theatre.key +
           (show.play.premiere ? ' premiere' : '') +
           (show.play.musical ? ' musical' : '') +
           (show.play.dancing ? ' dancing' : '') +
@@ -20,23 +21,18 @@ each show in date.shows
           content=showDateMoment.format('YYYY-MM-DDTHH:mmZZ')
         )
           = showDateMoment.format('H:mm')
-      .show-title.col-md-11(data-ng-init='showShowDetails = false')
+      .show-brief.col-md-11
         h4.show-title
           a(href=show.play.url itemprop='url' content=show.play.url)
             span(itemprop='name')= show.play.title
-        .show-scene(data-ng-hide='showShowDetails')
+        .show-scene
           div(itemprop='location', itemscope='', itemtype='http://schema.org/PerformingArtsTheater')
             meta(itemprop='name', content=show.theatre.houseSlug ? 'Дом Актера' : show.theatre.title)
             meta(itemprop='address', content='Kharkiv, Ukraine')
           span(itemprop='performer', itemscope='', itemtype='http://schema.org/TheaterGroup')
             link(itemprop='url', href=show.theatre.url)
             meta(itemprop='name', content=show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : ''))
-            a.show-theatre-title(
-              href='/year/' + filter.year + '/month/' + filter.month + '/theatre/' + show.theatre.key
-              title='Показать афишу театра'
-            )= show.theatre.title
-            if show.theatre.houseSlug
-              | , Дом Актера
+            = show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
           span.show-separator &nbsp;·&nbsp;
           span.nobr= show.scene.title
           if show.price || show.buyTicketUrl

@@ -10,55 +10,64 @@ let Scene = require('models/scene');
 let dateHelper = require('helpers/date');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', monthMiddleware);
+router.get('/year/:year/month/:month', monthMiddleware);
+router.get('/year/:year/month/:month/theatre/:theatre', monthMiddleware);
+
+function monthMiddleware(req, res, next) {
     let today = moment();
     let nextMonth = moment().add(1, 'months');
-    let filter = collectFilter(req.query);
-    loadOptionsData(filter.month, filter.year, function(err, options) {
-        if (err) return next(err);
-        Schedule.findOne(filter)
-            .populate('shows.theatre shows.scene shows.play')
-            .exec(function (err, schedule) {
-                if (err) return next(err);
-
-                let days = dateHelper.getMonthDays(filter.month, filter.year);
-                days.forEach(function(day) {
-                    day.shows = schedule.shows.filter(show => day.isSame(show.date, 'day'));
-                });
-                options.calendar = dateHelper.getCalendarDays(days);
-
-                res.render('front/month', {
-                    schedule: schedule,
-                    filter: filter,
-                    today: today,
-                    nextMonth: nextMonth,
-                    days: days,
-                    options: options,
-                    title: {
-                        currentMonth: s.capitalize(today.format('MMMM')),
-                        nextMonth: s.capitalize(nextMonth.format('MMMM') +
-                            (nextMonth.month() === 0 ? ' ' + nextMonth.year() : '')),
-                        theatre: ''
-                    }
-                });
-            });
-    });
-});
-
-
-function loadOptionsData(month, year, callback) {
+    let filter = collectFilter(req);
     async.parallel({
+        days: callback => callback(null, dateHelper.getMonthDays(filter.month, filter.year)),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
-    }, callback);
+        schedule: callback => Schedule.findOne(filter)
+            .populate('shows.theatre shows.scene shows.play').exec(callback)
+    }, function (err, result) {
+        if (err) return next(err);
+        let schedule = result.schedule;
+        if (!schedule) return next();
+
+        result.days.forEach(function(day) {
+            day.shows = schedule.shows.filter(show => day.isSame(show.date, 'day'));
+        });
+        if (req.params.theatre) {
+            filter.theatre = req.params.theatre;
+        }
+
+        res.render('front/month', {
+            schedule: schedule,
+            filter: filter,
+            today: today,
+            nextMonth: nextMonth,
+            days: result.days,
+            options: {
+                scenes: result.scenes,
+                calendar: dateHelper.getCalendarDays(result.days)
+            },
+            title: {
+                currentMonth: s.capitalize(today.format('MMMM')),
+                nextMonth: s.capitalize(nextMonth.format('MMMM') +
+                    (nextMonth.month() === 0 ? ' ' + nextMonth.year() : '')),
+                theatre: ''
+            }
+        });
+    });
 }
 
-function collectFilter(filterQuery) {
+function collectFilter(req) {
     let today = moment();
     let filter = {
         actual: true,
         month: today.month(),
         year: today.year(),
     };
+    if (req.params.month) {
+        filter.month = req.params.month - 1;
+    }
+    if (req.params.year) {
+        filter.year = req.params.year;
+    }
     return filter;
 }
 
