@@ -36,18 +36,18 @@ each show in date.shows
           span.show-separator &nbsp;·&nbsp;
           span.nobr= show.scene.title
           if show.price || show.buyTicketUrl
-          span(itemprop='offers', itemscope='', itemtype='http://schema.org/Offer')
-            span.show-separator &nbsp;·&nbsp;
-            if show.price
-              meta(itemprop='priceCurrency', content='UAH')
-            if show.price && !show.buyTicketUrl
-              span.price.nobr(itemprop='price', content=show.price)= show.price
-            if show.buyTicketUrl
-              a(title='Купить билеты' itemprop='url' href=show.buyTicketUrl)
-                if show.price
-                  span.price.nobr(itemprop='price', content=show.price)= show.price
-                else
-                  span.price.nobr купить билеты
+            span(itemprop='offers', itemscope='', itemtype='http://schema.org/Offer')
+              span.show-separator &nbsp;·&nbsp;
+              if show.price
+                meta(itemprop='priceCurrency', content='UAH')
+              if show.price && !show.buyTicketUrl
+                span.price.nobr(itemprop='price', content=show.price)= show.price
+              if show.buyTicketUrl
+                a(title='Купить билеты' itemprop='url' href=show.buyTicketUrl)
+                  if show.price
+                    span.price.nobr(itemprop='price', content=show.price)= show.price
+                  else
+                    span.price.nobr купить билеты
           if show.play.genre
             span.hidden-sm-down
               span.show-separator &nbsp;·&nbsp;
