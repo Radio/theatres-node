@@ -13,6 +13,7 @@ const fetchers = [
     'fetchers/beautiful-flowers',
     'fetchers/hatob',
     'fetchers/domaktera',
+    'fetchers/postscriptum',
 ];
 
 /**
