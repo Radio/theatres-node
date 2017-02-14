@@ -7,6 +7,14 @@ let mongoose = require('mongoose');
 let async = require('async');
 let CronJob = require('cron').CronJob;
 
+const fetchers = [
+    'fetchers/shevchenko',
+    'fetchers/pushkin',
+    'fetchers/beautiful-flowers',
+    'fetchers/hatob',
+    'fetchers/domaktera',
+];
+
 /**
  * Fetch raw data using given fetchers.
  *
@@ -82,7 +90,7 @@ let mapRawShowsData = function(rawShowsData, callback) {
     function mapTheatresAsync(rawShowsData, callback) {
         let mapTheatre = require('fetching/mappers/theatre');
         async.mapSeries(rawShowsData, function (rawShowData, callback) {
-            mapTheatre(rawShowData.theatre, function (err, theatre) {
+            mapTheatre(rawShowData.theatre, rawShowData.theatreRawData, function (err, theatre) {
                 if (err) return callback(err);
                 rawShowData.theatre = theatre;
                 callback(null, rawShowData);
@@ -182,12 +190,7 @@ if (!process.env.MONGO_URL) {
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);
 
-fetch([
-    'fetchers/shevchenko',
-    'fetchers/pushkin',
-    'fetchers/beautiful-flowers',
-    'fetchers/hatob',
-], function(err) {
+fetch(fetchers, function(err) {
     if (err) {
         console.error(err);
     }
