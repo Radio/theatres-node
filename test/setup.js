@@ -1,5 +1,6 @@
 "use strict";
 
+require('app-module-path').addPath('./app');
 require('dotenv').config({path: './.env.test'});
 
 if (!process.env.MONGO_URL) {

@@ -2,25 +2,28 @@
 
 let modelHelper = require('helpers/model');
 let Play = require('models/play');
+let shortid = require('shortid');
 
-function mapPlay(title, theatreId, playData, callback) {
+function mapPlay(title, theatreId, playUrl, playData, callback) {
     if (!title) {
         callback(new Error('Play mapper was provided with an empty play key.'));
     }
 
-    Play.findByTag(title)
-        .where({theatre: theatreId})
-        .exec(function(err, play) {
-            if (err) return callback(err);
-            if (!play) {
-                createPlay(title, playData, function(err, play) {
-                    if (err) return callback(err);
-                    callback(null, play);
-                });
-                return;
-            }
-            callback(null, play);
-        });
+    let findPlayQuery = Play.findByTag(title).where({theatre: theatreId});
+    if (playUrl) {
+        findPlayQuery.where({url: playUrl});
+    }
+    findPlayQuery.exec(function(err, play) {
+        if (err) return callback(err);
+        if (!play) {
+            createPlay(title, playData, function(err, play) {
+                if (err) return callback(err);
+                callback(null, play);
+            });
+            return;
+        }
+        callback(null, play);
+    });
 }
 
 
@@ -39,8 +42,20 @@ function createPlay(title, playData, callback) {
         image: playData.image,
         tags: [title]
     });
+    saveNewPlay(play, 1, callback);
+}
+const maxAttempts = 2;
+const mongoErrorName = 'MongoError';
+const duplicateKeyErrorCode = 11000;
+function saveNewPlay(play, attempt, callback) {
     play.save(function(err) {
-        if (err) return callback(err);
+        if (err) {
+            if (attempt < maxAttempts && err.name === mongoErrorName && err.code === duplicateKeyErrorCode) {
+                play.key += '-' + shortid.generate();
+                return saveNewPlay(play, attempt + 1, callback);
+            }
+            return callback(err);
+        }
         callback(null, play);
     });
 }
