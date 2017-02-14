@@ -138,8 +138,9 @@ let hatob = function(callback) {
             dates: [],
         };
         const mappedMonth = mapMonth(rawShow.date[2].toLowerCase());
+        const mappedYear = mappedMonth > month ? year : year + 1;
         (rawShow.times || []).forEach(function(time) {
-            show.dates.push(new Date(year, mappedMonth, rawShow.date[1], ...time.split(/:|-/)));
+            show.dates.push(new Date(mappedYear, mappedMonth, rawShow.date[1], ...time.split(/:|-/)));
         });
         return show;
     }
