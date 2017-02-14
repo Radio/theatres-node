@@ -4,7 +4,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let sceneSchema = new Schema({
-    key: { type: String, required: true },
+    key: { type: String, required: true, unique: true },
     title: { type: String, required: true }
 });
 sceneSchema.set('toObject', { versionKey: false });

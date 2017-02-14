@@ -4,7 +4,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let theatreSchema = new Schema({
-    key: { type: String, required: true },
+    key: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     abbreviation: String,
     url: String,
@@ -25,6 +25,10 @@ theatreSchema.virtual('fullTitle').get(function() {
 
 theatreSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
+};
+
+theatreSchema.statics.findByKeyOrHouseSlug = function(key, callback) {
+    return this.findOne({ $or: [{ key: key }, { houseSlug: key }] }, callback);
 };
 
 theatreSchema.methods.isInHouse = function() {
