@@ -18,6 +18,14 @@ scheduleSchema.virtual('monthKey').get(function() {
 });
 
 /**
+ * Update 'updated' property before saving the schedule.
+ */
+scheduleSchema.pre('save', function(next) {
+    this.updateUpdated();
+    next();
+});
+
+/**
  * Resolve schedule by given month and year.
  * If schedule doesn't exist it will be created.
  *
@@ -42,10 +50,26 @@ scheduleSchema.statics.resolve = function(month, year, callback) {
         });
 };
 
+/**
+ * Find schedule by given month and year.
+ *
+ * @param {Number} month
+ * @param {Number} year
+ * @param {Function} callback
+ * @return {Query|*}
+ */
 scheduleSchema.statics.findByMonthAndYear = function(month, year, callback) {
     return this.findOne({ month: month, year: year }, callback);
 };
 
+/**
+ * Create schedule for given month and year.
+ *
+ * @param {Number} month
+ * @param {Number} year
+ *
+ * @return {Object}
+ */
 scheduleSchema.statics.createForMonthAndYear = function(month, year) {
     return new this({
         shows: [],
@@ -55,10 +79,28 @@ scheduleSchema.statics.createForMonthAndYear = function(month, year) {
     });
 };
 
-scheduleSchema.pre('save', function(next) {
-    this.updateUpdated();
-    next();
-});
+/**
+ * Replace one play with another in all schedules.
+ * This method calls itself recursively until all play are not replaced.
+ *
+ * @param {String} oldPlayId
+ * @param {String} newPlayId
+ * @param {Function} callback
+ */
+scheduleSchema.statics.replacePlay = function(oldPlayId, newPlayId, callback) {
+    const Schedule = this;
+    this.update(
+        { 'shows.play': oldPlayId },
+        { $set: { 'shows.$.play': newPlayId } },
+        { multi: true },
+        function(err, raw) {
+            if (err) return callback(err);
+            if (!raw.nModified) {
+                return callback();
+            }
+            Schedule.replacePlay(oldPlayId, newPlayId, callback);
+        });
+};
 
 /**
  * Update 'updated' field with current date.

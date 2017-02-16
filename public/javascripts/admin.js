@@ -23,6 +23,9 @@
             if ($changedElements.length) {
                 $form.find('[data-action="reset-filters"]').attr('hidden', false);
             }
+        },
+        showAbsorbCandidateDetails: function (details, $container) {
+            $container.html(details ? JSON.stringify(details, null, 2) : '');
         }
     };
 
@@ -85,8 +88,6 @@
         }
     });
 
-
-
     $('[data-datetimepicker]').each(function() {
         const $element = $(this);
         $element.datetimepicker({
@@ -101,5 +102,11 @@
         })
     });
 
+    $('#original').change(function() {
+        actions.showAbsorbCandidateDetails(
+            $(this).find(':selected').data('candidate-details'),
+            $('#candidate-details')
+        )
+    });
 
 })(jQuery);

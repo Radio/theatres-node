@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    p
+      a(href='/admin/plays') ← Назад
+
+    include ../flash
+
+    p.alert.alert-danger(role="alert")
+      | Этот спектакль будет удален. Его теги перейдут к оригиналу.
+      br
+      |  В расписании он будет заменен на оригинал. Все остальные данные будут утеряны.
+
+    form(action='' method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='original') Оригинал
+        .col-sm-10
+          select.form-control(id='original' name='original')
+            option(value='') —
+            each candidate in candidates
+              if (candidate.id !== play.id)
+                option(
+                  value=candidate.id
+                  data-candidate-details=JSON.stringify(candidate.toObject())
+                )= candidate.title
+      .row
+        .col
+          pre#candidate-details
+
+      hr
+      button.btn.btn-primary(type='submit') Поглотить

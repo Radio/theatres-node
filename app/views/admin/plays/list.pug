@@ -47,10 +47,10 @@ block content
     table.table
       thead
         tr
-          th Название ↓
+          th(width='40%') Название ↓
           th Театр
           th Сцена
-          th(width=100)
+          th
       tbody
         each play in plays
           tr
@@ -71,10 +71,14 @@ block content
             td
               if (play.scene)
                 = play.scene.title
-            td
-              button.btn.btn-sm.btn-outline-danger(
+            td.nobr
+              button.btn.btn-sm.btn-outline-danger.mb-xs-2.mr-2(
                 data-action='remove'
                 data-url='/admin/plays/remove/' + play.key
                 data-id=play.id
                 data-return-url='/admin/plays'
               ) Удалить
+              a.btn.btn-sm.btn-outline-warning.mb-xs-2(
+                data-action='absorb'
+                href='/admin/plays/absorb/' + play.key
+              ) Поглотить
