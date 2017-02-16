@@ -14,21 +14,10 @@ let showSchema = new Schema({
     date: Date,
     hash: String,
     price: String,
+    url: String,
     buyTicketUrl: String
 });
 showSchema.set('toObject', { versionKey: false });
-
-showSchema.statics.findByHash = function(hash, callback) {
-    return this.findOne({ hash: hash }, callback);
-};
-
-showSchema.statics.replacePlay = function(oldPlay, newPlay, callback) {
-    this.update({ play: oldPlay.id }, { play: newPlay.id }, { multi: true }, callback);
-};
-
-showSchema.statics.calculateHash = function(theatreId, playId, date) {
-    return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
-};
 
 showSchema.pre('save', function(next) {
     this.updateHash();
@@ -36,7 +25,7 @@ showSchema.pre('save', function(next) {
 });
 
 showSchema.methods.updateHash = function() {
-    this.hash = this.constructor.calculateHash(
+    this.hash = calculateHash(
         (this.theatre instanceof Theatre) ? this.theatre.id : String(this.theatre),
         (this.play instanceof Play) ? this.play.id : String(this.play),
         this.date
@@ -53,6 +42,10 @@ showSchema.methods.edit = function(editRequest, callback) {
 
     this.validate(callback);
 };
+
+function calculateHash(theatreId, playId, date) {
+    return hash([String(theatreId), String(playId), date.toUTCString()].join('-'));
+}
 
 function hash(string) {
     return crypto.createHash('md5').update(string).digest("hex")
