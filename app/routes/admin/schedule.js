@@ -186,6 +186,7 @@ function buildShowEditRequest(requestBody) {
         scene: requestBody.scene,
         play: requestBody.play,
         price: requestBody.price,
+        url: requestBody.url,
         buyTicketUrl: requestBody['buy-ticket-url']
     };
 }

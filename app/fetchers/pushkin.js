@@ -6,7 +6,8 @@ let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'pushkin';
-const sourceUrl = 'http://rusdrama.com/afisha';
+const baseUrl = 'http://rusdrama.com';
+const sourceUrl = baseUrl + '/afisha';
 
 const defaultScene = 'main';
 
@@ -38,7 +39,7 @@ let fetcher = function(callback) {
             show.time = $li.find('.name-perform b').text();
             show.image = $li.find('.date-afisha img').attr('src');
             show.title = $li.find('h3').text();
-            show.url = $li.find('h3 a').attr('href');
+            show.playUrl = $li.find('h3 a').attr('href');
             show.scene = defaultScene;
             show.buyTicketUrl = $li.find('.vkino-link').attr('href');
             show.duration = $li.find('.name-perform')
@@ -59,8 +60,13 @@ let fetcher = function(callback) {
     function translateRawShow(rawShow) {
         return {
             theatre: rawShow.theatre,
+            theatreRawData: {
+                title: 'Театр имени Пушкина',
+                url: baseUrl,
+                hasFetcher: true
+            },
             title: s.humanize(rawShow.title),
-            url: url.resolve(sourceUrl, rawShow.url),
+            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: new Date(year, month, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
             scene: rawShow.scene,
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),

@@ -8,7 +8,8 @@ let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'hatob';
 const defaultScene = 'main';
-const sourceUrl = 'http://www.hatob.com.ua/rus/afisha';
+const baseUrl = 'http://www.hatob.com.ua';
+const sourceUrl = baseUrl + '/rus/afisha';
 
 const monthsMap = {
     'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
@@ -120,6 +121,11 @@ let hatob = function(callback) {
         rawShow.title[0] = s.humanize(rawShow.title[0]);
         const show = {
             theatre: rawShow.theatre,
+            theatreRawData: {
+                title: 'ХАТОБ',
+                url: baseUrl,
+                hasFetcher: true
+            },
             title: rawShow.title.join(', '),
             url: url.resolve(sourceUrl, rawShow.url),
             image: url.resolve(sourceUrl, rawShow.image),

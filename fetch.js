@@ -52,11 +52,11 @@ let mapRawShowsData = function(rawShowsData, callback) {
     function mapPlaysAsync(rawShowsData, callback) {
         let mapPlay = require('fetching/mappers/play');
         async.mapSeries(rawShowsData, function (rawShowData, callback) {
-            mapPlay(rawShowData.title, rawShowData.theatre.id, rawShowData.url, rawShowData, function (err, play) {
+            mapPlay(rawShowData.title, rawShowData.theatre.id, rawShowData, function (err, play) {
                 if (err) return callback(err);
                 rawShowData.play = play;
                 delete rawShowData.title;
-                delete rawShowData.url;
+                delete rawShowData.playUrl;
                 delete rawShowData.director;
                 delete rawShowData.author;
                 delete rawShowData.genre;
@@ -168,7 +168,6 @@ let fetch = function(fetchersNames, finish) {
         if (err) return finish(err);
         mapRawShowsData(rawShowsData, function(err, mappedShowsData) {
             if (err) return finish(err);
-
             let mappedShowsDataUnique = reduceDuplicates(mappedShowsData);
             updateSchedule(mappedShowsDataUnique, function(err) {
                 if (err) {

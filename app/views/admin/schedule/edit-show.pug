@@ -63,6 +63,14 @@ block content
         .col-sm-10
           input.form-control(type='text' id='price' name='price' value=show.price)
       .form-group.row
+        label.col-sm-2.col-form-label(for='url')
+          if (show.url)
+            a(href=show.url title='открыть' target='_blank') Url ↗
+          else
+            | Url
+        .col-sm-10
+          input.form-control(type='text' id='url' name='url' value=show.url)
+      .form-group.row
         label.col-sm-2.col-form-label(for='buy-ticket-url')
           if (show.buyTicketUrl)
             a(href=show.buyTicketUrl title='открыть' target='_blank') Купить билет (Url) ↗

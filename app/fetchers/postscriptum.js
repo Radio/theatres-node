@@ -51,7 +51,7 @@ let fetcher = function(callback) {
             });
             show.date = $($lines.get(0)).text();
             show.title = $($lines.get(1)).text();
-            show.url = $($lines.get(1)).find('a').attr('href');
+            show.playUrl = $($lines.get(1)).find('a').attr('href');
             show.price = $($lines.last()).text();
 
             return show;
@@ -60,7 +60,6 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const theatreKey = s(rawShow.theatre.url).strRightBack('/').value();
         const show = {
             theatre: rawShow.theatre,
             scene: rawShow.scene,
@@ -70,7 +69,7 @@ let fetcher = function(callback) {
                 hasFetcher: true
             },
             title: s.humanize(rawShow.title.replace(/“|”/g, '')),
-            url: url.resolve(sourceUrl, rawShow.url),
+            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             dates: []
         };
         if (rawShow.price.match(/\d/)) {

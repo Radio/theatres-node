@@ -8,7 +8,8 @@ let priceHelper = require('helpers/price');
 let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'shevchenko';
-const sourceUrl = 'http://www.theatre-shevchenko.com.ua/repertuar/month.php?id=';
+const baseUrl = 'http://www.theatre-shevchenko.com.ua';
+const sourceUrl = baseUrl + '/repertuar/month.php?id=';
 
 const defaultScene = 'big';
 const sceneMap = {
@@ -52,7 +53,7 @@ let fetcher = function(callback) {
             return {
                 theatre: theatreKey,
                 title: $li.find('h3').text(),
-                url: $li.find('h3 a').attr('href'),
+                playUrl: $li.find('h3 a').attr('href'),
                 date: $li.find('.date').text(),
                 month: month,
                 year: year,
@@ -69,8 +70,13 @@ let fetcher = function(callback) {
         const dateParts = /(\d+).+(\d\d)[.:](\d\d)/u.exec(rawShow.date);
         return {
             theatre: rawShow.theatre,
+            theatreRawData: {
+                title: 'Театр имени Шевченко',
+                url: baseUrl,
+                hasFetcher: true
+            },
             title: rawShow.title.replace(/\s+/, ' '),
-            url: url.resolve(sourceUrl, rawShow.url),
+            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: dateParts ?
                 new Date(rawShow.year, rawShow.month, dateParts[1], dateParts[2], dateParts[3], 0) :
                 null,

@@ -239,6 +239,9 @@ scheduleSchema.methods.addOrUpdateOneShow = function(show) {
         if (show.price) {
             this.shows[sameHashIndex].price = show.price;
         }
+        if (show.url) {
+            this.shows[sameHashIndex].url = show.url;
+        }
         return this.shows[sameHashIndex];
     } else {
         this.shows.push(show);

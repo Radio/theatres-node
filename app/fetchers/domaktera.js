@@ -45,7 +45,7 @@ let fetcher = function(callback) {
                 show.scene = scene;
                 show.date = $div.find('time').attr('datetime');
                 show.title = $titleLink.text();
-                show.url = $titleLink.attr('href');
+                show.playUrl = $titleLink.attr('href');
 
                 return show;
             }).get();
@@ -64,7 +64,7 @@ let fetcher = function(callback) {
                 houseSlug: theatreKey,
             },
             title: rawShow.title,
-            url: url.resolve(sourceUrl, rawShow.url),
+            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: new Date(rawShow.date + timeZoneOffset),
             scene: rawShow.scene,
         };

@@ -38,6 +38,7 @@ showSchema.methods.edit = function(editRequest, callback) {
     this.scene = editRequest.scene;
     this.play = editRequest.play;
     this.price = editRequest.price;
+    this.url = editRequest.url;
     this.buyTicketUrl = editRequest.buyTicketUrl;
 
     this.validate(callback);

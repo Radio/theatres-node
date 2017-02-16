@@ -40,7 +40,7 @@ let pushkin = function(callback) {
             show.theatre = theatreKey;
             show.scene = defaultScene;
             show.title = $div.find('h2').text();
-            show.url = $div.find('h2 a').attr('href');
+            show.playUrl = $div.find('h2 a').attr('href');
             show.month = $div.find('.date .month').text();
             show.day = $div.find('.date .day').text();
             show.buyTicketUrl = $div.find('.buy-ticket').attr('href');
@@ -56,9 +56,15 @@ let pushkin = function(callback) {
         }
         return {
             theatre: rawShow.theatre,
+            theatreRawData: {
+                title: 'Прекрасные цветы',
+                url: sourceUrl,
+                hasFetcher: true,
+                houseSlug: 'teatr-prekrasny-e-tsvety'
+            },
             scene: rawShow.scene,
             title: rawShow.title,
-            url: url.resolve(sourceUrl, rawShow.url),
+            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: new Date(year, mappedMonth, rawShow.day, ...defaultTime.split(':')),
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl)
         };
