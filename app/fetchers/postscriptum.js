@@ -1,28 +1,19 @@
 "use strict";
 
-let request = require('request');
 let s = require('underscore.string');
-let cheerio = require('cheerio');
-let priceHelper = require('helpers/price');
 let url = require('url');
+let cheerio = require('cheerio');
+let fetchHelper = require('helpers/fetch');
+let priceHelper = require('helpers/price');
 
 const theatreKey = 'postscriptum';
 const defaultScene = 'main';
 const sourceUrl = 'http://ps-teatr.com.ua/';
 
 const monthsMap = {
-    'січня': 0,
-    'лютого': 1,
-    'березня': 2,
-    'квітня': 3,
-    'травня': 4,
-    'червня': 5,
-    'липня': 6,
-    'серпня': 7,
-    'вересня': 8,
-    'жовтня': 9,
-    'листопада': 10,
-    'грудня': 11,
+    'січня': 0, 'лютого': 1, 'березня': 2, 'квітня': 3,
+    'травня': 4, 'червня': 5, 'липня': 6, 'серпня': 7,
+    'вересня': 8, 'жовтня': 9, 'листопада': 10, 'грудня': 11
 };
 let monthsNames = [];
 for (let monthName in monthsMap) monthsNames.push(monthName);
@@ -33,7 +24,7 @@ let fetcher = function(callback) {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    getContent(sourceUrl, function(err, content) {
+    fetchHelper.getContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
         callback(null, getSchedule(content));
     });
@@ -136,17 +127,6 @@ let fetcher = function(callback) {
             return null;
         }
         return monthsMap[textualMonth];
-    }
-
-    function getContent(url, callback) {
-        request(url, function (err, response, body) {
-            if (err) return callback(err);
-            if (response.statusCode !== 200) {
-                return callback(new Error('Failed to get the page contents. ' +
-                    'Server responded with ' + response.statusCode));
-            }
-            callback(null, body);
-        });
     }
 };
 

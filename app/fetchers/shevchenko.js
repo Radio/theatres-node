@@ -1,12 +1,11 @@
 "use strict";
 
-let request = require('request');
-let encoding = require('encoding');
 let s = require('underscore.string');
-let cheerio = require('cheerio');
 let url = require('url');
-let priceHelper = require('helpers/price');
+let cheerio = require('cheerio');
 let async = require('async');
+let priceHelper = require('helpers/price');
+let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'shevchenko';
 const sourceUrl = 'http://www.theatre-shevchenko.com.ua/repertuar/month.php?id=';
@@ -18,27 +17,24 @@ const sceneMap = {
     'Велика сцена': 'big',
 };
 
-let shevchenko = function(callback) {
+let fetcher = function(callback) {
 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    let perMonthFetchers = [0, 1, 2].map(function(monthDelta) {
-        return function(callback) {
-            let yearToParse = year;
-            let monthToParse = month + monthDelta;
-            if (monthToParse > 11) {
-                monthToParse = 11 - monthToParse;
-                yearToParse += 1;
-            }
-            getRelevantContent(sourceUrl + (monthToParse + 1), function(err, content) {
-                if (err) return callback(err);
-                callback(null, getSchedule(content, monthToParse, yearToParse));
-            });
+    async.map([0, 1, 2], function(monthDelta, callback) {
+        let yearToParse = year;
+        let monthToParse = month + monthDelta;
+        if (monthToParse > 11) {
+            monthToParse = 11 - monthToParse;
+            yearToParse += 1;
         }
-    });
-    async.parallel(perMonthFetchers, function(err, results) {
+        fetchHelper.getContent(sourceUrl + (monthToParse + 1), 'WINDOWS-1251', function(err, content) {
+            if (err) return callback(err);
+            callback(null, getSchedule(content, monthToParse, yearToParse));
+        });
+    }, function(err, results) {
         if (err) return callback(err);
         callback(null, Array.prototype.concat.apply([], results));
     });
@@ -84,25 +80,6 @@ let shevchenko = function(callback) {
                 null,
         };
     }
-
-    function getRelevantContent(url, callback) {
-        let options = {
-            url: url,
-            method: 'GET',
-            encoding: 'binary'
-        };
-        request(options, function (err, response, body) {
-            if (err) return callback(err);
-            if (response.statusCode !== 200) {
-                return callback(new Error('Failed to get the page contents. ' +
-                    'Server responded with ' + response.statusCode));
-            }
-
-            let utf8BodyBuffer = encoding.convert(body, 'utf-8', 'cp1251');
-
-            callback(null, utf8BodyBuffer.toString());
-        });
-    }
 };
 
-module.exports.fetch = shevchenko;
+module.exports.fetch = fetcher;

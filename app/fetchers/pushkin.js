@@ -1,22 +1,22 @@
 "use strict";
 
-let request = require('request');
 let s = require('underscore.string');
-let cheerio = require('cheerio');
 let url = require('url');
+let cheerio = require('cheerio');
+let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'pushkin';
 const sourceUrl = 'http://rusdrama.com/afisha';
 
 const defaultScene = 'main';
 
-let pushkin = function(callback) {
+let fetcher = function(callback) {
 
     const today = new Date();
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    getRelevantContent(sourceUrl, function(err, content) {
+    fetchHelper.getContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
         callback(null, getSchedule(content));
     });
@@ -70,17 +70,6 @@ let pushkin = function(callback) {
             genre: rawShow.genre
         };
     }
-
-    function getRelevantContent(url, callback) {
-        request(url, function (err, response, body) {
-            if (err) return callback(err);
-            if (response.statusCode !== 200) {
-                return callback(new Error('Failed to get the page contents. ' +
-                    'Server responded with ' + response.statusCode));
-            }
-            callback(null, body);
-        });
-    }
 };
 
-module.exports.fetch = pushkin;
+module.exports.fetch = fetcher;

@@ -1,11 +1,10 @@
 "use strict";
 
-let request = require('request');
 let s = require('underscore.string');
-let cheerio = require('cheerio');
 let url = require('url');
+let cheerio = require('cheerio');
+let fetchHelper = require('helpers/fetch');
 
-const theatreKey = 'domaktera';
 const sourceUrl = 'http://domaktera.kharkiv.ua/afisha';
 const timeZoneOffset = '+0200';
 
@@ -15,7 +14,7 @@ let fetcher = function(callback) {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    getContent(sourceUrl, function(err, content) {
+    fetchHelper.getContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
         callback(null, getSchedule(content));
     });
@@ -69,17 +68,6 @@ let fetcher = function(callback) {
             date: new Date(rawShow.date + timeZoneOffset),
             scene: rawShow.scene,
         };
-    }
-
-    function getContent(url, callback) {
-        request(url, function (err, response, body) {
-            if (err) return callback(err);
-            if (response.statusCode !== 200) {
-                return callback(new Error('Failed to get the page contents. ' +
-                    'Server responded with ' + response.statusCode));
-            }
-            callback(null, body);
-        });
     }
 };
 

@@ -1,29 +1,19 @@
 "use strict";
 
-let request = require('request');
 let s = require('underscore.string');
-let cheerio = require('cheerio');
 let url = require('url');
+let cheerio = require('cheerio');
 let async = require('async');
+let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'hatob';
+const defaultScene = 'main';
 const sourceUrl = 'http://www.hatob.com.ua/rus/afisha';
 
-const defaultScene = 'main';
-
 const monthsMap = {
-    'января': 0,
-    'февраля': 1,
-    'марта': 2,
-    'апреля': 3,
-    'мая': 4,
-    'июня': 5,
-    'июля': 6,
-    'августа': 7,
-    'сентября': 8,
-    'октября': 9,
-    'ноября': 10,
-    'декабря': 11,
+    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+    'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+    'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
 };
 let monthsNames = [];
 for (let monthName in monthsMap) monthsNames.push(monthName);
@@ -34,7 +24,7 @@ let hatob = function(callback) {
     const month = today.getMonth();
     const year = today.getFullYear();
 
-    getContent(sourceUrl, function(err, content) {
+    fetchHelper.getContent(sourceUrl, function(err, content) {
         if (err) return callback(err);
 
         let $ = cheerio.load(content);
@@ -43,7 +33,7 @@ let hatob = function(callback) {
         let otherPagesUrls = findOtherPages($);
 
         async.map(otherPagesUrls, function(otherSourceUrl, callback) {
-            getContent(otherSourceUrl, function(err, content) {
+            fetchHelper.getContent(otherSourceUrl, function(err, content) {
                 if (err) return callback(err);
                 let $ = cheerio.load(content);
                 let otherPageSchedule = getSchedule($);
@@ -161,17 +151,6 @@ let hatob = function(callback) {
             return null;
         }
         return monthsMap[textualMonth];
-    }
-
-    function getContent(url, callback) {
-        return request(url, function (err, response, body) {
-            if (err) return callback(err);
-            if (response.statusCode !== 200) {
-                return callback(new Error('Failed to get the page contents. ' +
-                    'Server responded with ' + response.statusCode));
-            }
-            callback(null, body);
-        });
     }
 };
 
