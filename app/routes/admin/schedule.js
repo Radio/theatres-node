@@ -180,15 +180,21 @@ function collectFilter(filterQuery) {
 }
 
 function buildShowEditRequest(requestBody) {
-    return {
+    const customHash = !requestBody['auto-hash'];
+    const editRequest = {
         date: moment(requestBody.date, momentDateFormat).toDate(),
         theatre: requestBody.theatre,
         scene: requestBody.scene,
         play: requestBody.play,
         price: requestBody.price,
         url: requestBody.url,
-        buyTicketUrl: requestBody['buy-ticket-url']
+        buyTicketUrl: requestBody['buy-ticket-url'],
+        customHash: customHash
     };
+    if (customHash) {
+        editRequest.hash = requestBody.hash;
+    }
+    return editRequest;
 }
 
 module.exports = router;

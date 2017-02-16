@@ -87,6 +87,15 @@ block content
         .form-group.row
           label.col-sm-2.col-form-label(for='title') Хеш
           .col-sm-10
-            p.form-control-static= show.hash
+            p#hash-static(hidden=show.customHash).form-control-static= show.hash
+            input.form-control(type='text' id='hash' name='hash' value=show.hash
+              disabled=!show.customHash
+              hidden=!show.customHash
+            )
+        .form-group.row
+          .form-check.offset-sm-2.col
+            label.form-check-label
+              input.form-check-input(type='checkbox' name='auto-hash' value='1' checked=!show.customHash)
+              |  Высчитывать хеш автоматически
       hr
       button.btn.btn-primary(type='submit') Сохранить

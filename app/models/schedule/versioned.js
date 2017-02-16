@@ -52,14 +52,7 @@ let versioning = {
             if (!result) {
                 return false;
             }
-            const sameShowIndex = currentSnapshot.shows.findIndex(function (currentShow) {
-                return show.play === currentShow.play &&
-                    show.theatre === currentShow.theatre &&
-                    show.scene === currentShow.scene &&
-                    show.date.getTime() === currentShow.date.getTime() &&
-                    show.price === currentShow.price &&
-                    show.buyTicketUrl === currentShow.buyTicketUrl;
-            });
+            const sameShowIndex = currentSnapshot.shows.findIndex(currentShow => Show.equal(show, currentShow));
             return sameShowIndex >= 0;
         }, true);
 

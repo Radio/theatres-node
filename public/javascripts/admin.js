@@ -109,4 +109,9 @@
         )
     });
 
+    $('[name="auto-hash"]').click(function() {
+        $('[name="hash"]').attr('disabled', this.checked).attr('hidden', this.checked);
+        $('#hash-static').attr('hidden', !this.checked);
+    });
+
 })(jQuery);
