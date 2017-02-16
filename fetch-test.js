@@ -35,8 +35,8 @@ let fetch = function(fetchersNames, finish) {
         if (err) return finish(err);
         rawShowsData.forEach(function(rawShowData) {
             console.log(JSON.stringify(rawShowData, null, 2));
-            finish();
         });
+        finish();
     });
 };
 
