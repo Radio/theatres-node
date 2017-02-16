@@ -258,8 +258,8 @@ scheduleSchema.methods.addOrUpdateOneShow = function(show) {
  */
 scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
     let showIndex = this.shows.findIndex(show => String(show._id) === String(showId));
-    if (!showIndex) {
-        callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
+    if (showIndex < 0) {
+        return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
     let show = new Show({_id: showId});
     let schedule = this;
