@@ -85,6 +85,13 @@
         }
     }
 
+    $(document).ready(function() {
+        $(".lightbox").each(function(item, image) {
+            $(image).imageLightbox({
+                quitOnEnd: true
+            })
+        });
+    });
 
     $('.show-title a').click(function(event) {
         event.preventDefault();
@@ -108,6 +115,6 @@
         if (typeof window.filter.theatre !== 'undefined') {
             actions.toggleFilter('theatre', 'theatre-' + window.filter.theatre, true);
         }
-    })
+    });
 
 })(jQuery);

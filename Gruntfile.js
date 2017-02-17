@@ -31,6 +31,8 @@ module.exports = function(grunt) {
                         'node_modules/font-awesome/css/font-awesome.min.css',
                         'node_modules/font-awesome/css/font-awesome.css.map',
                         'node_modules/font-awesome/fonts/*',
+                        'node_modules/imagelightbox/dist/imagelightbox.min.js',
+                        'node_modules/imagelightbox/dist/imagelightbox.min.css',
                     ],
                     dest: 'public/'
                 }]
