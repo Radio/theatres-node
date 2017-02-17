@@ -19,6 +19,7 @@ function mapPlay(title, theatreId, playData, callback) {
             });
             return;
         }
+        // todo: update play with some data
         callback(null, play);
     });
 }
@@ -33,6 +34,7 @@ function createPlay(title, playData, callback) {
         url: playData.playUrl,
         director: playData.director,
         author: playData.author,
+        premiere: playData.premiere,
         genre: playData.genre,
         duration: playData.duration,
         description: playData.description,

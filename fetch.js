@@ -59,6 +59,7 @@ let mapRawShowsData = function(rawShowsData, callback) {
                 delete rawShowData.playUrl;
                 delete rawShowData.director;
                 delete rawShowData.author;
+                delete rawShowData.premiere;
                 delete rawShowData.genre;
                 delete rawShowData.duration;
                 delete rawShowData.description;

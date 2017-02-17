@@ -11,6 +11,14 @@ const sourceUrl = baseUrl + '/afisha';
 
 const defaultScene = 'main';
 
+const monthsMap = {
+    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+    'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+    'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
+};
+let monthsNames = [];
+for (let monthName in monthsMap) monthsNames.push(monthName);
+
 let fetcher = function(callback) {
 
     const today = new Date();
@@ -42,6 +50,7 @@ let fetcher = function(callback) {
             show.playUrl = $li.find('h3 a').attr('href');
             show.scene = defaultScene;
             show.buyTicketUrl = $li.find('.vkino-link').attr('href');
+            show.premiere = $li.find('.name-perform').text().indexOf('премьера') >= 0;
             show.duration = $li.find('.name-perform')
                 .contents()
                 .filter(function() { return s.startsWith(this.nodeValue, 'Продолжительность'); })
@@ -58,7 +67,11 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        return {
+        const monthMatch = rawShow.date.match(new RegExp(monthsNames.join('|'), 'i'));
+        const mappedMonth = mapMonth(monthMatch[0].toLowerCase());
+        const mappedYear = mappedMonth >= month ? year : year + 1;
+
+        const show = {
             theatre: rawShow.theatre,
             theatreRawData: {
                 title: 'Театр имени Пушкина',
@@ -66,15 +79,28 @@ let fetcher = function(callback) {
                 hasFetcher: true
             },
             title: s.humanize(rawShow.title),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
-            date: new Date(year, month, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
+            date: new Date(mappedYear, mappedMonth, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
             scene: rawShow.scene,
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
-            image: url.resolve(sourceUrl, rawShow.image),
             duration: rawShow.duration.replace(/.*?(\d.*)/, '$1').trim(),
             author: rawShow.author,
-            genre: rawShow.genre
+            genre: rawShow.genre,
+            premiere: rawShow.premiere
         };
+        if (rawShow.image) {
+            show.image = url.resolve(sourceUrl, rawShow.image);
+        }
+        if (rawShow.playUrl) {
+            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+        }
+        return show;
+    }
+
+    function mapMonth(textualMonth) {
+        if (typeof monthsMap[textualMonth] === 'undefined') {
+            return null;
+        }
+        return monthsMap[textualMonth];
     }
 };
 
