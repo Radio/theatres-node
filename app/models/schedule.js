@@ -116,13 +116,14 @@ scheduleSchema.methods.updateUpdated = function() {
  * @param {[Object]} newShowsData
  */
 scheduleSchema.methods.replaceShows = function(newShowsData) {
-    let existingHashes = this.shows.map(show => show.hash);
+    const today = new Date();
+    let hashesOfExistingShowsInFuture = this.shows.filter(show => show.date > today).map(show => show.hash);
     let schedule = this;
     let newHashes = newShowsData.map(function(newShowData) {
         const show = schedule.addOrUpdateOneShow(newShowData instanceof Show ? newShowData : new Show(newShowData));
         return show.hash;
     });
-    let hashesToRemove =  existingHashes.filter(hash => newHashes.indexOf(hash) < 0);
+    let hashesToRemove =  hashesOfExistingShowsInFuture.filter(hash => newHashes.indexOf(hash) < 0);
     hashesToRemove.forEach(function(hashToRemove) {
         schedule.removeShowByHash(hashToRemove)
     });
