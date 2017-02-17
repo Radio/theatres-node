@@ -16,7 +16,8 @@ let showSchema = new Schema({
     customHash: Boolean,
     price: String,
     url: String,
-    buyTicketUrl: String
+    buyTicketUrl: String,
+    duplicateOf: Schema.Types.ObjectId
 });
 showSchema.set('toObject', { versionKey: false });
 
@@ -67,6 +68,14 @@ showSchema.methods.edit = function(editRequest, callback) {
     }
 
     this.validate(callback);
+};
+
+showSchema.methods.markAsDuplicate = function(originalId) {
+    this.duplicateOf = originalId;
+};
+
+showSchema.methods.isPubliclyVisible = function() {
+    return !this.duplicateOf;
 };
 
 function calculateHash(theatreId, playId, date) {

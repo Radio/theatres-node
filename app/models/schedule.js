@@ -267,7 +267,6 @@ scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
         if (err) return callback(err);
         schedule.addOrUpdateShowsAndSave([show], callback);
     });
-
 };
 
 /**
@@ -297,6 +296,22 @@ scheduleSchema.methods.removeShow = function(showId, callback) {
         return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
     this.removeShowsAndSave([showId], callback);
+};
+
+/**
+ * Mark show as a duplicate of another show.
+ *
+ * @param {String} duplicateId
+ * @param {String} originalId
+ * @param {Function} callback
+ */
+scheduleSchema.methods.markShowAsDuplicate = function(duplicateId, originalId, callback) {
+    let show = this.shows.find(show => String(show._id) === String(duplicateId));
+    if (!show) {
+        return callback(new Error('There is no show with ID=' + duplicateId + ' in this schedule.'));
+    }
+    show.markAsDuplicate(originalId);
+    this.save(callback);
 };
 
 scheduleSchema = versioned(scheduleSchema);

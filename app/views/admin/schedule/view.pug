@@ -78,7 +78,11 @@ block content
             tr
               td #{moment(show.date).format('D MMM HH:mm')}
               td
-                a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)= show.play.title
+                a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)
+                  = show.play.title
+                if show.duplicateOf
+                  =' '
+                  span.badge.badge-default(title=show.duplicateOf) дубликат
               td
                 if (show.theatre)
                   = show.theatre.title
@@ -86,9 +90,15 @@ block content
                 if (show.scene)
                   = show.scene.title
               td
-                button.btn.btn-sm.btn-outline-danger(
+                button.btn.btn-sm.btn-outline-danger.mb-xs-2.mr-2(
                   data-action='remove'
                   data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
                   data-id=show.id
-                  data-return-url='/admin/schedule'
-                ) Удалить
+                  data-return-url='/admin/schedule?month=' + schedule.monthKey
+                ) удалить
+                button.btn.btn-sm.btn-outline-warning.mb-xs-2(
+                  data-action='mark-as-duplicate'
+                  data-url='/admin/schedule/' + schedule.id + '/show/mark-as-duplicate/${duplicate-id}'
+                  data-id=show.id
+                  data-return-url='/admin/schedule?month=' + schedule.monthKey
+                ) дубликат

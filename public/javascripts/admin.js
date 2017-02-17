@@ -26,6 +26,9 @@
         },
         showAbsorbCandidateDetails: function (details, $container) {
             $container.html(details ? JSON.stringify(details, null, 2) : '');
+        },
+        markAsDuplicate: function(url, duplicate, original) {
+            return $.post(url.replace('${duplicate-id}', duplicate), { original: original });
         }
     };
 
@@ -112,6 +115,39 @@
     $('[name="auto-hash"]').click(function() {
         $('[name="hash"]').attr('disabled', this.checked).attr('hidden', this.checked);
         $('#hash-static').attr('hidden', !this.checked);
+    });
+
+    let duplicateClone = null;
+    $('[data-action="mark-as-duplicate"]').click(function() {
+        let $button = $(this);
+        const clickedId = $button.data('id');
+        if (!duplicateClone) {
+            $button.addClass('active').text('дубликат ...');
+            duplicateClone = clickedId;
+        } else {
+            if (duplicateClone === clickedId) {
+                $button.removeClass('active').text('дубликат');
+                duplicateClone = null;
+            } else {
+                $button.addClass('active').data('used', true);
+                actions.markAsDuplicate($button.data('url'), duplicateClone, clickedId)
+                    .then(function () {
+                        location.href = $button.data('return-url') || location.pathname;
+                    });
+            }
+        }
+    }).hover(function() {
+        let $button = $(this);
+        const clickedId = $button.data('id');
+        if (!duplicateClone || duplicateClone === clickedId) {
+            return;
+        }
+        $button.data('highlighted', true).text('... оригинал');
+    }).mouseleave(function() {
+        let $button = $(this);
+        if ($button.data('highlighted') && !$button.data('used')) {
+            $button.text('дубликат');
+        }
     });
 
 })(jQuery);

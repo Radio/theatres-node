@@ -29,7 +29,7 @@ function monthMiddleware(req, res, next) {
         if (!schedule) return next();
 
         result.days.forEach(function(day) {
-            day.shows = schedule.shows.filter(show => day.isSame(show.date, 'day'));
+            day.shows = schedule.shows.filter(show => show.isPubliclyVisible() && day.isSame(show.date, 'day'));
         });
         if (req.params.theatre) {
             filter.theatre = req.params.theatre;
