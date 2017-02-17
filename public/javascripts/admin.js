@@ -33,8 +33,12 @@
     };
 
     $('[data-action="remove"]').click(function(event) {
-        if (confirm('Уверенны?')) {
-            const $button = $(event.target);
+        const $button = $(event.target);
+        let question = 'Уверенны?';
+        if ($button.data('warning')) {
+            question += "\n" + $button.data('warning');
+        }
+        if (confirm(question)) {
             actions.remove($button.data('url'), $button.data('id')).then(function () {
                 location.href = $button.data('return-url') || location.pathname;
             });

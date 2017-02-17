@@ -3,9 +3,9 @@
 let mongoose = require('mongoose');
 // let crypto = require('crypto');
 let Schema = mongoose.Schema;
-let Scene = require('./scene');
-let Theatre = require('./theatre');
-let Play = require('./play');
+let Scene = require('models/scene');
+let Theatre = require('models/theatre');
+let Play = require('models/play');
 
 let showSchema = new Schema({
     play: {type: Schema.Types.ObjectId, ref: 'Play'},

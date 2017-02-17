@@ -1,10 +1,9 @@
 "use strict";
 
 let mongoose = require('mongoose');
-let modelHelper = require('helpers/model');
 let Schema = mongoose.Schema;
-let Scene = require('./scene');
-let Theatre = require('./theatre');
+let Scene = require('models/scene');
+let Theatre = require('models/theatre');
 
 let playSchema = new Schema({
     key: { type: String, required: true, unique: true },
@@ -26,6 +25,10 @@ let playSchema = new Schema({
     tags: [String]
 });
 playSchema.set('toObject', { versionKey: false });
+
+playSchema.post('remove', function() {
+    playSchema.emit('remove', this);
+});
 
 playSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
@@ -77,6 +80,5 @@ playSchema.methods.edit = function(editRequest, callback) {
 
     this.save(callback);
 };
-
 
 module.exports = mongoose.model('Play', playSchema);

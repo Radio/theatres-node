@@ -3,6 +3,7 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let Show = require('models/show');
+let Play = require('models/play');
 let versioned = require('models/schedule/versioned');
 
 let scheduleSchema = new Schema({
@@ -23,6 +24,14 @@ scheduleSchema.virtual('monthKey').get(function() {
 scheduleSchema.pre('save', function(next) {
     this.updateUpdated();
     next();
+});
+
+Play.schema.on('remove', function(play) {
+    mongoose.model('Schedule').update(
+        { },
+        { $pull: { shows: { play: play._id } } },
+        { multi: true }
+    ).exec();
 });
 
 /**

@@ -79,7 +79,7 @@ block content
               td #{moment(show.date).format('D MMM HH:mm')}
               td
                 a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)
-                  = show.play.title
+                  = show.play ? show.play.title : '[УДАЛЕН]'
                 if show.duplicateOf
                   =' '
                   span.badge.badge-default(title=show.duplicateOf) дубликат
