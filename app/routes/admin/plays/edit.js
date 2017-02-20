@@ -72,6 +72,8 @@ module.exports = function(router) {
             musical: !!requestBody.musical,
             dancing: !!requestBody.dancing,
             forKids: !!requestBody['for-kids'],
+            opera: !!requestBody.opera,
+            ballet: !!requestBody.ballet,
             tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
         };
     }

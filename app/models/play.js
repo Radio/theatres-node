@@ -22,6 +22,8 @@ let playSchema = new Schema({
     musical: Boolean,
     dancing: Boolean,
     forKids: Boolean,
+    opera: Boolean,
+    ballet: Boolean,
     tags: [String]
 });
 playSchema.set('toObject', { versionKey: false });
@@ -73,6 +75,8 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.musical = editRequest.musical;
     this.dancing = editRequest.dancing;
     this.forKids = editRequest.forKids;
+    this.opera = editRequest.opera;
+    this.ballet = editRequest.ballet;
     this.tags = editRequest.tags;
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);

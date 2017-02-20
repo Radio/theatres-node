@@ -38,6 +38,8 @@ function createPlay(title, playData, callback) {
         musical: playData.musical,
         dancing: playData.dancing,
         forKids: playData.forKids,
+        opera: playData.opera,
+        ballet: playData.ballet,
         genre: playData.genre,
         duration: playData.duration,
         description: playData.description,
