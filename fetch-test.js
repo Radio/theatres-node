@@ -7,31 +7,15 @@ let mongoose = require('mongoose');
 let async = require('async');
 
 /**
- * Fetch raw data using given fetchers.
+ * Fetch schedule for given theatre and output plain results.
  *
- * @param fetchersNames
- * @param callback
- *
- * @return void
- */
-let fetchRawShowsData = function(fetchersNames, callback) {
-    let fetchers = fetchersNames.map(fetcherName => callback => require(fetcherName).fetch(callback));
-    async.parallel(fetchers, function(err, schedules) {
-        if (err) return callback(err);
-        callback(null, Array.prototype.concat.apply([], schedules));
-    });
-};
-
-/**
- * Fetch schedule for all theatres from the sources and put to database.
- *
- * @param {Array} fetchersNames
+ * @param {String} fetcherName
  * @param {Function} finish
  * 
  * @return void
  */
-let fetch = function(fetchersNames, finish) {
-    fetchRawShowsData(fetchersNames, function(err, rawShowsData) {
+let testFetch = function(fetcherName, finish) {
+    require(fetcherName).fetch(function(err, rawShowsData) {
         if (err) return finish(err);
         console.log(
             "\n==================================================================================================" +
@@ -52,9 +36,7 @@ if (!process.env.MONGO_URL) {
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);
 
-fetch([
-    'fetchers/' + process.argv[2]
-], function(err) {
+testFetch('fetchers/' + process.argv[2], function(err) {
     if (err) {
         console.error(err);
     }
