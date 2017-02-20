@@ -14,6 +14,7 @@ const fetchers = [
     'fetchers/hatob',
     'fetchers/domaktera',
     'fetchers/postscriptum',
+    'fetchers/puppet',
 ];
 
 /**
@@ -60,6 +61,9 @@ let mapRawShowsData = function(rawShowsData, callback) {
                 delete rawShowData.director;
                 delete rawShowData.author;
                 delete rawShowData.premiere;
+                delete rawShowData.musical;
+                delete rawShowData.dancing;
+                delete rawShowData.forKids;
                 delete rawShowData.genre;
                 delete rawShowData.duration;
                 delete rawShowData.description;
