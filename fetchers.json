@@ -10,5 +10,6 @@
     "fetchers/theatre19",
     "fetchers/novascena",
     "fetchers/operetta",
-    "fetchers/madrigal"
+    "fetchers/madrigal",
+    "fetchers/moget"
 ]
