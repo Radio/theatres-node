@@ -33,6 +33,10 @@ let fetchRawShowsData = function(fetchersNames, callback) {
 let fetch = function(fetchersNames, finish) {
     fetchRawShowsData(fetchersNames, function(err, rawShowsData) {
         if (err) return finish(err);
+        console.log(
+            "\n==================================================================================================" +
+            "\n=================================================================================================="
+        );
         rawShowsData.forEach(function(rawShowData) {
             console.log(JSON.stringify(rawShowData, null, 2));
         });

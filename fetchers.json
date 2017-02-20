@@ -8,5 +8,6 @@
     "fetchers/puppet",
     "fetchers/tyz",
     "fetchers/theatre19",
-    "fetchers/novascena"
+    "fetchers/novascena",
+    "fetchers/operetta"
 ]
