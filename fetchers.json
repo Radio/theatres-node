@@ -9,5 +9,6 @@
     "fetchers/tyz",
     "fetchers/theatre19",
     "fetchers/novascena",
-    "fetchers/operetta"
+    "fetchers/operetta",
+    "fetchers/madrigal"
 ]
