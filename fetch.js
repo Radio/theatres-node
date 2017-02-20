@@ -15,6 +15,7 @@ const fetchers = [
     'fetchers/domaktera',
     'fetchers/postscriptum',
     'fetchers/puppet',
+    'fetchers/tyz',
 ];
 
 /**
