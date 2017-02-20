@@ -21,7 +21,8 @@ let fetcher = function(callback) {
 
     function getSchedule(content) {
         const parsedShows = parseShows(content);
-        return parsedShows.map(translateRawShow);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content) {

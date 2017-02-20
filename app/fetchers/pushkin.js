@@ -11,14 +11,6 @@ const sourceUrl = baseUrl + '/afisha';
 
 const defaultScene = 'main';
 
-const monthsMap = {
-    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
-    'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
-    'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
-};
-let monthsNames = [];
-for (let monthName in monthsMap) monthsNames.push(monthName);
-
 let fetcher = function(callback) {
 
     const today = new Date();
@@ -31,8 +23,9 @@ let fetcher = function(callback) {
     });
 
     function getSchedule(content) {
-        return parseShows(content)
-            .map(translateRawShow);
+        const parsedShows = parseShows(content);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content) {
@@ -67,8 +60,12 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const monthMatch = rawShow.date.match(new RegExp(monthsNames.join('|'), 'i'));
-        const mappedMonth = mapMonth(monthMatch[0].toLowerCase());
+        const monthMatch = rawShow.date.match(new RegExp(fetchHelper.getMonthsNames('ru').join('|'), 'i'));
+        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
+        if (mappedMonth < 0) {
+            console.warn('Pushkin: Unable to map month: ' + rawShow.date[2].toLowerCase());
+            return null;
+        }
         const mappedYear = mappedMonth >= month ? year : year + 1;
 
         const show = {
@@ -94,13 +91,6 @@ let fetcher = function(callback) {
             show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
         }
         return show;
-    }
-
-    function mapMonth(textualMonth) {
-        if (typeof monthsMap[textualMonth] === 'undefined') {
-            return null;
-        }
-        return monthsMap[textualMonth];
     }
 };
 

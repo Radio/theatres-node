@@ -11,14 +11,6 @@ const sourceUrl = baseUrl + '/afisha.html';
 
 const defaultScene = 'main';
 
-const monthsMap = {
-    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
-    'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
-    'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
-};
-let monthsNames = [];
-for (let monthName in monthsMap) monthsNames.push(monthName);
-
 let fetcher = function(callback) {
 
     const today = new Date();
@@ -32,8 +24,8 @@ let fetcher = function(callback) {
 
     function getSchedule(content) {
         const parsedShows = parseShows(content);
-        const translatedShows = parsedShows.map(translateRawShow);
-        return translatedShows.reduce(splitShowsByDate, []);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content) {
@@ -64,9 +56,13 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const monthMatch = rawShow.date.match(new RegExp(monthsNames.join('|'), 'i'));
+        const monthMatch = rawShow.date.match(new RegExp(fetchHelper.getMonthsNames('ru').join('|'), 'i'));
         const mappedDay = rawShow.date.replace(/\D/g, '');
-        const mappedMonth = mapMonth(monthMatch[0].toLowerCase());
+        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
+        if (mappedMonth < 0) {
+            console.warn('Puppet: Unable to map month: ' + monthMatch[0].toLowerCase());
+            return null;
+        }
         const mappedYear = mappedMonth >= month ? year : year + 1;
 
         const show = {
@@ -96,24 +92,6 @@ let fetcher = function(callback) {
         });
 
         return show;
-    }
-
-    function mapMonth(textualMonth) {
-        if (typeof monthsMap[textualMonth] === 'undefined') {
-            return null;
-        }
-        return monthsMap[textualMonth];
-    }
-
-    function splitShowsByDate(splitShows, show) {
-        show.dates.forEach(function(date) {
-            let clonedShow = Object.assign({}, show);
-            delete clonedShow.dates;
-            clonedShow.date = date;
-            splitShows.push(clonedShow);
-        });
-
-        return splitShows;
     }
 };
 

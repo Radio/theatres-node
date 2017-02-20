@@ -11,15 +11,7 @@ const defaultScene = 'main';
 const baseUrl = 'http://www.hatob.com.ua';
 const sourceUrl = baseUrl + '/rus/afisha';
 
-const monthsMap = {
-    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
-    'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
-    'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
-};
-let monthsNames = [];
-for (let monthName in monthsMap) monthsNames.push(monthName);
-
-let hatob = function(callback) {
+let fetcher = function(callback) {
 
     const today = new Date();
     const month = today.getMonth();
@@ -48,9 +40,9 @@ let hatob = function(callback) {
     });
 
     function getSchedule($) {
-        return parseShows($)
-            .map(translateRawShow)
-            .reduce(splitShowsByDate, []);
+        const parsedShows = parseShows($);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function findOtherPages($) {
@@ -76,7 +68,7 @@ let hatob = function(callback) {
 
             $li.find('p').each(function(index, paragraph) {
                 let $paragraph = $(paragraph);
-                const dateRegExp = new RegExp('(\\d+)\\s*(' + monthsNames.join('|') + ')(.*)', 'i');
+                const dateRegExp = new RegExp('(\\d+)\\s*(' + fetchHelper.getMonthsNames('ru').join('|') + ')(.*)', 'i');
                 let dateMatch = $paragraph.text().match(dateRegExp);
                 if (dateMatch) {
                     show.date = dateMatch;
@@ -96,21 +88,16 @@ let hatob = function(callback) {
             });
             if (!show.title) {
                 // This will remove item from resulting collection
-                console.warn('HATOB: Skip show because title was not found. Show text: ' + $li.text());
+                console.warn('Hatob: Skip show because title was not found. Show text: ' + $li.text());
                 return null;
             }
             if (!show.date || !show.times) {
                 // This will remove item from resulting collection
-                console.warn('HATOB: Skip show because date or time were not found. Show text: ' + $li.text());
-                return null;
-            }
-            if (!mapMonth(show.date[2].toLowerCase())) {
-                // This will remove item from resulting collection
-                console.warn('HATOB: Skip show because month could not be mapped. Show text: ' + $li.text());
+                console.warn('Hatob: Skip show because date or time were not found. Show text: ' + $li.text());
                 return null;
             }
             if (!show.duration) {
-                console.warn('HATOB: Duration was not found. Show text: ' + $li.text());
+                console.warn('Hatob: Duration was not found. Show text: ' + $li.text());
             }
 
             return show;
@@ -118,6 +105,12 @@ let hatob = function(callback) {
     }
 
     function translateRawShow(rawShow) {
+        const mappedMonth = fetchHelper.mapMonth(rawShow.date[2].toLowerCase(), 'ru');
+        if (mappedMonth < 0) {
+            console.warn('Hatob: Unable to map month: ' + rawShow.date[2].toLowerCase());
+            return null;
+        }
+        const mappedYear = mappedMonth >= month ? year : year + 1;
         rawShow.title[0] = s.humanize(rawShow.title[0]);
         const show = {
             theatre: rawShow.theatre,
@@ -133,31 +126,11 @@ let hatob = function(callback) {
             duration: s.humanize(rawShow.duration),
             dates: [],
         };
-        const mappedMonth = mapMonth(rawShow.date[2].toLowerCase());
-        const mappedYear = mappedMonth >= month ? year : year + 1;
         (rawShow.times || []).forEach(function(time) {
             show.dates.push(new Date(mappedYear, mappedMonth, rawShow.date[1], ...time.split(/:|-/)));
         });
         return show;
     }
-
-    function splitShowsByDate(splitShows, show) {
-        show.dates.forEach(function(date) {
-            let clonedShow = Object.assign({}, show);
-            delete clonedShow.dates;
-            clonedShow.date = date;
-            splitShows.push(clonedShow);
-        });
-
-        return splitShows;
-    }
-    
-    function mapMonth(textualMonth) {
-        if (typeof monthsMap[textualMonth] === 'undefined') {
-            return null;
-        }
-        return monthsMap[textualMonth];
-    }
 };
 
-module.exports.fetch = hatob;
+module.exports.fetch = fetcher;

@@ -41,8 +41,9 @@ let fetcher = function(callback) {
     });
 
     function getSchedule(content, month, year) {
-        return parseShows(content, month, year)
-            .map(translateRawShow);
+        const parsedShows = parseShows(content, month, year);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content, month, year) {

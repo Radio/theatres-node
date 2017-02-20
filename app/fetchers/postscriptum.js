@@ -10,14 +10,6 @@ const theatreKey = 'postscriptum';
 const defaultScene = 'main';
 const sourceUrl = 'http://ps-teatr.com.ua/';
 
-const monthsMap = {
-    'січня': 0, 'лютого': 1, 'березня': 2, 'квітня': 3,
-    'травня': 4, 'червня': 5, 'липня': 6, 'серпня': 7,
-    'вересня': 8, 'жовтня': 9, 'листопада': 10, 'грудня': 11
-};
-let monthsNames = [];
-for (let monthName in monthsMap) monthsNames.push(monthName);
-
 let fetcher = function(callback) {
 
     const today = new Date();
@@ -31,8 +23,8 @@ let fetcher = function(callback) {
 
     function getSchedule(content) {
         const parsedShows = parseShows(content);
-        const translatedShows = parsedShows.map(translateRawShow);
-        return translatedShows.reduce(splitShowsByDate, []);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content) {
@@ -77,6 +69,9 @@ let fetcher = function(callback) {
         }
 
         show.dates = parseDates(rawShow.date.trim());
+        if (!show.dates) {
+            return null;
+        }
 
         return show;
     }
@@ -85,12 +80,16 @@ let fetcher = function(callback) {
         const dateLine = s.strLeft(datetimeLine, '(');
         const timeLine = s.strRight(datetimeLine, '(');
         const days = dateLine.match(/\d+/g);
-        const monthMatch = dateLine.match(new RegExp(monthsNames.join('|')));
+        const monthMatch = dateLine.match(new RegExp(fetchHelper.getMonthsNames('ua').join('|')));
         const times = timeLine.match(/\d+[.:]\d+/g);
         if (!monthMatch || !days || !times) {
             return [];
         }
-        const mappedMonth = mapMonth(monthMatch[0].toLowerCase());
+        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ua');
+        if (mappedMonth < 0) {
+            console.warn('PS: Unable to map month: ' + rawShow.date[2].toLowerCase());
+            return null;
+        }
         const mappedYear = mappedMonth > month ? year : year + 1;
         let dates = [];
         if (days.length === 1 || times.length > 1) {
@@ -108,24 +107,6 @@ let fetcher = function(callback) {
             }
         }
         return dates;
-    }
-
-    function splitShowsByDate(splitShows, show) {
-        show.dates.forEach(function(date) {
-            let clonedShow = Object.assign({}, show);
-            delete clonedShow.dates;
-            clonedShow.date = date;
-            splitShows.push(clonedShow);
-        });
-
-        return splitShows;
-    }
-
-    function mapMonth(textualMonth) {
-        if (typeof monthsMap[textualMonth] === 'undefined') {
-            return null;
-        }
-        return monthsMap[textualMonth];
     }
 };
 

@@ -11,11 +11,6 @@ const sourceUrl = 'http://gobananas.com.ua/';
 const defaultTime = '19:00'; // todo: there might be two same plays at different time.
 const defaultScene = 'main';
 
-const monthsMap = {
-    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
-    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
-};
-
 let pushkin = function(callback) {
 
     const today = new Date();
@@ -28,8 +23,9 @@ let pushkin = function(callback) {
     });
 
     function getSchedule(content) {
-        return parseShows(content)
-            .map(translateRawShow);
+        const parsedShows = parseShows(content);
+        const translatedShows = parsedShows.map(translateRawShow).filter(show => show !== null);
+        return translatedShows.reduce(fetchHelper.splitShowByDates, []);
     }
 
     function parseShows(content) {
@@ -50,8 +46,8 @@ let pushkin = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        let mappedMonth = monthsMap[rawShow.month.toLowerCase()];
-        if (typeof mappedMonth === 'undefined') {
+        let mappedMonth = fetchHelper.mapMonth(rawShow.month.toLowerCase(), 'en_short');
+        if (typeof mappedMonth < 0) {
             mappedMonth = month;
         }
         return {
