@@ -3,20 +3,13 @@
 require('dotenv').config();
 require('app-module-path').addPath('./app');
 
+let fs = require('fs');
 let mongoose = require('mongoose');
 let async = require('async');
+
 let CronJob = require('cron').CronJob;
 
-const fetchers = [
-    'fetchers/shevchenko',
-    'fetchers/pushkin',
-    'fetchers/beautiful-flowers',
-    'fetchers/hatob',
-    'fetchers/domaktera',
-    'fetchers/postscriptum',
-    'fetchers/puppet',
-    'fetchers/tyz',
-];
+const fetchers = JSON.parse(fs.readFileSync('fetchers.json', 'utf8'));
 
 /**
  * Fetch raw data using given fetchers.
