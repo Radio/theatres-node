@@ -3,7 +3,6 @@
 let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
-let modelHelper = require('helpers/model');
 let fetchHelper = require('helpers/fetch');
 
 const theatreKey = 'novascena';
