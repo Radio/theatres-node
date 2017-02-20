@@ -22,7 +22,12 @@ function monthMiddleware(req, res, next) {
         days: callback => callback(null, dateHelper.getMonthDays(filter.month, filter.year)),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
         schedule: callback => Schedule.findOne(filter)
-            .populate('shows.theatre shows.scene shows.play').exec(callback)
+            .populate('shows.theatre shows.scene')
+            .populate({
+                path: 'shows.play',
+                populate: { path:'scene' }
+            })
+            .exec(callback)
     }, function (err, result) {
         if (err) return next(err);
         let schedule = result.schedule;

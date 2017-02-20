@@ -8,10 +8,10 @@ let Theatre = require('models/theatre');
 let Play = require('models/play');
 
 let showSchema = new Schema({
-    play: {type: Schema.Types.ObjectId, ref: 'Play'},
-    theatre: {type: Schema.Types.ObjectId, ref: 'Theatre'},
+    play: {type: Schema.Types.ObjectId, ref: 'Play', required: true},
+    theatre: {type: Schema.Types.ObjectId, ref: 'Theatre', required: true},
     scene: {type: Schema.Types.ObjectId, ref: 'Scene'},
-    date: Date,
+    date: {type: Date, required: true},
     hash: String,
     customHash: Boolean,
     price: String,

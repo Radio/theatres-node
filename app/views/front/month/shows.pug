@@ -1,19 +1,15 @@
 each show in date.shows
-  - showDateMoment = moment(show.date)
+  - var showDateMoment = moment(show.date)
+  - var scene = show.scene || show.play.scene;
   .show-row(
-    class='scene-' + show.scene.key +
+    class='scene-' + scene.key +
           ' theatre-' + show.theatre.key +
           (show.play.premiere ? ' premiere' : '') +
           (show.play.musical ? ' musical' : '') +
           (show.play.dancing ? ' dancing' : '') +
           (show.play.forKids ? ' for-kids' : ' for-adults')
   )
-    .row.show-info.show-brief(
-      class='{{ show.theatre_key }}'
-      data-ng-class='getShowClass(show)'
-      itemscope=''
-      itemtype='http://schema.org/TheaterEvent'
-    )
+    .row.show-info.show-brief(itemscope='' itemtype='http://schema.org/TheaterEvent')
       .show-time.col-md-1
         time(
           datetime=showDateMoment.format('YYYY-MM-DDTHH:mmZZ')
@@ -37,7 +33,7 @@ each show in date.shows
             meta(itemprop='name', content=show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : ''))
             = show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
           span.show-separator &nbsp;·&nbsp;
-          span.nobr= show.scene.title
+          span.nobr= scene.title
           if show.price || show.buyTicketUrl
             span(itemprop='offers', itemscope='', itemtype='http://schema.org/Offer')
               span.show-separator &nbsp;·&nbsp;

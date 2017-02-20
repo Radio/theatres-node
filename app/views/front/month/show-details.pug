@@ -8,7 +8,7 @@
   p
     a(href=show.theatre.url title='Сайт театра')= show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
     span.show-separator &nbsp;·&nbsp;
-    span.nobr= show.scene.title
+    span.nobr= scene.title
     if show.price || show.buyTicketUrl
       span.show-separator &nbsp;·&nbsp;
       if show.price && !show.buyTicketUrl

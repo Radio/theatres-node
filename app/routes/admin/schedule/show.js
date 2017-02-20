@@ -89,7 +89,7 @@ module.exports = function(router) {
         const editRequest = {
             date: moment(requestBody.date, momentDateFormat).toDate(),
             theatre: requestBody.theatre,
-            scene: requestBody.scene,
+            scene: requestBody.scene || null,
             play: requestBody.play,
             price: requestBody.price,
             url: requestBody.url,
