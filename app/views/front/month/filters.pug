@@ -19,26 +19,38 @@ div
     h5 Спектакли
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='for-adults' data-disabled-if-enabled="[name='is_for_children']")
+        input.form-check-input(type='checkbox' name='for-adults' checked=true
+          data-disabled-if-enabled="[name='for-kids']"
+        )
         |  для взрослых
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='for-kids' data-disabled-if-enabled="[name='is_for_adults']")
+        input.form-check-input(type='checkbox' name='for-kids' checked=true
+          data-disabled-if-enabled="[name='for-adults']"
+        )
         |  для детей
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='musical')
+        input.form-check-input(type='checkbox' name='musical' checked=true)
         |  музыкальные
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox', name='dancing')
+        input.form-check-input(type='checkbox', name='dancing' checked=true)
         |  танцевальные
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='ballet' checked=true)
+        |  балет
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='opera' checked=true)
+        |  опера
   .filter-block.scenes
     h5 Сцены
     each scene in options.scenes
       .form-check
         label.form-check-label
-          input.form-check-input(type='checkbox' name='scene-' + scene.key)
+          input.form-check-input(type='checkbox' name='scene-' + scene.key checked=true)
           = ' ' + scene.title
   .filter-block
     p

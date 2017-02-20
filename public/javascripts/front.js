@@ -109,6 +109,14 @@
         actions.toggleFilter('scene', event.target.name, event.target.checked);
     });
     $(document).ready(function() {
+        $('.filter-block.play-types [type="checkbox"]').each(function() {
+            actions.toggleFilter('type', this.name, this.checked);
+        });
+        $('.filter-block.scenes [type="checkbox"]').each(function() {
+            actions.toggleFilter('scene', this.name, this.checked);
+        });
+    });
+    $(document).ready(function() {
         if (typeof window.filter === 'undefined') {
             return;
         }
