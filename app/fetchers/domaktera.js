@@ -6,7 +6,6 @@ let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
 
 const sourceUrl = 'http://domaktera.kharkiv.ua/afisha';
-const timeZoneOffset = '+0200';
 
 let fetcher = function(callback) {
 
@@ -56,6 +55,9 @@ let fetcher = function(callback) {
 
     function translateRawShow(rawShow) {
         const theatreKey = s(rawShow.theatre.url).strRightBack('/').value();
+        let [dateString, timeString] = rawShow.date.split('T');
+        let [year, month, day, hour, minute] = [...dateString.split('-'), ... timeString.split(':')];
+        const date = new Date(year, month - 1, day, hour, minute);
         return {
             theatre: theatreKey,
             theatreRawData: {
@@ -66,7 +68,7 @@ let fetcher = function(callback) {
             },
             title: rawShow.title,
             playUrl: url.resolve(sourceUrl, rawShow.playUrl),
-            date: new Date(rawShow.date + timeZoneOffset),
+            date: date,
             scene: rawShow.scene,
         };
     }
