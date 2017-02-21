@@ -16,7 +16,7 @@ router.get('/year/:year/month/:month/theatre/:theatre', monthMiddleware);
 
 function monthMiddleware(req, res, next) {
     let today = moment();
-    let nextMonth = moment().add(1, 'months');
+    let nextMonth = moment().startOf('month').add(1, 'months');
     let filter = collectFilter(req);
     async.parallel({
         days: callback => callback(null, dateHelper.getMonthDays(filter.month, filter.year)),
@@ -40,11 +40,14 @@ function monthMiddleware(req, res, next) {
             filter.theatre = req.params.theatre;
         }
 
+        let scheduleMonth = moment().startOf('month').month(schedule.month).year(schedule.year);
+
         res.render('front/month', {
             schedule: schedule,
             filter: filter,
             today: today,
             nextMonth: nextMonth,
+            scheduleMonth: scheduleMonth,
             days: result.days,
             options: {
                 scenes: result.scenes,
@@ -53,7 +56,9 @@ function monthMiddleware(req, res, next) {
             title: {
                 currentMonth: s.capitalize(today.format('MMMM')),
                 nextMonth: s.capitalize(nextMonth.format('MMMM') +
-                    (nextMonth.month() === 0 ? ' ' + nextMonth.year() : '')),
+                    (nextMonth.year() !== today.year() ? ' ' + nextMonth.year() : '')),
+                scheduleMonth: s.capitalize(scheduleMonth.format('MMMM') +
+                    (scheduleMonth.year() !== today.year() ? ' ' + scheduleMonth.year() : '')),
                 theatre: ''
             },
             showFilterClasses: function(show) {
