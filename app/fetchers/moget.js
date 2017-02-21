@@ -55,7 +55,7 @@ let fetcher = function(callback) {
                 url: baseUrl,
                 hasFetcher: true,
             },
-            title: rawShow.title.replace(/«|»/, '').trim(),
+            title: rawShow.title.replace(/«|»/g, '').trim(),
             scene: rawShow.scene,
             dates: rawShow.dates.map(function(dateString) {
                 let date = new Date(dateString);
