@@ -36,7 +36,6 @@
                     filter[filterName].splice(index, 1);
                 }
             }
-            this.applyFilter();
         },
         applyFilter: function() {
             let $rows = $('.show-row');
@@ -46,7 +45,7 @@
             } else {
                 $rows.each(function () {
                     let $showRow = $(this);
-                    $showRow.toggle(groups.every(selector => $showRow.is(selector)));
+                    $showRow.toggle(groups.every(selector => selector.length && $showRow.is(selector)));
                 });
             }
             $('.month .day').each(function() {
@@ -60,9 +59,7 @@
         let groups = [];
         for (let filterName in filter) {
             if (!filter.hasOwnProperty(filterName)) continue;
-            if (filter[filterName].length) {
-                groups.push(filter[filterName].map(className => '.' + className).join(','))
-            }
+            groups.push(filter[filterName].map(className => '.' + className).join(','))
         }
         return groups;
     }
@@ -102,18 +99,35 @@
         actions.scrollToDay($(event.target).data('day'));
     });
 
+    $('.filter-block.play-ages [type="checkbox"]').click(function(event) {
+        actions.toggleFilter('age', event.target.name, event.target.checked);
+        actions.applyFilter();
+    });
     $('.filter-block.play-types [type="checkbox"]').click(function(event) {
         actions.toggleFilter('type', event.target.name, event.target.checked);
+        actions.applyFilter();
     });
     $('.filter-block.scenes [type="checkbox"]').click(function(event) {
         actions.toggleFilter('scene', event.target.name, event.target.checked);
+        actions.applyFilter();
     });
     $(document).ready(function() {
+        $('.filter-block.play-ages [type="checkbox"]').each(function() {
+            actions.toggleFilter('age', this.name, this.checked);
+        });
         $('.filter-block.play-types [type="checkbox"]').each(function() {
             actions.toggleFilter('type', this.name, this.checked);
         });
         $('.filter-block.scenes [type="checkbox"]').each(function() {
             actions.toggleFilter('scene', this.name, this.checked);
+        });
+        actions.applyFilter();
+    });
+    $('[data-disabled-if-unchecked]').each(function() {
+        let $element = $(this);
+        let dependencySelector = $element.data('disabled-if-unchecked');
+        $(dependencySelector).click(function() {
+            $element.attr('disabled', !this.checked);
         });
     });
     $(document).ready(function() {

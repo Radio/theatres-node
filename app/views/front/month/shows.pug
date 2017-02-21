@@ -1,16 +1,7 @@
 each show in date.shows
   - var showDateMoment = moment(show.date)
   - var scene = show.scene || show.play.scene;
-  .show-row(
-    class='scene-' + scene.key +
-          ' theatre-' + show.theatre.key +
-          (show.play.premiere ? ' premiere' : '') +
-          (show.play.musical || show.play.dancing || show.play.ballet ? ' musical' : '') +
-          (show.play.dancing || show.play.ballet ? ' dancing' : '') +
-          (show.play.ballet ? ' ballet' : '') +
-          (show.play.opera ? ' opera' : '') +
-          (show.play.forKids ? ' for-kids' : ' for-adults')
-  )
+  .show-row(class=showFilterClasses(show))
     .row.show-info.show-brief(itemscope='' itemtype='http://schema.org/TheaterEvent')
       .show-time.col-md-1
         time(

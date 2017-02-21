@@ -3,7 +3,7 @@ div
     .filter-block
       a(href='/year/' + filter.year + '/month/' + filter.month) ← Все театры
   .filter-block
-    h5 Выберите день
+    //h5 Выберите день
     .calendar
       each week in options.calendar
         .week.clearfix
@@ -15,20 +15,17 @@ div
               data-day=day
             )= day
 
-  .filter-block.play-types
-    h5 Спектакли
+  .filter-block.play-ages
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='for-adults' checked=true
-          data-disabled-if-enabled="[name='for-kids']"
-        )
+        input.form-check-input(type='checkbox' name='for-adults' checked=true)
         |  для взрослых
     .form-check
       label.form-check-label
-        input.form-check-input(type='checkbox' name='for-kids' checked=true
-          data-disabled-if-enabled="[name='for-adults']"
-        )
+        input.form-check-input(type='checkbox' name='for-kids' checked=true)
         |  для детей
+
+  .filter-block.play-types
     .form-check
       label.form-check-label
         input.form-check-input(type='checkbox' name='musical' checked=true)
@@ -45,13 +42,29 @@ div
       label.form-check-label
         input.form-check-input(type='checkbox' name='opera' checked=true)
         |  опера
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='other' checked=true)
+        |  другие
+
   .filter-block.scenes
-    h5 Сцены
-    each scene in options.scenes
-      .form-check
-        label.form-check-label
-          input.form-check-input(type='checkbox' name='scene-' + scene.key checked=true)
-          = ' ' + scene.title
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='scene-big' checked=true)
+        |  на основной сцене
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='scene-small' checked=true)
+        |  на малой сцене
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='scene-exp' checked=true)
+        |  на экспериментальной сцене
+    .form-check
+      label.form-check-label
+        input.form-check-input(type='checkbox' name='scene-other' checked=true)
+        |  на других сценах
+
   .filter-block
     p
       span.hidden-sm-down Присылайте замечания или пожелания Максиму на

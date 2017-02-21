@@ -55,6 +55,32 @@ function monthMiddleware(req, res, next) {
                 nextMonth: s.capitalize(nextMonth.format('MMMM') +
                     (nextMonth.month() === 0 ? ' ' + nextMonth.year() : '')),
                 theatre: ''
+            },
+            showFilterClasses: function(show) {
+                let classes = [];
+
+                show.play.premiere && classes.push('premiere');
+                (show.play.musical || show.play.dancing || show.play.ballet) && classes.push('musical');
+                (show.play.dancing || show.play.ballet) && classes.push('dancing');
+                show.play.ballet && classes.push('ballet');
+                show.play.opera && classes.push('opera');
+
+                classes.length === 0 && classes.push('other');
+
+                show.play.forKids ? classes.push('for-kids') : classes.push('for-adults');
+
+                classes.push('theatre-' + show.theatre.key);
+
+                let scene = show.scene || show.play.scene;
+                if (['big', 'small', 'exp'].indexOf(scene.key) >=0) {
+                    classes.push('scene-' + scene.key);
+                } else if (scene.key === 'main') {
+                    classes.push('scene-big');
+                } else {
+                    classes.push('scene-other');
+                }
+
+                return classes.join(' ');
             }
         });
     });
