@@ -12,3 +12,18 @@ mixin pluralizeItemsNumber(number)
 
 mixin pluralizePlaysNumber(number)
   +pluralizeAbstractItemsNumber(number, 'спектакль', 'спектакля', 'спектаклей')
+
+mixin playIcons(play)
+  span.flag-icons
+    if play.premiere
+      i.fa.fa-star(title='Премьера')
+    if play.musical
+      i.fa.fa-music(title='Музыкальный')
+    if play.dancing
+      i.fa.fa-slideshare(title='Танцевальный')
+    if play.ballet
+      i.fa.fa-ra(title='Балет')
+    if play.opera
+      i.fa.fa-opera(title='Опера')
+    if play.forKids
+      i.fa.fa-child(title='Детский')

@@ -80,6 +80,7 @@ block content
               td
                 a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)
                   = show.play ? show.play.title : '[УДАЛЕН]'
+                +playIcons(show.play)
                 if show.duplicateOf
                   =' '
                   span.badge.badge-default(title=show.duplicateOf) дубликат
