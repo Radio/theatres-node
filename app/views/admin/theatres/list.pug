@@ -9,17 +9,10 @@ block content
 
     include ../flash
 
-    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.mb-3
-      button.navbar-toggler.navbar-toggler-right(
-      type="button"
-      data-toggle="collapse"
-      data-target="#filter-nav"
-      )
-        span.navbar-toggler-icon
-      div#filter-nav.collapse.navbar-collapse
-        div.mr-auto
-        div
-          a.btn.btn-sm.btn-primary(href='/admin/theatres/create') Создать новый
+    nav#filter-nav.nav.mb-3.py-2.px-3
+      div.nav-item.mr-auto
+      div.form-inline
+        a.btn.btn-sm.btn-primary(href='/admin/theatres/create') Создать новый
 
     table.table
       thead
