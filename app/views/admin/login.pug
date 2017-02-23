@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    include flash
+
+    form.w-50.mx-auto(action='' method='post')
+
+      .form-group.row
+        label.col-sm-2.col-form-label(for='email') Email
+        .col-sm-10
+          input.form-control(type='text' id='email' name='email' value=formData.email)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='password') Пароль
+        .col-sm-10
+          input.form-control(type='password' id='password' name='password')
+      button.btn.btn-primary(type='submit') Войти

@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+
+    p
+      a(href='/admin/users') ← Назад
+
+    include ../flash
+
+    form(action='' method='post' autocomplete="off")
+
+      if (user._id)
+        .form-group.row
+          label.col-sm-2.col-form-label ID
+          .col-sm-10
+            p.form-control-static= user._id
+      .form-group.row
+        label.col-sm-2.col-form-label(for='name') Имя
+        .col-sm-10
+          input.form-control(type='text' id='name' name='name' autocomplete="off" value=user.name)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='email') Email
+        .col-sm-10
+          input.form-control(type='text' id='email' name='email' autocomplete="off" value=user.email)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='password') Пароль
+        .col-sm-10
+          input.form-control(type='password' id='password' name='new-password' autocomplete="new-password")
+      hr
+      button.btn.btn-primary(type='submit') Сохранить

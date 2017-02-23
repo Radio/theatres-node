@@ -8,13 +8,18 @@
       span.navbar-toggler-icon
     div#main-nav.collapse.navbar-collapse
       ul.navbar-nav.mr-auto
+        if user
+          li.nav-item
+            a.nav-link(href='/admin/theatres') Театры
+          li.nav-item
+            a.nav-link(href='/admin/scenes') Сцены
+          li.nav-item
+            a.nav-link(href='/admin/plays') Спектакли
+          li.nav-item
+            a.nav-link(href='/admin/schedule') Расписание
+      ul.navbar-nav
+        if user
+          li.nav-item
+            a.nav-link(href='/admin/users') Пользователи
         li.nav-item
-          a.nav-link(href='/') Хоум
-        li.nav-item
-          a.nav-link(href='/admin/theatres') Театры
-        li.nav-item
-          a.nav-link(href='/admin/scenes') Сцены
-        li.nav-item
-          a.nav-link(href='/admin/plays') Спектакли
-        li.nav-item
-          a.nav-link(href='/admin/schedule') Расписание
+          a.nav-link(href='/' target='_blank') Хоум ↗

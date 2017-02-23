@@ -1,3 +1,9 @@
 footer
   .container
-    p &copy; Я
+    .nav.p-3
+      .nav-item.mr-auto
+        | &copy; Максим Гопей
+      if (user)
+        .nav-item
+          form(action='/admin/logout' method='post')
+            button.btn.btn-sm.btn-default(type='submit') Выйти

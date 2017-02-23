@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      h1= title
+      p
+        +pluralizeItemsNumber(users.length)
+
+    include ../flash
+
+    nav#filter-nav.nav.mb-3.py-2.px-3
+      div.nav-item.mr-auto
+      div.form-inline
+        a.btn.btn-sm.btn-primary(href='/admin/users/create') Создать нового
+
+    table.table
+      thead
+        tr
+          th Имя ↓
+          th Email
+          th(width=100)
+      tbody
+        each user in users
+          tr
+            td
+              a(href='/admin/users/edit/' + user._id)= user.name
+            td= user.email
+            td
+              button.btn.btn-sm.btn-outline-danger(
+                data-action='remove'
+                data-url='/admin/users/remove/' + user._id
+                data-return-url='/admin/users'
+              ) Удалить

@@ -12,6 +12,9 @@ let session = require('express-session');
 let flash = require('connect-flash');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
+let passport = require('passport');
+let passportStrategy = require('authentication/authentication-strategy-local');
+let serializationStrategy = require('authentication/serialization-strategy');
 
 let app = express();
 
@@ -33,7 +36,7 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 1209600000 },
     resave: false,
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET
@@ -69,7 +72,22 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);
 
 /**
- * 3. Setup app routes
+ * 3. Setup admin authentication.
+ */
+
+passport.use(passportStrategy);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(serializationStrategy.serializeUser);
+passport.deserializeUser(serializationStrategy.deserializeUser);
+app.use(function(req, res, next) {
+    res.locals.user = req.user;
+    next();
+});
+
+
+/**
+ * 4. Setup app routes
  */
 
 let month = require('routes/month');
@@ -78,7 +96,7 @@ app.use('/', month);
 app.use('/admin', admin);
 
 /**
- * 4. Setup error handlers
+ * 5. Setup error handlers
  */
 
 app.use(function(err, req, res, next) {
