@@ -64,14 +64,13 @@ function monthMiddleware(req, res, next) {
             showFilterClasses: function(show) {
                 let classes = [];
 
-                show.play.premiere && classes.push('premiere');
                 (show.play.musical || show.play.dancing || show.play.ballet) && classes.push('musical');
                 (show.play.dancing || show.play.ballet) && classes.push('dancing');
                 show.play.ballet && classes.push('ballet');
                 show.play.opera && classes.push('opera');
-
                 classes.length === 0 && classes.push('other');
 
+                show.play.premiere && classes.push('premiere');
                 show.play.forKids ? classes.push('for-kids') : classes.push('for-adults');
 
                 classes.push('theatre-' + show.theatre.key);
