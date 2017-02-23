@@ -28,7 +28,7 @@ let fetchTask = function() {
     });
 };
 
-if (process.argv[2] === 'test') {
+if (process.argv[2] === 'once') {
     fetchTask();
 } else {
     const timezone = 'Europe/Kiev';
