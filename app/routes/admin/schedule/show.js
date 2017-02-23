@@ -26,7 +26,7 @@ module.exports = function(router) {
         req.schedule.editShow(req.show._id, buildShowEditRequest(req.body), function(err) {
             if (err) return next(err);
             req.flash('success', 'Расписание обновлено.');
-            res.redirect('/admin/schedule/?month=' + req.schedule.monthKey);
+            res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
         });
     });
 
@@ -49,7 +49,7 @@ module.exports = function(router) {
         req.schedule.addShow(buildShowEditRequest(req.body), function(err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль добавлен в расписание.');
-            res.redirect('/admin/schedule/?month=' + req.schedule.monthKey);
+            res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
         });
     });
 
