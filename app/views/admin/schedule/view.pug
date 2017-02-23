@@ -23,29 +23,36 @@ block content
       )
         span.navbar-toggler-icon
       div#filter-nav.collapse.navbar-collapse
-        form.form-inline.mr-auto
-          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(
-            id='filter-month'
-            name='month'
-          )
-            each month in months
-              option(value=month.key selected=filter.month==month.key data-starting-value=month.actual)= month.value
-          label(for='filter-theatre').mr-sm-2 Театр:
-          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-theatre' name='theatre')
-            option(value='') —
-            each theatre in theatres
-              option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
-          label(for='filter-scene').mr-sm-2 Сцена:
-          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-scene' name='scene')
-            option(value='') —
-            each scene in scenes
-              option(value=scene.id selected= filter.scene == scene.id)= scene.title
-          label(for='filter-version').mr-sm-2 Версия:
-          select.form-control.form-control-sm.mb-2.mr-sm-2.mb-sm-0(id='filter-version' name='version')
-            each version in versions
-              - var versionKey = version.actual ? '' : version.version
-              option(value=versionKey selected= filter.version == versionKey data-starting-value=!versionKey)
-                = version.version + (version.actual ? ' (актуальная)' : '')
+        form.mr-auto
+          div.form-inline
+            select.form-control.form-control-sm.mb-2.mr-sm-2(
+              id='filter-month'
+              name='month'
+            )
+              each month in months
+                option(value=month.key selected=filter.month==month.key data-starting-value=month.actual)= month.value
+
+            //label(for='filter-version').mb-2.mr-2.mr-xs-0 Версия:
+            select.form-control.form-control-sm.mb-2.mr-sm-2(id='filter-version' name='version')
+              each version in versions
+                - var versionKey = version.actual ? '' : version.version
+                option(value=versionKey selected= filter.version == versionKey data-starting-value=!versionKey)
+                  = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
+          div.form-inline
+            //label(for='filter-theatre').mb-xs-2.mr-2.mr-xs-0 Театр:
+            select.form-control.form-control-sm.mr-sm-2(id='filter-theatre' name='theatre')
+              option(value='') — театр —
+              each theatre in theatres
+                option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
+
+            //label(for='filter-scene').mb-xs-2.mr-2.mr-xs-0 Сцена:
+            select.form-control.form-control-sm.mr-sm-2(id='filter-scene' name='scene')
+              option(value='') — сцена —
+              each scene in scenes
+                option(value=scene.id selected= filter.scene == scene.id)= scene.title
+
+
+
           button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
             type='button'
             data-action='reset-filters'
@@ -54,7 +61,7 @@ block content
 
         if (schedule)
           div
-            a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
+            a.btn.btn-sm.btn-primary.align-bottom(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
     if (!schedule)
       .alert.alert-warning(role="alert") На этот месяц расписания нет.
