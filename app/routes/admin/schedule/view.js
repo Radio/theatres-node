@@ -29,8 +29,9 @@ module.exports = function(router) {
 
     function filterScheduleShows(schedule, req) {
         return schedule.shows.filter(function (show) {
+            const scene = show.scene || show.play.scene;
             return (!req.query.theatre || req.query.theatre === String(show.theatre.id)) &&
-                (!req.query.scene || req.query.scene === String(show.scene.id))
+                (!req.query.scene || req.query.scene === String(scene.id))
         });
     }
 };
