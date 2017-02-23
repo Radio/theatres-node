@@ -126,13 +126,13 @@ scheduleSchema.methods.updateUpdated = function() {
  */
 scheduleSchema.methods.replaceShows = function(newShowsData) {
     const today = new Date();
-    let hashesOfExistingShowsInFuture = this.shows.filter(show => show.date > today).map(show => show.hash);
+    let removalCandidates = this.shows.filter(show => !show.manual && show.date > today).map(show => show.hash);
     let schedule = this;
     let newHashes = newShowsData.map(function(newShowData) {
         const show = schedule.addOrUpdateOneShow(newShowData instanceof Show ? newShowData : new Show(newShowData));
         return show.hash;
     });
-    let hashesToRemove =  hashesOfExistingShowsInFuture.filter(hash => newHashes.indexOf(hash) < 0);
+    let hashesToRemove =  removalCandidates.filter(hash => newHashes.indexOf(hash) < 0);
     hashesToRemove.forEach(function(hashToRemove) {
         schedule.removeShowByHash(hashToRemove)
     });

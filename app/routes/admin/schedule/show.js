@@ -94,7 +94,8 @@ module.exports = function(router) {
             price: requestBody.price,
             url: requestBody.url,
             buyTicketUrl: requestBody['buy-ticket-url'],
-            customHash: customHash
+            customHash: customHash,
+            manual: !!requestBody.manual
         };
         if (customHash) {
             editRequest.hash = requestBody.hash;

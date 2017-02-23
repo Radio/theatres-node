@@ -95,5 +95,10 @@ block content
             label.form-check-label
               input.form-check-input(type='checkbox' name='auto-hash' value='1' checked=!show.customHash)
               |  Высчитывать хеш автоматически
+        .form-group.row
+          .form-check.offset-sm-2.col
+            label.form-check-label
+              input.form-check-input(type='checkbox' name='manual' value='1' checked=show.manual)
+              |  Не удалять при автоматическом обновлении
       hr
       button.btn.btn-primary(type='submit') Сохранить
