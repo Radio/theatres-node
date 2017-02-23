@@ -11,6 +11,7 @@ module.exports = function(router) {
             play: getFormData(req.play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            backUrl: req.session.playsBackUrl
         });
     });
 
@@ -40,6 +41,7 @@ module.exports = function(router) {
             play: getFormData(new Play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            backUrl: req.session.playsBackUrl
         });
     });
 

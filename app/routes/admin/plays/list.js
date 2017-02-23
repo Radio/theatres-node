@@ -6,6 +6,7 @@ let Play = require('models/play');
 module.exports = function(router) {
 
     router.get('/', function(req, res, next) {
+        req.session.playsBackUrl = req.originalUrl;
         let filter = collectFilter(req.query);
         Play.find(filter)
             .populate('theatre scene')

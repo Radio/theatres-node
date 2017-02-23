@@ -8,7 +8,7 @@ block content
         | #{s.capitalize(moment().format('MMMM YYYY'))}
 
     p
-      a(href='/admin/schedule?month=' + schedule.monthKey)
+      a(href=backUrl || '/admin/schedule?month=' + schedule.monthKey)
         | ← Назад
 
     include ../flash

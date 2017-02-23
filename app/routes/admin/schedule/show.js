@@ -17,6 +17,7 @@ module.exports = function(router) {
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             plays: groupPlaysByTheatre(req.options.plays),
+            backUrl: req.session.scheduleBackUrl
         });
     });
 
@@ -39,6 +40,7 @@ module.exports = function(router) {
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             plays: groupPlaysByTheatre(req.options.plays),
+            backUrl: req.session.scheduleBackUrl
         });
     });
 

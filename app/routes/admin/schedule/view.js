@@ -4,6 +4,7 @@ let Schedule = require('models/schedule');
 
 module.exports = function(router) {
     router.get('/', function (req, res, next) {
+        req.session.scheduleBackUrl = req.originalUrl;
         if (!req.filter) return next();
         let filter = req.filter;
         Schedule.findOne(filter)
