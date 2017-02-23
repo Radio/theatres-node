@@ -1,4 +1,4 @@
-(function() {
+(function($, viewport) {
     "use strict";
 
     let scrolledToDay;
@@ -64,9 +64,6 @@
         return groups;
     }
 
-    function isSmallViewport() {
-        return false; //ResponsiveBootstrapToolkit.is('xs') || ResponsiveBootstrapToolkit.is('sm');
-    }
 
     function fixPosterMargin() {
         if (isSmallViewport()) {
@@ -138,5 +135,36 @@
             actions.toggleFilter('theatre', 'theatre-' + window.filter.theatre, true);
         }
     });
+    $('body').on('click', '.scroll-top', function() {
+        $('html, body').scrollTop(0);
+    });
+    $(window)
+        .bind('scroll', handelWindowScroll)
+        .bind('resize', function() {
+            viewport.changed(handleWindowResize);
+        });
 
-})(jQuery);
+    function isSmallViewport() {
+        return viewport.is('xs') || viewport.is('sm');
+    }
+
+    function handelWindowScroll() {
+        if (isSmallViewport()) {
+            if ($(window).scrollTop() > 100) {
+                $('.scroll-top').show();
+            } else {
+                $('.scroll-top').hide();
+            }
+        }
+    }
+
+    function handleWindowResize()
+    {
+        if (isSmallViewport()) {
+            $('.main-container').addClass('small-viewport');
+        } else {
+            $('.main-container').removeClass('small-viewport');
+        }
+    }
+
+})(jQuery, ResponsiveBootstrapToolkit);

@@ -33,6 +33,7 @@ module.exports = function(grunt) {
                         'node_modules/font-awesome/fonts/*',
                         'node_modules/imagelightbox/dist/imagelightbox.min.js',
                         'node_modules/imagelightbox/dist/imagelightbox.min.css',
+                        'node_modules/responsive-toolkit/dist/bootstrap-toolkit.min.js',
                     ],
                     dest: 'public/'
                 }]

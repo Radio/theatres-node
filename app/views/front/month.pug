@@ -3,9 +3,11 @@ extends layout
 block content
   header.main-header
     h1
-      a.first-title(href='/') Все спектакли Харькова на одной странице
+      a.first-title(href='/') Все спектакли Харькова
+        span.hidden-sm-down  на одной странице
 
-      span &nbsp;/&nbsp;
+      span &nbsp;/
+        =' '
 
       if today.month() !== filter.month && nextMonth.month() !== filter.month
         strong.second-subtitle= title.scheduleMonth
