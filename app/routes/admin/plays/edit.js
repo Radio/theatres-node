@@ -20,7 +20,7 @@ module.exports = function(router) {
         req.play.edit(buildEditRequest(req.body), function (err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль сохранен.');
-            res.redirect('/admin/plays/edit/' + req.play.key);
+            res.redirect(req.session.playsBackUrl || '/admin/plays');
         });
     });
 
@@ -50,7 +50,7 @@ module.exports = function(router) {
         play.edit(buildEditRequest(req.body), function(err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль сохранен.');
-            res.redirect('/admin/plays/edit/' + play.key);
+            res.redirect(req.session.playsBackUrl || '/admin/plays');
         });
     });
 

@@ -36,7 +36,7 @@ router.post('/edit/:theatreKey', function(req, res, next) {
     req.theatre.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Театр сохранен.');
-        res.redirect('/admin/theatres/edit/' + req.theatre.key);
+        res.redirect('/admin/theatres');
     });
 });
 
@@ -63,7 +63,7 @@ router.post('/create', function(req, res, next) {
     theatre.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Театр сохранен.');
-        res.redirect('/admin/theatres/edit/' + theatre.key);
+        res.redirect('/admin/theatres');
     });
 });
 
