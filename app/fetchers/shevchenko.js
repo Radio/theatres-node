@@ -56,6 +56,7 @@ let fetcher = function(callback) {
                 title: $li.find('h3').text(),
                 playUrl: $li.find('h3 a').attr('href'),
                 date: $li.find('.date').text(),
+                premiere: !!$li.find('.primer').length,
                 month: month,
                 year: year,
                 scene: $li.find('em')
@@ -85,6 +86,7 @@ let fetcher = function(callback) {
             price: /\d/.test(rawShow.price) ?
                 priceHelper.normalize(s.strRight(rawShow.price, 'квиток коштує ')) :
                 null,
+            premiere: rawShow.premiere
         };
     }
 };
