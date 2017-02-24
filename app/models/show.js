@@ -18,7 +18,8 @@ let showSchema = new Schema({
     url: String,
     buyTicketUrl: String,
     duplicateOf: Schema.Types.ObjectId,
-    manual: Boolean
+    manual: Boolean,
+    labels: [String]
 });
 showSchema.set('toObject', { versionKey: false });
 
@@ -42,7 +43,8 @@ showSchema.statics.equal = function(show1, show2) {
         show1.buyTicketUrl === show2.buyTicketUrl &&
         show1.customHash === show2.customHash &&
         (!show1.customHash || (show1.hash === show2.hash)) &&
-        show1.manual === show2.manual;
+        show1.manual === show2.manual &&
+        show1.labels.join() === show2.labels.join();
 };
 
 showSchema.methods.updateHash = function() {
@@ -69,6 +71,7 @@ showSchema.methods.edit = function(editRequest, callback) {
         this.hash = editRequest.hash;
     }
     this.manual = editRequest.manual;
+    this.labels = editRequest.labels;
 
     this.validate(callback);
 };

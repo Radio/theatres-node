@@ -16,6 +16,7 @@ module.exports = function(router) {
             show: getFormData(req.show, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            labels: req.options.labels,
             plays: groupPlaysByTheatre(req.options.plays),
             backUrl: req.session.scheduleBackUrl
         });
@@ -97,7 +98,8 @@ module.exports = function(router) {
             url: requestBody.url,
             buyTicketUrl: requestBody['buy-ticket-url'],
             customHash: customHash,
-            manual: !!requestBody.manual
+            manual: !!requestBody.manual,
+            labels: requestBody.labels.split(',').map(label => label.trim())
         };
         if (customHash) {
             editRequest.hash = requestBody.hash;

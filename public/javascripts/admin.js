@@ -154,4 +154,14 @@
         }
     });
 
+    $('.tokenfield').each(function() {
+        $(this).tokenfield({
+            autocomplete: {
+                source: ($(this).data('tokenfield-source') || '').split(','),
+                delay: 100
+            },
+            showAutocompleteOnFocus: true
+        });
+    });
+
 })(jQuery);

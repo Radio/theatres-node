@@ -34,6 +34,10 @@ module.exports = function(grunt) {
                         'node_modules/imagelightbox/dist/imagelightbox.min.js',
                         'node_modules/imagelightbox/dist/imagelightbox.min.css',
                         'node_modules/responsive-toolkit/dist/bootstrap-toolkit.min.js',
+                        'node_modules/jquery-ui-dist/jquery-ui.min.js',
+                        'node_modules/jquery-ui-dist/jquery-ui.min.css',
+                        'node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css',
+                        'node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js',
                     ],
                     dest: 'public/'
                 }]

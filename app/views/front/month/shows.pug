@@ -17,6 +17,10 @@ each show in date.shows
         if show.play.premiere
           =' '
           sup.badge.badge-warning премьера
+        if show.labels
+          each label in show.labels
+            =' '
+            sup.badge.badge-info= label
         .show-scene
           div(itemprop='location', itemscope='', itemtype='http://schema.org/PerformingArtsTheater')
             meta(itemprop='name', content=show.theatre.houseSlug ? 'Дом Актера' : show.theatre.title)
