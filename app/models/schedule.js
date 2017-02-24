@@ -127,8 +127,8 @@ scheduleSchema.statics.getActualLabels = function(callback) {
         { $group: { _id: 'all', labels: { $addToSet: '$label' } } }
     ], function(err, result) {
         if (err) return callback(err);
-        if (!result) {
-            callback(null, []);
+        if (!result || result.length === 0) {
+            return callback(null, []);
         }
         callback(null, result[0].labels);
     });
