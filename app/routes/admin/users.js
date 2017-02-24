@@ -36,7 +36,7 @@ router.post('/edit/:userId', function(req, res, next) {
     req.userToEdit.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Пользователь сохранен.');
-        res.redirect('/admin/users/edit/' + req.userToEdit.id);
+        res.redirect('/admin/users');
     });
 });
 
@@ -62,7 +62,7 @@ router.post('/create', function(req, res, next) {
     user.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Пользователь сохранен.');
-        res.redirect('/admin/users/edit/' + user.id);
+        res.redirect('/admin/users');
     });
 });
 

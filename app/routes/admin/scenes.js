@@ -36,7 +36,7 @@ router.post('/edit/:sceneKey', function(req, res, next) {
     req.scene.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Сцена сохранена.');
-        res.redirect('/admin/scenes/edit/' + req.scene.key);
+        res.redirect('/admin/scenes');
     });
 });
 
@@ -63,7 +63,7 @@ router.post('/create', function(req, res, next) {
     scene.edit(buildEditRequest(req.body), function(err) {
         if (err) return next(err);
         req.flash('success', 'Сцена сохранена.');
-        res.redirect('/admin/scenes/edit/' + scene.key);
+        res.redirect('/admin/scenes');
     });
 });
 
