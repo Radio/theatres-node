@@ -27,3 +27,8 @@ mixin playIcons(play)
       i.fa.fa-opera(title='Опера')
     if play.forKids
       i.fa.fa-child(title='Детский')
+
+mixin title(title)
+  h1
+    span.hidden-sm-down= 'Управление — '
+    = title

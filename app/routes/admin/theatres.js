@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
     Theatre.find({}).sort({title: 1}).exec(function(err, theatres) {
         if (err) return next(err);
         res.render('admin/theatres/list', {
-            title: 'Управление — Театры',
+            title: 'Театры',
             theatres: theatres
         });
     });
@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.get('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
     res.render('admin/theatres/edit', {
-        title: 'Управление — Театры — ­' + req.theatre.title,
+        title: 'Театры — ­' + req.theatre.title,
         theatre: getFormData(req.theatre, req)
     });
 });
@@ -53,7 +53,7 @@ router.delete('/remove/:theatreKey', function(req, res, next) {
 router.get('/create', function(req, res, next) {
     let theatre = new Theatre();
     res.render('admin/theatres/edit', {
-        title: 'Управление — Театры — Новый­',
+        title: 'Театры — Новый­',
         theatre: getFormData(theatre, req)
     });
 });

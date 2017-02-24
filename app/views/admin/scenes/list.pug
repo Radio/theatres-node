@@ -3,7 +3,7 @@ extends ../layout
 block content
   .container
     .jumbotron
-      h1= title
+      +title(title)
       p
         +pluralizeItemsNumber(scenes.length)
 
@@ -12,7 +12,7 @@ block content
     nav#filter-nav.nav.mb-3.py-2.px-3
       div.nav-item.mr-auto
       div.form-inline
-        a.btn.btn-sm.btn-primary(href='/admin/scenes/create') Создать новую
+        a.btn.btn-sm.btn-primary(href='/admin/scenes/create') Создать
 
     table.table
       thead

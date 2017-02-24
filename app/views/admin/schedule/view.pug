@@ -3,7 +3,7 @@ extends ../layout
 block content
   .container
     .jumbotron
-      h1= title
+      +title(title)
       p
         - selectedMonthDate = moment({month: s.strLeft(filter.month, '-') - 1, year: s.strRight(filter.month, '-')})
         | #{s.capitalize(selectedMonthDate.format('MMMM YYYY'))}
@@ -33,7 +33,7 @@ block content
                 = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
         div.form-inline
           //label(for='filter-theatre').mb-xs-2.mr-2.mr-xs-0 Театр:
-          select.form-control.form-control-sm.mr-sm-2(id='filter-theatre' name='theatre')
+          select.form-control.form-control-sm.mr-sm-2.mb-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') — театр —
             each theatre in theatres
               option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
@@ -51,7 +51,7 @@ block content
           ) Сбросить
 
       if (schedule)
-        div.form-inline
+        div.form-inline.pl-2
           a.btn.btn-sm.btn-primary.align-bottom(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
     if (!schedule)
