@@ -6,7 +6,7 @@ let passport = require('passport');
 
 router.get('/', function(req, res, next) {
     res.render('admin/login', {
-        title: 'Управление — Вход',
+        title: 'Вход',
         formData: req.flash('body')[0] || {}
     });
 });

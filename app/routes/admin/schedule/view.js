@@ -17,7 +17,7 @@ module.exports = function(router) {
                 let viewFilter = req.query;
                 viewFilter.month = viewFilter.month || schedule.monthKey;
                 res.render('admin/schedule/view', {
-                    title: 'Управление — Расписание',
+                    title: 'Расписание',
                     schedule: schedule,
                     filter: viewFilter,
                     theatres: req.options.theatres,

@@ -7,7 +7,7 @@ module.exports = function(router) {
     router.get('/edit/:playKey', function(req, res, next) {
         if (!req.play) return next();
         res.render('admin/plays/edit', {
-            title: 'Управление — Спектакли — ­' + req.play.title,
+            title: 'Спектакли — ­' + req.play.title,
             play: getFormData(req.play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
@@ -37,7 +37,7 @@ module.exports = function(router) {
 
     router.get('/create', function(req, res) {
         res.render('admin/plays/edit', {
-            title: 'Управление — Спектакли — Новый­',
+            title: 'Спектакли — Новый­',
             play: getFormData(new Play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,

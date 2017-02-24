@@ -10,12 +10,13 @@ module.exports = function(router) {
     router.get('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
         res.render('admin/schedule/edit-show', {
-            title: 'Управление — Расписание — ­' + req.show.play.title,
+            title: 'Расписание — ­' + req.show.play.title,
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
             show: getFormData(req.show, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            labels: req.options.labels,
             plays: groupPlaysByTheatre(req.options.plays),
             backUrl: req.session.scheduleBackUrl
         });
@@ -33,7 +34,7 @@ module.exports = function(router) {
     router.get('/:scheduleId/show/add', function(req, res, next) {
         if (!req.schedule) return next();
         res.render('admin/schedule/edit-show', {
-            title: 'Управление — Расписание — Добавить',
+            title: 'Расписание — Добавить',
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
             show: getFormData(new Show(), req),
@@ -97,7 +98,8 @@ module.exports = function(router) {
             url: requestBody.url,
             buyTicketUrl: requestBody['buy-ticket-url'],
             customHash: customHash,
-            manual: !!requestBody.manual
+            manual: !!requestBody.manual,
+            labels: requestBody.labels.split(',').map(label => label.trim())
         };
         if (customHash) {
             editRequest.hash = requestBody.hash;

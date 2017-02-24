@@ -33,5 +33,5 @@ if (process.argv[2] === 'once') {
 } else {
     const timezone = 'Europe/Kiev';
     let CronJob = require('cron').CronJob;
-    new CronJob('0 * * * * *', fetchTask, null, true, timezone);
+    new CronJob(process.env.FETCH_CRON_EXPRESSION || '0 0 * * * *', fetchTask, null, true, timezone);
 }

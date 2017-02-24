@@ -63,7 +63,8 @@ function loadOptionsData(month, year, callback) {
         plays: callback => Play.find({}).populate('theatre scene').sort({title: 1}).exec(callback),
         versions: callback => Schedule.find({ month: month, year: year }, { version: 1, actual: 1, _id: 0 })
             .sort({ version: -1 }).exec(callback),
-        months: callback => callback(null, Array.from(monthOptions(passedMonths, followingMonths)))
+        months: callback => callback(null, Array.from(monthOptions(passedMonths, followingMonths))),
+        labels: callback => Schedule.getActualLabels(callback)
     }, callback);
 }
 

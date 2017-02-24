@@ -3,7 +3,7 @@ extends ../layout
 block content
   .container
     .jumbotron
-      h1= title
+      +title(title)
       p
         | #{s.capitalize(moment().format('MMMM YYYY'))}
 
@@ -76,6 +76,13 @@ block content
             | Купить билет (Url)
         .col-sm-10
           input.form-control(type='text' id='buy-ticket-url' name='buy-ticket-url' value=show.buyTicketUrl)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='labels') Лейблы
+        .col-sm-10
+          input.form-control.tokenfield(
+            type='text' id='labels' name='labels' value=show.labels.join(',')
+            data-tokenfield-source=labels.join(',')
+          )
       if (show._id && show.date)
         .form-group.row
           label.col-sm-2.col-form-label(for='title') ID

@@ -17,6 +17,10 @@ each show in date.shows
         if show.play.premiere
           =' '
           sup.badge.badge-warning премьера
+        if show.labels
+          each label in show.labels
+            =' '
+            sup.badge.badge-info= label
         .show-scene
           div(itemprop='location', itemscope='', itemtype='http://schema.org/PerformingArtsTheater')
             meta(itemprop='name', content=show.theatre.houseSlug ? 'Дом Актера' : show.theatre.title)
@@ -25,11 +29,11 @@ each show in date.shows
             link(itemprop='url', href=show.theatre.url)
             meta(itemprop='name', content=show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : ''))
             = show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
-          span.show-separator &nbsp;·&nbsp;
+          span.show-separator= ' · '
           span.nobr= scene.title
           if show.price || show.buyTicketUrl
             span(itemprop='offers', itemscope='', itemtype='http://schema.org/Offer')
-              span.show-separator &nbsp;·&nbsp;
+              span.show-separator= ' · '
               if show.price
                 meta(itemprop='priceCurrency', content='UAH')
               if show.price && !show.buyTicketUrl
@@ -42,7 +46,7 @@ each show in date.shows
                     span.price.nobr купить билеты
           if show.play.genre
             span.hidden-sm-down
-              span.show-separator &nbsp;·&nbsp;
+              span.show-separator= ' · '
               =show.play.genre
     .show-details
       .row

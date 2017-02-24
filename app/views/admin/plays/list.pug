@@ -3,7 +3,7 @@ extends ../layout
 block content
   .container
     .jumbotron
-      h1= title
+      +title(title)
       p
         +pluralizeItemsNumber(plays.length)
 
@@ -22,7 +22,7 @@ block content
 
         div.form-inline
           //label(for='filter-theatre').mr-sm-2 Театр:
-          select.form-control.form-control-sm.mr-sm-2(id='filter-theatre' name='theatre')
+          select.form-control.form-control-sm.mr-sm-2.mb-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') — театр —
             each theatre in theatres
               option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
@@ -37,8 +37,8 @@ block content
           data-action='reset-filters'
           hidden
           ) Сбросить
-      div.form-inline
-        a.btn.btn-sm.btn-primary(href='/admin/plays/create') Создать новый
+      div.form-inline.pl-2
+        a.btn.btn-sm.btn-primary(href='/admin/plays/create') Создать
 
     table.table
       thead

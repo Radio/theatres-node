@@ -14,7 +14,7 @@ module.exports = function(router) {
             .exec(function (err, plays) {
                 if (err) return next(err);
                 res.render('admin/plays/list', {
-                    title: 'Управление — Спектакли',
+                    title: 'Спектакли',
                     plays: plays,
                     filter: req.query,
                     theatres: req.options.theatres,

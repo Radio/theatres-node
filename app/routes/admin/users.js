@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
     User.find({}).sort({ name: 1 }).exec(function(err, users) {
         if (err) return next(err);
         res.render('admin/users/list', {
-            title: 'Управление — Пользователи',
+            title: 'Пользователи',
             users: users
         });
     });
@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.get('/edit/:userId', function(req, res, next) {
     if (!req.userToEdit) return next();
     res.render('admin/users/edit', {
-        title: 'Управление — Пользователи — ­' + req.userToEdit.name,
+        title: 'Пользователи — ­' + req.userToEdit.name,
         user: getFormData(req.userToEdit, req)
     });
 });
@@ -52,7 +52,7 @@ router.delete('/remove/:userId', function(req, res, next) {
 router.get('/create', function(req, res, next) {
     let user = new User();
     res.render('admin/users/edit', {
-        title: 'Управление — Пользователи — Новая­',
+        title: 'Пользователи — Новая­',
         user: getFormData(user, req)
     });
 });
