@@ -5,3 +5,6 @@ mixin priceSpecification(price)
   if prices && prices.length > 1
     meta(itemprop='minPrice', content=prices[0])
     meta(itemprop='maxPrice', content=prices[prices.length - 1])
+
+mixin nl2br(text)
+  | !{(text || '').replace(/\n/g, '<br/>')}
