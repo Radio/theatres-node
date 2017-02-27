@@ -5,10 +5,11 @@ block content
     .jumbotron
       +title(title)
       p
-        | #{s.capitalize(moment({year: a.year, month: a.month}).format('MMMM YYYY'))}
-        = ': '
-        = 'версия ' + a.version + (a.actual ? ' (актуальная)' : '') + ' — '
-        = 'версия ' + b.version + (b.actual ? ' (актуальная)' : '')
+        | #{s.capitalize(moment({year: a.year, month: a.month}).format('MMMM YYYY'))}:
+        br
+        = '— версия ' + a.version + ' — ' + moment(a.updated).format('D MMM HH:mm:ss') + (a.actual ? ' (актуальная)' : '')
+        br
+        = '— версия ' + b.version + ' — ' + moment(b.updated).format('D MMM HH:mm:ss') + (b.actual ? ' (актуальная)' : '')
 
     p
       a(href='/admin/schedule/diff?a=' + a._id) ← Назад

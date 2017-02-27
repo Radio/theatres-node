@@ -36,7 +36,11 @@ module.exports = function(router) {
 
     function loadSchedule(id, callback) {
         Schedule.findOne({_id: id})
-            .populate('shows.scene shows.play')
+            .populate('shows.scene')
+            .populate({
+                path: 'shows.play',
+                populate: { path: 'theatre' }
+            })
             .exec(callback);
     }
 
@@ -46,6 +50,7 @@ module.exports = function(router) {
             show.play__title = show.play.title;
             show.scene__id = show.scene ? show.scene._id : null;
             show.scene__title = show.scene ? show.scene.title : null;
+            show.theatre__title = show.play.theatre.title;
             delete show._id;
             delete show.play;
             delete show.scene;
