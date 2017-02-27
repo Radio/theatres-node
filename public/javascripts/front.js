@@ -80,6 +80,13 @@
     }
 
     $(document).ready(function() {
+        const today = $('.calendar .today').data('day');
+        if (today) {
+            actions.scrollToDay(today);
+        }
+    });
+
+    $(document).ready(function() {
         $(".lightbox").each(function(item, image) {
             $(image).imageLightbox({
                 quitOnEnd: true
