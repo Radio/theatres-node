@@ -1,0 +1,10 @@
+mixin priceSpecification(price)
+  - var prices = (price.match(/\d+/g) || []).map(price => Number(price)).sort((a, b) => a - b);
+  if prices && prices.length === 1
+    meta(itemprop='price', content=prices[0])
+  if prices && prices.length > 1
+    meta(itemprop='minPrice', content=prices[0])
+    meta(itemprop='maxPrice', content=prices[prices.length - 1])
+
+mixin nl2br(text)
+  | !{(text || '').replace(/\n/g, '<br/>')}

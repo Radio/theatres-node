@@ -35,15 +35,17 @@ each show in date.shows
             span(itemprop='offers', itemscope='', itemtype='http://schema.org/Offer')
               span.show-separator= ' · '
               if show.price
-                meta(itemprop='priceCurrency', content='UAH')
-              if show.price && !show.buyTicketUrl
-                span.price.nobr(itemprop='price', content=show.price)= show.price
-              if show.buyTicketUrl
-                a(title='Купить билеты' itemprop='url' href=show.buyTicketUrl)
-                  if show.price
-                    span.price.nobr(itemprop='price', content=show.price)= show.price
+                span(itemprop='priceSpecification', itemscope, itemtype='http://schema.org/PriceSpecification')
+                  meta(itemprop='priceCurrency', content='UAH')
+                  +priceSpecification(show.price)
+                  if show.buyTicketUrl
+                    a(title='Купить билеты' itemprop='url' href=show.buyTicketUrl)
+                      span.price.nobr= show.price
                   else
-                    span.price.nobr купить билеты
+                    span.price.nobr= show.price
+              else
+                a(title='Купить билеты' itemprop='url' href=show.buyTicketUrl)
+                  span.price.nobr купить билеты
           if show.play.genre
             span.hidden-sm-down
               span.show-separator= ' · '

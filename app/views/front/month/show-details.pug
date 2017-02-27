@@ -25,6 +25,6 @@
       strong Длительность:
       = ' ' + show.play.duration
   p.play-description
-    | !{show.play.description}
+    +nl2br(show.play.description)
   p
     a(href=show.play.url) Описание на сайте театра ↗
