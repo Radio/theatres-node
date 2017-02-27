@@ -40,6 +40,7 @@ module.exports = function(router) {
             show: getFormData(new Show(), req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            labels: req.options.labels,
             plays: groupPlaysByTheatre(req.options.plays),
             backUrl: req.session.scheduleBackUrl
         });
