@@ -8,11 +8,18 @@ module.exports = function(router) {
 
     router.get('/diff', function (req, res, next) {
         if (!req.options) return next();
-        if (!req.query.a || !req.query.b) {
-            res.render('admin/schedule/diff/choose', {
-                title: 'Расписание — Сравнить',
-                aId: req.query.a,
-                versions: req.options.versions
+        if (req.query.month) {
+            const [month, year] = req.query.month.split('-');
+            Schedule
+                .find({ month: month - 1, year: year }, { version: 1, actual: 1 })
+                .sort({ version: -1 }).exec(function(err, versions) {
+                    if (err) return next(err);
+                    if (!versions) return next();
+                    res.render('admin/schedule/diff/choose', {
+                        title: 'Расписание — Сравнить',
+                        aId: req.query.a,
+                        versions: versions
+                    });
             });
             return;
         }

@@ -5,13 +5,6 @@
         remove: (url, id) => $.ajax(url, {method:'delete', data: {id: id}}),
         resetFilters: function($form) {
             location.href = location.pathname;
-            // $form.find("input[type=text], input[type=search], select").each(function() {
-            //     const $element = $(this);
-            //     let startingValue = $element.data('starting-value') ||
-            //         $element.find('option[data-starting-value]').attr('value') || '';
-            //     $element.val(startingValue);
-            // });
-            // $form.submit();
         },
         displayResetButton: function($form) {
             const $changedElements = $form.find("input[type=text], input[type=search], select").filter(function() {
@@ -72,8 +65,9 @@
         filterOptgroup();
         $master.change(filterOptgroup);
         function filterOptgroup() {
-            $element.find('optgroup').hide().find('option').attr('disabled', true);
-            $element.find('optgroup[data-dependency-id="' + $master.val() + '"]').show()
+            $element.find('optgroup').attr('hidden', true)
+                    .find('option').attr('disabled', true);
+            $element.find('optgroup[data-dependency-id="' + $master.val() + '"]').attr('hidden', false)
                     .find('option').attr('disabled', false);
             if ($element.has('option[value="' + $element.data('original-value') + '"]:enabled').length) {
                 $element.val($element.data('original-value'));
