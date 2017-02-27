@@ -52,7 +52,9 @@ block content
 
       if (schedule)
         div.pl-2
-          a.btn.btn-sm.btn-primary.mb-2(href='/admin/schedule/diff?a=' + schedule.id) Сравнить
+          a.btn.btn-sm.btn-primary.mb-2(
+            href='/admin/schedule/diff?month=' + schedule.monthKey + '&a=' + schedule.id
+          ) Сравнить
           br
           a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
