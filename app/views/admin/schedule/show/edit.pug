@@ -1,17 +1,17 @@
-extends ../layout
+extends ../../layout
 
 block content
   .container
     .jumbotron
       +title(title)
       p
-        | #{s.capitalize(moment().format('MMMM YYYY'))}
+        | #{s.capitalize(moment({year: schedule.year, month: schedule.month}).format('MMMM YYYY'))}
 
     p
       a(href=backUrl || '/admin/schedule?month=' + schedule.monthKey)
         | ← Назад
 
-    include ../flash
+    include ../../flash
 
     form(action='' method='post')
       .form-group.row

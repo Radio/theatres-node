@@ -51,8 +51,10 @@ block content
           ) Сбросить
 
       if (schedule)
-        div.form-inline.pl-2
-          a.btn.btn-sm.btn-primary.align-bottom(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
+        div.pl-2
+          a.btn.btn-sm.btn-primary.mb-2(href='/admin/schedule/diff?a=' + schedule.id) Сравнить
+          br
+          a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
 
     if (!schedule)
       .alert.alert-warning(role="alert") На этот месяц расписания нет.
