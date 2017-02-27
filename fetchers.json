@@ -11,5 +11,6 @@
     "fetchers/novascena",
     "fetchers/operetta",
     "fetchers/madrigal",
-    "fetchers/moget"
+    "fetchers/moget",
+    "fetchers/mdt"
 ]
