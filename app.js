@@ -9,6 +9,7 @@ let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let session = require('express-session');
+let MongoStore = require('connect-mongo')(session);
 let flash = require('connect-flash');
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
@@ -16,11 +17,24 @@ let passport = require('passport');
 let passportStrategy = require('authentication/authentication-strategy-local');
 let serializationStrategy = require('authentication/serialization-strategy');
 
-let app = express();
+/**
+ * 1. Setup mongo connection.
+ */
+
+if (!process.env.MONGO_URL) {
+    console.log('Mongo URL is not set in env variables.');
+    process.exit(1);
+}
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGO_URL);
+
 
 /**
- * 1. Setup app.
+ * 2. Setup app.
  */
+
+let app = express();
 
 // view engine setup
 app.set('environment', process.env.ENVIRONMENT);
@@ -39,7 +53,8 @@ app.use(session({
     cookie: { maxAge: 1209600000 },
     resave: false,
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(flash());
 app.use(function(req, res, next){
@@ -58,18 +73,6 @@ app.use(function(req, res, next) {
     res.locals.moment = moment;
     next();
 });
-
-/**
- * 2. Setup mongo connection.
- */
-
-if (!process.env.MONGO_URL) {
-    console.log('Mongo URL is not set in env variables.');
-    process.exit(1);
-}
-
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_URL);
 
 /**
  * 3. Setup admin authentication.
