@@ -1,0 +1,31 @@
+extends ../../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+      p
+        | #{s.capitalize(moment({year: a.year, month: a.month}).format('MMMM YYYY'))}
+        = ': '
+        = 'версия ' + a.version + (a.actual ? ' (актуальная)' : '') + ' — '
+        = 'версия ' + b.version + (b.actual ? ' (актуальная)' : '')
+
+    p
+      a(href='/admin/schedule/diff?a=' + a._id) ← Назад
+
+    include ../../flash
+
+    //nav#filter-nav.nav.mb-3.py-2.px-3
+    //  div.nav-item.mr-auto
+    //    a(href='#')
+
+    pre
+      each part in diff
+        - var color = part.added ? 'green' : part.removed ? 'red' : 'grey';
+        - var hidden = part.count > 10 && !part.added && !part.removed;
+        if hidden
+          br
+          span(class='diff-'+color)= '... (' + part.count + ' lines)'
+          br
+          br
+        span(class='diff-'+color hidden=hidden)= part.value

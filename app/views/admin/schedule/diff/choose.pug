@@ -1,0 +1,31 @@
+extends ../../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+      p
+        | #{s.capitalize(moment().format('MMMM YYYY'))}
+
+    p
+      a(href=backUrl || '/admin/schedule') ← Назад
+
+    include ../../flash
+
+    form(action='/admin/schedule/diff' method='get')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='a') версию
+        .col-sm-10
+          select.form-control(id='a' name='a')
+            each version in versions
+              option(value=version._id selected= aId == version._id)
+                = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='b') с версией
+        .col-sm-10
+          select.form-control(id='b' name='b')
+            each version in versions
+              option(value=version._id)
+                = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
+      hr
+      button.btn.btn-primary(type='submit') Сравнить

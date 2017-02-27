@@ -9,7 +9,7 @@ module.exports = function(router) {
 
     router.get('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
-        res.render('admin/schedule/edit-show', {
+        res.render('admin/schedule/show/edit', {
             title: 'Расписание — ­' + req.show.play.title,
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
@@ -33,7 +33,7 @@ module.exports = function(router) {
 
     router.get('/:scheduleId/show/add', function(req, res, next) {
         if (!req.schedule) return next();
-        res.render('admin/schedule/edit-show', {
+        res.render('admin/schedule/show/edit', {
             title: 'Расписание — Добавить',
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,

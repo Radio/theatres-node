@@ -61,7 +61,7 @@ function loadOptionsData(month, year, callback) {
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
         plays: callback => Play.find({}).populate('theatre scene').sort({title: 1}).exec(callback),
-        versions: callback => Schedule.find({ month: month, year: year }, { version: 1, actual: 1, _id: 0 })
+        versions: callback => Schedule.find({ month: month, year: year }, { version: 1, actual: 1 })
             .sort({ version: -1 }).exec(callback),
         months: callback => callback(null, Array.from(monthOptions(passedMonths, followingMonths))),
         labels: callback => Schedule.getActualLabels(callback)
@@ -85,5 +85,6 @@ function* monthOptions(passedMonths, followingMonths) {
 
 require('./schedule/view')(router);
 require('./schedule/show')(router);
+require('./schedule/diff')(router);
 
 module.exports = router;

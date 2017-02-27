@@ -247,7 +247,8 @@ scheduleSchema.methods.removeShowByHash = function(hashToRemove) {
  * Sort shows by date.
  */
 scheduleSchema.methods.sortShows = function() {
-    this.shows.sort((show1, show2) => show1.date - show2.date);
+    this.shows.sort((show1, show2) => show1.date - show2.date ||
+            String(show1.play._id || show1.play).localeCompare(String(show2.play._id || show2.play)));
 };
 
 /**
