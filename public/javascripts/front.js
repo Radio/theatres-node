@@ -2,7 +2,7 @@
     "use strict";
 
     let scrolledToDay;
-    let filter = {};
+    let filter = localStorage ? JSON.parse(localStorage.getItem('filter')) || {} : {};
     let actions = {
         toggleShowDetails: function($showRow) {
             $showRow.toggleClass('detailed');
@@ -38,6 +38,9 @@
             }
         },
         applyFilter: function() {
+            if (localStorage) {
+                // localStorage.setItem('filter', JSON.stringify(filter));
+            }
             let $rows = $('.show-row');
             let groups = getFilterClassesGrouped();
             if (!groups.length) {
@@ -101,15 +104,27 @@
         actions.applyFilter();
     });
     $(document).ready(function() {
-        $('.filter-block.play-ages [type="checkbox"]').each(function() {
-            actions.toggleFilter('age', this.name, this.checked);
-        });
-        $('.filter-block.play-types [type="checkbox"]').each(function() {
-            actions.toggleFilter('type', this.name, this.checked);
-        });
-        $('.filter-block.scenes [type="checkbox"]').each(function() {
-            actions.toggleFilter('scene', this.name, this.checked);
-        });
+        if ($.isEmptyObject(filter)) {
+            $('.filter-block.play-ages [type="checkbox"]').each(function() {
+                actions.toggleFilter('age', this.name, this.checked);
+            });
+            $('.filter-block.play-types [type="checkbox"]').each(function() {
+                actions.toggleFilter('type', this.name, this.checked);
+            });
+            $('.filter-block.scenes [type="checkbox"]').each(function() {
+                actions.toggleFilter('scene', this.name, this.checked);
+            });
+        } else {
+            $('.filter-block.play-ages [type="checkbox"]').each(function () {
+                this.checked = (filter.age || []).indexOf(this.name) >= 0;
+            });
+            $('.filter-block.play-types [type="checkbox"]').each(function () {
+                this.checked = (filter.type || []).indexOf(this.name) >= 0;
+            });
+            $('.filter-block.scenes [type="checkbox"]').each(function() {
+                this.checked = (filter.scene || []).indexOf(this.name) >= 0;
+            });
+        }
         actions.applyFilter();
     });
 
