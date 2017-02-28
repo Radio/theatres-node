@@ -10,7 +10,7 @@ module.exports = function(router) {
     router.get('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
         res.render('admin/schedule/show/edit', {
-            title: 'Расписание — ­' + req.show.play.title,
+            title: 'Расписание — ' + req.show.play.title,
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
             show: getFormData(req.show, req),

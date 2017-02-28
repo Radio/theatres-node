@@ -12,7 +12,7 @@ module.exports = function(router) {
             if (err) return next(err);
 
             res.render('admin/plays/absorb', {
-                title: 'Спектакли — ­' + req.play.title + ' — Поглотить',
+                title: 'Спектакли — ' + req.play.title + ' — Поглотить',
                 play: req.play,
                 candidates: plays
             });
