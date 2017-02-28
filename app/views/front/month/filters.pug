@@ -1,9 +1,8 @@
 div
   if filter.theatre
     .filter-block
-      a(href='/year/' + filter.year + '/month/' + filter.month) ← Все театры
+      a(href='/year/' + filter.year + '/month/' + (filter.month + 1)) ← Все театры
   .filter-block
-    //h5 Выберите день
     .calendar
       each week in calendar
         .week.clearfix

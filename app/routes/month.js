@@ -4,12 +4,14 @@ let express = require('express');
 let router = express.Router();
 let async = require('async');
 let moment = require('moment');
+let Theatre = require('models/theatre');
 let Schedule = require('models/schedule');
 let dateHelper = require('helpers/date');
 
 router.get('/', monthMiddleware);
 router.get('/year/:year/month/:month', monthMiddleware);
-router.get('/year/:year/month/:month/theatre/:theatre', monthMiddleware);
+router.get('/theatre/:theatre', monthMiddleware);
+router.get('/theatre/:theatre/year/:year/month/:month', monthMiddleware);
 
 function monthMiddleware(req, res, next) {
     let today = moment();
@@ -17,6 +19,7 @@ function monthMiddleware(req, res, next) {
     let filter = collectFilter(req);
     async.parallel({
         days: callback => callback(null, dateHelper.getMonthDays(filter.month, filter.year)),
+        theatre: callback => filter.theatre ? Theatre.findByKey(filter.theatre, callback) : callback(),
         schedule: callback => Schedule.findByMonthAndYear(filter.month, filter.year)
             .populate('shows.scene')
             .populate({
@@ -28,26 +31,35 @@ function monthMiddleware(req, res, next) {
         if (err) return next(err);
         if (!result.schedule) return next();
 
-        const schedule = result.schedule;
-        const scheduleMonth = moment().startOf('month').month(schedule.month).year(schedule.year);
+        const scheduleMonth = moment().startOf('month')
+            .month(result.schedule.month).year(result.schedule.year);
 
-        populateDaysWithShows(result.days, schedule.shows);
+        let days = populateDaysWithShows(result.days, filterShows(result.schedule.shows, filter));
 
         res.render('front/month', {
-            schedule: schedule,
+            days: days,
+            schedule: result.schedule,
+            theatre: result.theatre,
             filter: filter,
             today: today,
             nextMonth: nextMonth,
             scheduleMonth: scheduleMonth,
-            days: result.days,
             calendar: dateHelper.getCalendarDays(result.days),
             showFilterClasses: showFilterClasses
         });
     });
 
+    function filterShows(shows, filter) {
+        if (!filter.theatre) {
+            return shows;
+        }
+        return shows.filter(show => show.get('play.theatre.key') === filter.theatre);
+    }
+
     function populateDaysWithShows(days, shows) {
-        days.forEach(function(day) {
+        return days.map(function(day) {
             day.shows = shows.filter(show => show.isPubliclyVisible() && day.isSame(show.date, 'day'));
+            return day;
         });
     }
 

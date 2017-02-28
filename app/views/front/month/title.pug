@@ -8,27 +8,28 @@
 h1
   a.first-title(href='/') Все спектакли Харькова
     span.hidden-sm-down  на одной странице
-
   span &nbsp;/
+  =' '
+
+  if theatre
+    strong.second-title= theatre.title
+    span &nbsp;/
     =' '
 
   if today.month() !== filter.month && nextMonth.month() !== filter.month
-    strong.second-subtitle= scheduleMonthTitle
+    strong.second-title= scheduleMonthTitle
   else
     if today.month() === filter.month
       strong.second-title= currentMonthTitle
       span.no-print &nbsp;—&nbsp;
       a.second-subtitle.no-print(
-       href='/year/' + nextMonth.year() + '/month/' + (nextMonth.month() + 1)
+       href=(theatre ? '/theatre/' + theatre.key : '') + '/year/' + nextMonth.year() + '/month/' + (nextMonth.month() + 1)
       )= nextMonthTitle
 
     if nextMonth.month() === filter.month
       a.second-title.no-print(
-        href='/year/' + today.year() + '/month/' + (today.month() + 1)
+        href=(theatre ? '/theatre/' + theatre.key : '') + '/year/' + today.year() + '/month/' + (today.month() + 1)
       )= currentMonthTitle
       span.no-print &nbsp;—&nbsp;
       strong.second-subtitle= nextMonthTitle
 
-  //-if filter.theatre
-  //-  span &nbsp;/&nbsp;
-  //-  span.third-title= theatre.title

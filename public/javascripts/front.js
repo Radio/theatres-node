@@ -64,21 +64,6 @@
         return groups;
     }
 
-
-    function fixPosterMargin() {
-        if (isSmallViewport()) {
-            let tries = 5;
-            let interval = setInterval(function() {
-                let headerHeight = $('.main-header').height();
-                $('.scroll-top').css({'top': headerHeight});
-                $('.filters-col').css({'margin-top': headerHeight});
-                if (!--tries) {
-                    clearInterval(interval);
-                }
-            }, 500);
-        }
-    }
-
     $(document).ready(function() {
         const today = $('.calendar .today').data('day');
         if (today) {
@@ -127,6 +112,7 @@
         });
         actions.applyFilter();
     });
+
     $('[data-disabled-if-unchecked]').each(function() {
         let $element = $(this);
         let dependencySelector = $element.data('disabled-if-unchecked');
@@ -134,17 +120,11 @@
             $element.attr('disabled', !this.checked);
         });
     });
-    $(document).ready(function() {
-        if (typeof window.filter === 'undefined') {
-            return;
-        }
-        if (typeof window.filter.theatre !== 'undefined') {
-            actions.toggleFilter('theatre', 'theatre-' + window.filter.theatre, true);
-        }
-    });
+
     $('body').on('click', '.scroll-top', function() {
         $('html, body').scrollTop(0);
     });
+
     $(window)
         .bind('scroll', handelWindowScroll)
         .bind('resize', function() {
@@ -157,21 +137,12 @@
 
     function handelWindowScroll() {
         if (isSmallViewport()) {
-            if ($(window).scrollTop() > 100) {
-                $('.scroll-top').show();
-            } else {
-                $('.scroll-top').hide();
-            }
+            $('.scroll-top').toggle($(window).scrollTop() > 100);
         }
     }
 
-    function handleWindowResize()
-    {
-        if (isSmallViewport()) {
-            $('.main-container').addClass('small-viewport');
-        } else {
-            $('.main-container').removeClass('small-viewport');
-        }
+    function handleWindowResize() {
+        $('.main-container').toggleClass('small-viewport', isSmallViewport());
     }
 
 })(jQuery, ResponsiveBootstrapToolkit);
