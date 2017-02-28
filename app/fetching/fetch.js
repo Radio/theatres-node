@@ -42,6 +42,7 @@ let mapRawShowsData = function(rawShowsData, callback) {
                 if (err) return callback(err);
                 rawShowData.play = play;
                 delete rawShowData.scene;
+                delete rawShowData.theatre;
                 delete rawShowData.title;
                 delete rawShowData.playUrl;
                 delete rawShowData.director;

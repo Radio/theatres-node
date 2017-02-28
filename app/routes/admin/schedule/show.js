@@ -74,9 +74,9 @@ module.exports = function(router) {
     });
 
     function getFormData(show, req) {
-        const playUrl = (typeof show.play === 'object' && show.play.url) ? show.play.url : null;
-        let formData = req.flash('body')[0] || show.toObject({depopulate: true});
-        formData.playUrl = playUrl;
+        let formData = req.flash('body')[0] || show.toObject({ depopulate: true });
+        formData.playUrl = show.get('play.url');
+        formData.theatre = show.get('play.theatre.id');
         return formData;
     }
 
