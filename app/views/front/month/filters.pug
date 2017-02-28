@@ -2,71 +2,79 @@ div
   if filter.theatre
     .filter-block
       a(href='/year/' + filter.year + '/month/' + (filter.month + 1)) ← Все театры
-  .filter-block
-    .calendar
-      each week in calendar
-        .week.clearfix
-          each day in week
-            - isToday = day && today.isSame([filter.year, filter.month, day], 'day');
-            .day(
-              class=(!day ? ' out-of-month' : '') + (isToday ? ' today' : '')
-              title=isToday ? 'Сегодня' : false
-              data-day=day
-            )= day
+  .row
+    .col-12.col-md-6.col-lg-12
+      .filter-block
+        .calendar
+          each week in calendar
+            .week.clearfix
+              each day in week
+                - isToday = day && today.isSame([filter.year, filter.month, day], 'day');
+                .day(
+                  class=(!day ? ' out-of-month' : '') + (isToday ? ' today' : '')
+                  title=isToday ? 'Сегодня' : false
+                  data-day=day
+                )= day
+      .filter-block.hidden-sm-down.hidden-lg-up
+        p
+          | Присылайте замечания или пожелания Максиму на
+          |
+          a(href='mailto:max@theatres.kh.ua') max.gopey@gmail.com
 
-  .filter-block.play-ages
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='for-adults' checked=true)
-        |  для взрослых
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='for-kids' checked=true)
-        |  для детей
+    .col-12.col-md-6.col-lg-12
+      .filter-block.play-ages
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='for-adults' checked=true)
+            |  для взрослых
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='for-kids' checked=true)
+            |  для детей
 
-  .filter-block.play-types
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='musical' checked=true)
-        |  музыкальные
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox', name='dancing' checked=true)
-        |  танцевальные
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='ballet' checked=true)
-        |  балет
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='opera' checked=true)
-        |  опера
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='other' checked=true)
-        |  другие
+      .filter-block.play-types
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='musical' checked=true)
+            |  музыкальные
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox', name='dancing' checked=true)
+            |  танцевальные
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='ballet' checked=true)
+            |  балет
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='opera' checked=true)
+            |  опера
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='other' checked=true)
+            |  другие
 
-  .filter-block.scenes
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='scene-big' checked=true)
-        |  на основной сцене
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='scene-small' checked=true)
-        |  на малой сцене
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='scene-exp' checked=true)
-        |  на экспериментальной сцене
-    .form-check
-      label.form-check-label
-        input.form-check-input(type='checkbox' name='scene-other' checked=true)
-        |  на других сценах
+      .filter-block.scenes
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='scene-big' checked=true)
+            |  на основной сцене
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='scene-small' checked=true)
+            |  на малой сцене
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='scene-exp' checked=true)
+            |  на экспериментальной сцене
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='scene-other' checked=true)
+            |  на других сценах
 
-  .filter-block
-    p
-      span.hidden-sm-down Присылайте замечания или пожелания Максиму на
-      span.hidden-md-up Для связи:
-      |
-      a(href='mailto:max@theatres.kh.ua') max.gopey@gmail.com
+      .filter-block.hidden-md
+        p
+          span.hidden-sm-down Присылайте замечания или пожелания Максиму на
+          span.hidden-md-up Для связи:
+          =' '
+          a(href='mailto:max@theatres.kh.ua') max.gopey@gmail.com
