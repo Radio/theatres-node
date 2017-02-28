@@ -25,20 +25,17 @@ block content
             each month in months
               option(value=month.key selected=filter.month==month.key data-starting-value=month.actual)= month.value
 
-          //label(for='filter-version').mb-2.mr-2.mr-xs-0 Версия:
           select.form-control.form-control-sm.mb-2.mr-sm-2(id='filter-version' name='version')
             each version in versions
               - var versionKey = version.actual ? '' : version.version
               option(value=versionKey selected= filter.version == versionKey data-starting-value=!versionKey)
                 = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
         div.form-inline
-          //label(for='filter-theatre').mb-xs-2.mr-2.mr-xs-0 Театр:
           select.form-control.form-control-sm.mr-sm-2.mb-2.mb-sm-0(id='filter-theatre' name='theatre')
             option(value='') — театр —
             each theatre in theatres
               option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
 
-          //label(for='filter-scene').mb-xs-2.mr-2.mr-xs-0 Сцена:
           select.form-control.form-control-sm.mr-sm-2(id='filter-scene' name='scene')
             option(value='') — сцена —
             each scene in scenes
@@ -89,20 +86,16 @@ block content
                 if show.duplicateOf
                   =' '
                   span.badge.badge-default(title=show.duplicateOf) дубликат
+              td= show.play && show.play.theatre ? show.play.theatre.title : '—'
+              td= show.scene ? show.scene.title : '—'
               td
-                if (show.theatre)
-                  = show.theatre.title
-              td
-                if (show.scene)
-                  = show.scene.title
-              td
-                button.btn.btn-sm.btn-outline-danger.mb-xs-2.mr-2(
+                button.btn.btn-sm.btn-outline-danger.mb-1(
                   data-action='remove'
                   data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
                   data-id=show.id
                   data-return-url='/admin/schedule?month=' + schedule.monthKey
                 ) удалить
-                button.btn.btn-sm.btn-outline-warning.mb-xs-2(
+                button.btn.btn-sm.btn-outline-warning(
                   data-action='mark-as-duplicate'
                   data-url='/admin/schedule/' + schedule.id + '/show/mark-as-duplicate/${duplicate-id}'
                   data-id=show.id
