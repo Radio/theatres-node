@@ -8,7 +8,7 @@ module.exports = function(router) {
         if (!req.filter) return next();
         let filter = req.filter;
         Schedule.findOne(filter)
-            .populate('shows.theatre shows.scene shows.play')
+            .populate('shows.scene shows.play')
             .exec(function (err, schedule) {
                 if (err) return next(err);
                 if (schedule) {

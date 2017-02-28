@@ -92,7 +92,6 @@ module.exports = function(router) {
         const customHash = !requestBody['auto-hash'];
         const editRequest = {
             date: moment(requestBody.date, momentDateFormat).toDate(),
-            theatre: requestBody.theatre,
             scene: requestBody.scene || null,
             play: requestBody.play,
             price: requestBody.price,
