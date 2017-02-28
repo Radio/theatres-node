@@ -38,6 +38,10 @@
         }
     });
 
+    $('#filter-nav').find('select').change(function() {
+        this.form.submit();
+    });
+
     $(document).ready(function() {
         const $resetButton = $('[data-action="reset-filters"]');
         if ($resetButton.length) {
@@ -45,31 +49,29 @@
         }
     });
 
+    $('[data-action="reset-filters"]').click(function(event) {
+        actions.resetFilters($(event.target.form));
+    });
+
     $(document).ready(function() {
         const path = location.pathname.replace(/^(\/.*?\/.*?)\/.*/, '$1');
         $('#main-nav').find('a[href^="' + path + '"]').closest('li').addClass('active');
     });
 
-    $('[data-action="reset-filters"]').click(function(event) {
-        actions.resetFilters($(event.target.form));
-    });
-
-    $('#filter-nav').find('select').change(function() {
-        this.form.submit();
-    });
-
     $('[data-optgroup-dependent-on]').each(function() {
         let $element = $(this);
         let $master = $($element.data('optgroup-dependent-on'));
+
         $element.data('original-value', $element.val());
+        let $optgroups = $element.find('optgroup').detach();
+
         filterOptgroup();
         $master.change(filterOptgroup);
+
         function filterOptgroup() {
-            $element.find('optgroup').attr('hidden', true)
-                    .find('option').attr('disabled', true);
-            $element.find('optgroup[data-dependency-id="' + $master.val() + '"]').attr('hidden', false)
-                    .find('option').attr('disabled', false);
-            if ($element.has('option[value="' + $element.data('original-value') + '"]:enabled').length) {
+            $element.find('optgroup').detach();
+            $element.append($optgroups.filter('[data-dependency-id="' + $master.val() + '"]'));
+            if ($element.has('option[value="' + $element.data('original-value') + '"]').length) {
                 $element.val($element.data('original-value'));
                 return;
             }
@@ -101,6 +103,16 @@
             startDate: $element.data('start-date'),
             endDate: $element.data('end-date'),
         })
+    });
+
+    $('.tokenfield').each(function() {
+        $(this).tokenfield({
+            autocomplete: {
+                source: ($(this).data('tokenfield-source') || '').split(','),
+                delay: 100
+            },
+            showAutocompleteOnFocus: true
+        });
     });
 
     $('#original').change(function() {
@@ -146,16 +158,6 @@
         if ($button.data('highlighted') && !$button.data('used')) {
             $button.text('дубликат');
         }
-    });
-
-    $('.tokenfield').each(function() {
-        $(this).tokenfield({
-            autocomplete: {
-                source: ($(this).data('tokenfield-source') || '').split(','),
-                delay: 100
-            },
-            showAutocompleteOnFocus: true
-        });
     });
 
 })(jQuery);
