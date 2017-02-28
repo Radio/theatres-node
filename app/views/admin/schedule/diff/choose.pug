@@ -12,6 +12,7 @@ block content
 
     include ../../flash
 
+    - var fromVersion = versions.find(version => aId == version._id);
     form(action='/admin/schedule/diff' method='get')
       .form-group.row
         label.col-sm-2.col-form-label(for='a') версию
@@ -25,7 +26,7 @@ block content
         .col-sm-10
           select.form-control(id='b' name='b')
             each version in versions
-              option(value=version._id)
+              option(value=version._id selected=(fromVersion && fromVersion.version - 1 == version.version))
                 = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
       hr
       button.btn.btn-primary(type='submit') Сравнить
