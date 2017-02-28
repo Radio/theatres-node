@@ -27,5 +27,6 @@
       = ' ' + show.play.duration
   p.play-description
     +nl2br(show.play.description)
-  p
-    a(href=show.play.url) Описание на сайте театра ↗
+  if show.url || show.play.url
+    p
+      a(href=(show.url || show.play.url)) Описание на сайте театра ↗

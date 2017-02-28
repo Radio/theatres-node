@@ -12,7 +12,7 @@ each show in date.shows
           = showDateMoment.format('H:mm')
       .show-brief.col-md-11
         h4.show-title
-          a(href=(show.play.url || '#') itemprop='url' content=show.play.url)
+          a(href=(show.url || show.play.url || '#') itemprop='url' content=(show.url || show.play.url || '#'))
             span(itemprop='name')= show.play.title
         if show.play.premiere
           =' '
