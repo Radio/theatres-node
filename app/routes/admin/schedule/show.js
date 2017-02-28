@@ -10,7 +10,7 @@ module.exports = function(router) {
     router.get('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
         res.render('admin/schedule/show/edit', {
-            title: 'Расписание — ­' + req.show.play.title,
+            title: 'Расписание — ' + req.show.play.title,
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
             show: getFormData(req.show, req),
@@ -74,9 +74,9 @@ module.exports = function(router) {
     });
 
     function getFormData(show, req) {
-        const playUrl = (typeof show.play === 'object' && show.play.url) ? show.play.url : null;
-        let formData = req.flash('body')[0] || show.toObject({depopulate: true});
-        formData.playUrl = playUrl;
+        let formData = req.flash('body')[0] || show.toObject({ depopulate: true });
+        formData.playUrl = show.get('play.url');
+        formData.theatre = show.get('play.theatre.id');
         return formData;
     }
 
@@ -92,7 +92,6 @@ module.exports = function(router) {
         const customHash = !requestBody['auto-hash'];
         const editRequest = {
             date: moment(requestBody.date, momentDateFormat).toDate(),
-            theatre: requestBody.theatre,
             scene: requestBody.scene || null,
             play: requestBody.play,
             price: requestBody.price,

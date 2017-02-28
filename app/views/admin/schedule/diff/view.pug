@@ -12,7 +12,7 @@ block content
         = '— версия ' + b.version + ' — ' + moment(b.updated).format('D MMM HH:mm:ss') + (b.actual ? ' (актуальная)' : '')
 
     p
-      a(href='/admin/schedule/diff?a=' + a._id) ← Назад
+      a(href='/admin/schedule/diff?month=' + a.monthKey + '&a=' + a._id) ← Назад
 
     include ../../flash
 

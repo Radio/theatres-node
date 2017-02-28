@@ -67,6 +67,9 @@ strong {
         > span {
             display: none;
         }
+        strong {
+            font-weight: 400;
+        }
     }
 }
 
@@ -125,4 +128,10 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 .options-panel {
     margin-bottom: 10px;
+}
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 992px) {
+    .hidden-md {
+        display: none !important;
+    }
 }

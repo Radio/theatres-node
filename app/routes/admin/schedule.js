@@ -23,7 +23,11 @@ router.get(/\/.*/, function(req, res, next) {
 
 router.param('scheduleId', function(req, res, next, id) {
     Schedule.findOne({_id: id, actual: true})
-        .populate('shows.theatre shows.scene shows.play')
+        .populate('shows.scene')
+        .populate({
+            path: 'shows.play',
+            populate: { path: 'theatre' }
+        })
         .exec(function(err, schedule) {
             if (err) return next(err);
             req.schedule = schedule;

@@ -2,35 +2,7 @@ extends layout
 
 block content
   header.main-header
-    h1
-      a.first-title(href='/') Все спектакли Харькова
-        span.hidden-sm-down  на одной странице
-
-      span &nbsp;/
-        =' '
-
-      if today.month() !== filter.month && nextMonth.month() !== filter.month
-        strong.second-subtitle= title.scheduleMonth
-      else
-        if today.month() === filter.month
-          strong.second-title= title.currentMonth
-        if nextMonth.month() === filter.month
-          a.second-title.no-print(
-            href='/year/' + today.year() + '/month/' + (today.month() + 1)
-          )= title.currentMonth
-
-        span.no-print &nbsp;—&nbsp;
-
-        if today.month() === filter.month
-          a.second-subtitle.no-print(
-            href='/year/' + nextMonth.year() + '/month/' + (nextMonth.month() + 1)
-          )= title.nextMonth
-        if nextMonth.month() === filter.month
-          strong.second-subtitle= title.nextMonth
-
-      if title.theatre
-        span &nbsp;/&nbsp;
-        span.third-title= title.theatre
+    include month/title
 
   .scroll-top
   .container-fluid.month-container

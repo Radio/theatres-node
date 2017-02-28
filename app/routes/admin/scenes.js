@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.get('/edit/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
     res.render('admin/scenes/edit', {
-        title: 'Сцены — ­' + req.scene.title,
+        title: 'Сцены — ' + req.scene.title,
         scene: getFormData(req.scene, req)
     });
 });
@@ -53,7 +53,7 @@ router.delete('/remove/:sceneKey', function(req, res, next) {
 router.get('/create', function(req, res, next) {
     let scene = new Scene();
     res.render('admin/scenes/edit', {
-        title: 'Сцены — Новая­',
+        title: 'Сцены — Новая',
         scene: getFormData(scene, req)
     });
 });

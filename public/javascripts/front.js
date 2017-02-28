@@ -2,7 +2,7 @@
     "use strict";
 
     let scrolledToDay;
-    let filter = {};
+    let filter = localStorage ? JSON.parse(localStorage.getItem('filter')) || {} : {};
     let actions = {
         toggleShowDetails: function($showRow) {
             $showRow.toggleClass('detailed');
@@ -38,6 +38,9 @@
             }
         },
         applyFilter: function() {
+            if (localStorage) {
+                // localStorage.setItem('filter', JSON.stringify(filter));
+            }
             let $rows = $('.show-row');
             let groups = getFilterClassesGrouped();
             if (!groups.length) {
@@ -62,21 +65,6 @@
             groups.push(filter[filterName].map(className => '.' + className).join(','))
         }
         return groups;
-    }
-
-
-    function fixPosterMargin() {
-        if (isSmallViewport()) {
-            let tries = 5;
-            let interval = setInterval(function() {
-                let headerHeight = $('.main-header').height();
-                $('.scroll-top').css({'top': headerHeight});
-                $('.filters-col').css({'margin-top': headerHeight});
-                if (!--tries) {
-                    clearInterval(interval);
-                }
-            }, 500);
-        }
     }
 
     $(document).ready(function() {
@@ -116,17 +104,30 @@
         actions.applyFilter();
     });
     $(document).ready(function() {
-        $('.filter-block.play-ages [type="checkbox"]').each(function() {
-            actions.toggleFilter('age', this.name, this.checked);
-        });
-        $('.filter-block.play-types [type="checkbox"]').each(function() {
-            actions.toggleFilter('type', this.name, this.checked);
-        });
-        $('.filter-block.scenes [type="checkbox"]').each(function() {
-            actions.toggleFilter('scene', this.name, this.checked);
-        });
+        if ($.isEmptyObject(filter)) {
+            $('.filter-block.play-ages [type="checkbox"]').each(function() {
+                actions.toggleFilter('age', this.name, this.checked);
+            });
+            $('.filter-block.play-types [type="checkbox"]').each(function() {
+                actions.toggleFilter('type', this.name, this.checked);
+            });
+            $('.filter-block.scenes [type="checkbox"]').each(function() {
+                actions.toggleFilter('scene', this.name, this.checked);
+            });
+        } else {
+            $('.filter-block.play-ages [type="checkbox"]').each(function () {
+                this.checked = (filter.age || []).indexOf(this.name) >= 0;
+            });
+            $('.filter-block.play-types [type="checkbox"]').each(function () {
+                this.checked = (filter.type || []).indexOf(this.name) >= 0;
+            });
+            $('.filter-block.scenes [type="checkbox"]').each(function() {
+                this.checked = (filter.scene || []).indexOf(this.name) >= 0;
+            });
+        }
         actions.applyFilter();
     });
+
     $('[data-disabled-if-unchecked]').each(function() {
         let $element = $(this);
         let dependencySelector = $element.data('disabled-if-unchecked');
@@ -134,17 +135,11 @@
             $element.attr('disabled', !this.checked);
         });
     });
-    $(document).ready(function() {
-        if (typeof window.filter === 'undefined') {
-            return;
-        }
-        if (typeof window.filter.theatre !== 'undefined') {
-            actions.toggleFilter('theatre', 'theatre-' + window.filter.theatre, true);
-        }
-    });
+
     $('body').on('click', '.scroll-top', function() {
         $('html, body').scrollTop(0);
     });
+
     $(window)
         .bind('scroll', handelWindowScroll)
         .bind('resize', function() {
@@ -157,21 +152,12 @@
 
     function handelWindowScroll() {
         if (isSmallViewport()) {
-            if ($(window).scrollTop() > 100) {
-                $('.scroll-top').show();
-            } else {
-                $('.scroll-top').hide();
-            }
+            $('.scroll-top').toggle($(window).scrollTop() > 100);
         }
     }
 
-    function handleWindowResize()
-    {
-        if (isSmallViewport()) {
-            $('.main-container').addClass('small-viewport');
-        } else {
-            $('.main-container').removeClass('small-viewport');
-        }
+    function handleWindowResize() {
+        $('.main-container').toggleClass('small-viewport', isSmallViewport());
     }
 
 })(jQuery, ResponsiveBootstrapToolkit);

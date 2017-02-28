@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.get('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
     res.render('admin/theatres/edit', {
-        title: 'Театры — ­' + req.theatre.title,
+        title: 'Театры — ' + req.theatre.title,
         theatre: getFormData(req.theatre, req)
     });
 });
@@ -53,7 +53,7 @@ router.delete('/remove/:theatreKey', function(req, res, next) {
 router.get('/create', function(req, res, next) {
     let theatre = new Theatre();
     res.render('admin/theatres/edit', {
-        title: 'Театры — Новый­',
+        title: 'Театры — Новый',
         theatre: getFormData(theatre, req)
     });
 });

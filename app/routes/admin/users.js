@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
 router.get('/edit/:userId', function(req, res, next) {
     if (!req.userToEdit) return next();
     res.render('admin/users/edit', {
-        title: 'Пользователи — ­' + req.userToEdit.name,
+        title: 'Пользователи — ' + req.userToEdit.name,
         user: getFormData(req.userToEdit, req)
     });
 });
@@ -52,7 +52,7 @@ router.delete('/remove/:userId', function(req, res, next) {
 router.get('/create', function(req, res, next) {
     let user = new User();
     res.render('admin/users/edit', {
-        title: 'Пользователи — Новая­',
+        title: 'Пользователи — Новая',
         user: getFormData(user, req)
     });
 });
