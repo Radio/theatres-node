@@ -5,7 +5,7 @@ div
   .filter-block
     //h5 Выберите день
     .calendar
-      each week in options.calendar
+      each week in calendar
         .week.clearfix
           each day in week
             - isToday = day && today.isSame([filter.year, filter.month, day], 'day');
@@ -69,5 +69,5 @@ div
     p
       span.hidden-sm-down Присылайте замечания или пожелания Максиму на
       span.hidden-md-up Для связи:
-      =' '
+      |
       a(href='mailto:max@theatres.kh.ua') max.gopey@gmail.com

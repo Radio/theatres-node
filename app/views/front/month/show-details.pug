@@ -6,7 +6,8 @@
   if show.play.genre
     p= show.play.genre
   p
-    a(href=show.theatre.url title='Сайт театра')= show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
+    a(href=show.play.theatre.url title='Сайт театра')
+      = show.play.theatre.title + (show.play.theatre.houseSlug ? ', Дом Актера' : '')
     span.show-separator= ' · '
     span.nobr= scene.title
     if show.price || show.buyTicketUrl

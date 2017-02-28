@@ -23,12 +23,12 @@ each show in date.shows
             sup.badge.badge-info= label
         .show-scene
           div(itemprop='location', itemscope='', itemtype='http://schema.org/PerformingArtsTheater')
-            meta(itemprop='name', content=show.theatre.houseSlug ? 'Дом Актера' : show.theatre.title)
+            meta(itemprop='name', content=show.play.theatre.houseSlug ? 'Дом Актера' : show.play.theatre.title)
             meta(itemprop='address', content='Kharkiv, Ukraine')
           span(itemprop='performer', itemscope='', itemtype='http://schema.org/TheaterGroup')
-            link(itemprop='url', href=show.theatre.url)
-            meta(itemprop='name', content=show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : ''))
-            = show.theatre.title + (show.theatre.houseSlug ? ', Дом Актера' : '')
+            link(itemprop='url', href=show.play.theatre.url)
+            meta(itemprop='name', content=show.play.theatre.title + (show.play.theatre.houseSlug ? ', Дом Актера' : ''))
+            = show.play.theatre.title + (show.play.theatre.houseSlug ? ', Дом Актера' : '')
           span.show-separator= ' · '
           span.nobr= scene.title
           if show.price || show.buyTicketUrl

@@ -1,0 +1,34 @@
+-
+  var currentMonthTitle = s.capitalize(today.format('MMMM'));
+  var nextMonthTitle = s.capitalize(nextMonth.format('MMMM') +
+      (nextMonth.year() !== today.year() ? ' ' + nextMonth.year() : ''));
+  var scheduleMonthTitle = s.capitalize(scheduleMonth.format('MMMM') +
+      (scheduleMonth.year() !== today.year() ? ' ' + scheduleMonth.year() : ''));
+
+h1
+  a.first-title(href='/') Все спектакли Харькова
+    span.hidden-sm-down  на одной странице
+
+  span &nbsp;/
+    =' '
+
+  if today.month() !== filter.month && nextMonth.month() !== filter.month
+    strong.second-subtitle= scheduleMonthTitle
+  else
+    if today.month() === filter.month
+      strong.second-title= currentMonthTitle
+      span.no-print &nbsp;—&nbsp;
+      a.second-subtitle.no-print(
+       href='/year/' + nextMonth.year() + '/month/' + (nextMonth.month() + 1)
+      )= nextMonthTitle
+
+    if nextMonth.month() === filter.month
+      a.second-title.no-print(
+        href='/year/' + today.year() + '/month/' + (today.month() + 1)
+      )= currentMonthTitle
+      span.no-print &nbsp;—&nbsp;
+      strong.second-subtitle= nextMonthTitle
+
+  //-if filter.theatre
+  //-  span &nbsp;/&nbsp;
+  //-  span.third-title= theatre.title
