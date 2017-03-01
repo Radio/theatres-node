@@ -4,6 +4,7 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'moget';
 const baseUrl = 'http://moget.com.ua';

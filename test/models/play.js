@@ -33,6 +33,7 @@ describe('Play', function() {
     before(function(done) {
         play = new Play({
             title: 'О чем говорят мужчины?',
+            key: 'test-play-1',
             theatre: theatre,
             scene: scene,
             tags: ['мужчины']
@@ -41,6 +42,7 @@ describe('Play', function() {
             if (err) return done(err);
             playDuplicate = new Play({
                 title: 'О чем говорят мужчины 2',
+                key: 'test-play-2',
                 theatre: theatre,
                 scene: scene,
                 tags: ['мужчины 2']

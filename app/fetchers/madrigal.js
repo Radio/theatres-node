@@ -5,6 +5,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let priceHelper = require('helpers/price');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'madrigal';
 const baseUrl = 'http://madrigal.org.ua';
@@ -85,12 +86,12 @@ let fetcher = function(callback) {
 
     function parseDate(rawShow) {
         const day = rawShow.date.replace(/\D/g, '');
-        const monthMatch = rawShow.date.match(new RegExp(fetchHelper.getMonthsNames('ru').join('|'), 'i'));
+        const monthMatch = rawShow.date.match(new RegExp(dateHelper.getMonthsNames('ru').join('|'), 'i'));
         const timeMatch = rawShow.time.match(/\d+:\d+/);
         if (!monthMatch || !day || !timeMatch) {
             return null;
         }
-        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
+        const mappedMonth = dateHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Madrigal: Unable to map month: ' + monthMatch[0].toLowerCase());
             return null;

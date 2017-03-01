@@ -5,6 +5,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let priceHelper = require('helpers/price');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawData) {
 
@@ -64,13 +65,13 @@ let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawD
         }
 
         function parseDate(dateString) {
-            const monthsNames = fetchHelper.getMonthsNames('ru');
+            const monthsNames = dateHelper.getMonthsNames('ru');
             const dateRegExp = new RegExp('(\\d+)\\s+(' + monthsNames.join('|') + '),\\s+(\\d+:\\d+)', 'i');
             let dateMatch = dateString.match(dateRegExp);
             if (!dateMatch) {
                 return null;
             }
-            const mappedMonth = fetchHelper.mapMonth(dateMatch[2].toLowerCase(), 'ru');
+            const mappedMonth = dateHelper.mapMonth(dateMatch[2].toLowerCase(), 'ru');
             if (mappedMonth < 0) {
                 console.warn('Internet Bilet (' + theatreKey + '): Unable to map month: ' + dateMatch[2].toLowerCase());
                 return null;

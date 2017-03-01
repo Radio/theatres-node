@@ -5,6 +5,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
 let priceHelper = require('helpers/price');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'postscriptum';
 const defaultScene = 'main';
@@ -80,12 +81,12 @@ let fetcher = function(callback) {
         const dateLine = s.strLeft(datetimeLine, '(');
         const timeLine = s.strRight(datetimeLine, '(');
         const days = dateLine.match(/\d+/g);
-        const monthMatch = dateLine.match(new RegExp(fetchHelper.getMonthsNames('ua').join('|')));
+        const monthMatch = dateLine.match(new RegExp(dateHelper.getMonthsNames('ua').join('|')));
         const times = timeLine.match(/\d+[.:]\d+/g);
         if (!monthMatch || !days || !times) {
             return [];
         }
-        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ua');
+        const mappedMonth = dateHelper.mapMonth(monthMatch[0].toLowerCase(), 'ua');
         if (mappedMonth < 0) {
             console.warn('PS: Unable to map month: ' + rawShow.date[2].toLowerCase());
             return null;

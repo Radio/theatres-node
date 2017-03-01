@@ -4,6 +4,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let modelHelper = require('helpers/model');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'theatre19';
 const baseUrl = 'http://www.theatre19.com.ua';
@@ -56,7 +57,7 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const mappedMonth = fetchHelper.mapMonth(rawShow.month.toLowerCase(), 'ru');
+        const mappedMonth = dateHelper.mapMonth(rawShow.month.toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Theatre 19: Unable to map month: ' + rawShow.month.toLowerCase());
             return null;
