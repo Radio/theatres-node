@@ -88,17 +88,18 @@ app.use(function(req, res, next) {
     next();
 });
 
-
 /**
  * 4. Setup app routes
  */
 
 let month = require('routes/month');
 let admin = require('routes/admin');
-let bot = require('routes/bot');
 app.use('/', month);
 app.use('/admin', admin);
-app.use('/bot', bot);
+if (process.env.RUN_TELEGRAM_BOT === 'yes') {
+    let bot = require('routes/bot');
+    app.use('/bot', bot);
+}
 
 /**
  * 5. Setup error handlers
