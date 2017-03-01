@@ -13,6 +13,7 @@ const webHookBaseUrl = process.env.TELEGRAM_BOT_WEB_HOOK_BASE_URL;
 
 let bot = new TelegramBot(token, { polling: mode === 'polling' });
 if (mode === 'webhook') {
+    bot.setWebHook(); // Remove web hook possibly set from another environment
     bot.setWebHook(webHookBaseUrl + '/bot/' + token);
 }
 
