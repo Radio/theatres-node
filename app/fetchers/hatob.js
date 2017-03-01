@@ -5,6 +5,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let async = require('async');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'hatob';
 const defaultScene = 'main';
@@ -68,7 +69,7 @@ let fetcher = function(callback) {
 
             $li.find('p').each(function(index, paragraph) {
                 let $paragraph = $(paragraph);
-                const dateRegExp = new RegExp('(\\d+)\\s*(' + fetchHelper.getMonthsNames('ru').join('|') + ')(.*)', 'i');
+                const dateRegExp = new RegExp('(\\d+)\\s*(' + dateHelper.getMonthsNames('ru').join('|') + ')(.*)', 'i');
                 let dateMatch = $paragraph.text().match(dateRegExp);
                 if (dateMatch) {
                     show.date = dateMatch;
@@ -105,7 +106,7 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const mappedMonth = fetchHelper.mapMonth(rawShow.date[2].toLowerCase(), 'ru');
+        const mappedMonth = dateHelper.mapMonth(rawShow.date[2].toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Hatob: Unable to map month: ' + rawShow.date[2].toLowerCase());
             return null;

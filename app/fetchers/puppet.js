@@ -4,6 +4,7 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'puppet';
 const baseUrl = 'http://puppet.kharkov.ua';
@@ -56,9 +57,9 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const monthMatch = rawShow.date.match(new RegExp(fetchHelper.getMonthsNames('ru').join('|'), 'i'));
+        const monthMatch = rawShow.date.match(new RegExp(dateHelper.getMonthsNames('ru').join('|'), 'i'));
         const mappedDay = rawShow.date.replace(/\D/g, '');
-        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
+        const mappedMonth = dateHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Puppet: Unable to map month: ' + monthMatch[0].toLowerCase());
             return null;

@@ -4,6 +4,7 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'beautiful-flowers';
 const sourceUrl = 'http://gobananas.com.ua/';
@@ -46,7 +47,7 @@ let pushkin = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        let mappedMonth = fetchHelper.mapMonth(rawShow.month.toLowerCase(), 'en_short');
+        let mappedMonth = dateHelper.mapMonth(rawShow.month.toLowerCase(), 'en');
         if (typeof mappedMonth < 0) {
             mappedMonth = month;
         }

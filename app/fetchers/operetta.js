@@ -5,6 +5,7 @@ let url = require('url');
 let cheerio = require('cheerio');
 let async = require('async');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'operetta';
 const defaultScene = 'main';
@@ -124,7 +125,7 @@ let fetcher = function(callback) {
     function parseDate(rawShow) {
         const mappedDay = rawShow.day.trim();
         const mappedTime = rawShow.time.replace(/[^\d:]/g, '');
-        const mappedMonth = fetchHelper.mapMonth(rawShow.month.toLowerCase(), 'ru');
+        const mappedMonth = dateHelper.mapMonth(rawShow.month.toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Operetta: Unable to map month: ' + rawShow.month.toLowerCase());
             return null;

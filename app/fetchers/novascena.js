@@ -4,6 +4,7 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'novascena';
 const baseUrl = 'http://novascena.org';
@@ -51,7 +52,7 @@ let fetcher = function(callback) {
 
     function translateRawShow(rawShow) {
         const dateRegExp = new RegExp('(\\d+:\\d+)\\s+\/\\s+(\\d+)\\s+(' +
-            fetchHelper.getMonthsNames('ru_short').join('|') + ')\\s+(\\d+)', 'i');
+            dateHelper.getMonthsNames('ru').join('|') + ')\\s+(\\d+)', 'i');
         const dateMatch = rawShow.date.match(dateRegExp);
         if (!dateMatch) {
             console.warn('Novascena: Unable to parse date: ' + rawShow.date);
@@ -59,7 +60,7 @@ let fetcher = function(callback) {
         }
         const mappedTime = dateMatch[1];
         const mappedDay = dateMatch[2];
-        const mappedMonth = fetchHelper.mapMonth(dateMatch[3].toLowerCase(), 'ru_short');
+        const mappedMonth = dateHelper.mapMonth(dateMatch[3].toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Novascena: Unable to map month: ' + dateMatch[3].toLowerCase().toLowerCase());
             return null;

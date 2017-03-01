@@ -4,6 +4,7 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
+let dateHelper = require('helpers/date');
 
 const theatreKey = 'pushkin';
 const baseUrl = 'http://rusdrama.com';
@@ -60,8 +61,8 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const monthMatch = rawShow.date.match(new RegExp(fetchHelper.getMonthsNames('ru').join('|'), 'i'));
-        const mappedMonth = fetchHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
+        const monthMatch = rawShow.date.match(new RegExp(dateHelper.getMonthsNames('ru').join('|'), 'i'));
+        const mappedMonth = dateHelper.mapMonth(monthMatch[0].toLowerCase(), 'ru');
         if (mappedMonth < 0) {
             console.warn('Pushkin: Unable to map month: ' + rawShow.date[2].toLowerCase());
             return null;
