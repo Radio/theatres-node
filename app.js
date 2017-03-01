@@ -95,8 +95,10 @@ app.use(function(req, res, next) {
 
 let month = require('routes/month');
 let admin = require('routes/admin');
+let bot = require('routes/bot');
 app.use('/', month);
 app.use('/admin', admin);
+app.use('/bot', bot);
 
 /**
  * 5. Setup error handlers
