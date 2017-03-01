@@ -52,7 +52,7 @@ let fetcher = function(callback) {
 
     function translateRawShow(rawShow) {
         const dateRegExp = new RegExp('(\\d+:\\d+)\\s+\/\\s+(\\d+)\\s+(' +
-            dateHelper.getMonthsNames('ru').join('|') + ')\\s+(\\d+)', 'i');
+            dateHelper.getMonthsNames('ru_short').join('|') + ')\\s+(\\d+)', 'i');
         const dateMatch = rawShow.date.match(dateRegExp);
         if (!dateMatch) {
             console.warn('Novascena: Unable to parse date: ' + rawShow.date);
