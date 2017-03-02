@@ -17,25 +17,8 @@ module.exports = {
         }
         let year = month < today.month() ? today.year() + 1 : today.year();
         let parsedDate = moment([year, month, day]);
-        return parsedDate.isValid() ? parsedDate : today;
-    },
-    formatNoDataMessage: (date) => {
-        return 'На *' + date.format('D MMMM YYYY') + '* еще (или уже) нет расписания.'
-    },
-    formatPosterMessage: (date, shows) => {
-        if (!shows.length) {
-            return 'На *' + date.format('D MMMM YYYY') + '* нет спектаклей.'
-        }
-        let lines = ['*Расписание на ' + date.format('D MMMM YYYY') + '*'];
-        shows.forEach(show => {
-            let url = show.url || show.play.url;
-            lines.push(
-                '*' + moment(show.date).format('HH:mm') + '*' +
-                ' ' + (url ? ' [' + show.play.title + '](' + url + ')' : show.play.title) +
-                ' (' + show.play.theatre.title + ')'
-            );
-        });
-        return lines.join("\n");
+
+        return (parsedDate.isValid() ? parsedDate : today).toObject();
     },
     getMonthDays: function(month) {
         const daysInMonth = moment({month: month}).daysInMonth();

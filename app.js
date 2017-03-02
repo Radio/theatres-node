@@ -96,9 +96,9 @@ let month = require('routes/month');
 let admin = require('routes/admin');
 app.use('/', month);
 app.use('/admin', admin);
-if (process.env.RUN_TELEGRAM_BOT === 'yes') {
-    let bot = require('routes/bot');
-    app.use('/bot', bot);
+
+if (process.env.RUN_BOTS === 'yes') {
+    require('./bots')(app);
 }
 
 /**
