@@ -20,6 +20,7 @@ module.exports = function(router) {
                 scenes: req.options.scenes,
                 months: req.options.months,
                 versions: req.options.versions,
+                backUrl: req.session.scheduleBackUrl
             });
         }, err => next(err));
     });

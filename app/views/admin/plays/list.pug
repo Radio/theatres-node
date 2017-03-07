@@ -64,7 +64,7 @@ block content
                 data-action='remove'
                 data-url='/admin/plays/remove/' + play.key
                 data-id=play.id
-                data-return-url='/admin/plays'
+                data-return-url=backUrl || '/admin/plays'
                 data-warning='Этот спектакль будет удален из всех расписаний.'
               ) Удалить
               a.btn.btn-sm.btn-outline-warning.mb-xs-2(

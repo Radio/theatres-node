@@ -19,6 +19,7 @@ module.exports = function(router) {
                     filter: req.query,
                     theatres: req.options.theatres,
                     scenes: req.options.scenes,
+                    backUrl: req.session.playsBackUrl
                 });
             });
     });

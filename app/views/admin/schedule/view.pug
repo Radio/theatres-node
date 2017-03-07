@@ -93,7 +93,7 @@ block content
                   data-action='remove'
                   data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
                   data-id=show.id
-                  data-return-url='/admin/schedule?month=' + schedule.monthKey
+                  data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
                 ) удалить
                 button.btn.btn-sm.btn-outline-warning(
                   data-action='mark-as-duplicate'
