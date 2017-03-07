@@ -104,5 +104,14 @@ block content
         .col-sm-10
           textarea.form-control(id='tags' name='tags')= play.tags.join("\n")
 
+      .form-group.row
+        label.col-sm-2.col-form-label(for='scene') Оригинал
+        .col-sm-10
+          select.form-control(id='map-as' name='map-as')
+            option(value='') —
+            each mapPlay in plays
+              option(value=mapPlay.id selected= play.mapAs == mapPlay.id)
+                = mapPlay.title + ' (' + mapPlay.theatre.title + ')'
+
       hr
       button.btn.btn-primary(type='submit') Сохранить

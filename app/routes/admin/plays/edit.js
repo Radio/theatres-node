@@ -11,6 +11,7 @@ module.exports = function(router) {
             play: getFormData(req.play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            plays: req.options.plays,
             backUrl: req.session.playsBackUrl
         });
     });
@@ -77,6 +78,7 @@ module.exports = function(router) {
             opera: !!requestBody.opera,
             ballet: !!requestBody.ballet,
             tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
+            mapAs: requestBody['map-as'] || null
         };
     }
 };

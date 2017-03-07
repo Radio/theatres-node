@@ -18,13 +18,18 @@ let playSchema = new Schema({
     duration: String,
     description: String,
     image: String,
+    tags: [String],
+
+    // flags
     premiere: Boolean,
     musical: Boolean,
     dancing: Boolean,
     forKids: Boolean,
     opera: Boolean,
     ballet: Boolean,
-    tags: [String]
+
+    // A link to another play, that should be used by play mapper.
+    mapAs: { type: Schema.Types.ObjectId, ref: 'Play' },
 });
 playSchema.set('toObject', { versionKey: false });
 
@@ -88,6 +93,7 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.forKids = editRequest.forKids;
     this.opera = editRequest.opera;
     this.ballet = editRequest.ballet;
+    this.mapAs = editRequest.mapAs;
     this.tags = editRequest.tags.map(tag => tag.trim());
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);
