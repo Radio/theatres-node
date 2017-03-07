@@ -31,17 +31,21 @@ playSchema.set('toObject', { versionKey: false });
 playSchema.post('remove', function() {
     playSchema.emit('remove', this);
 });
+playSchema.pre('save', function(next) {
+    this.tags = this.tags.map(tag => tag.trim());
+    next();
+});
 
 playSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
 };
 playSchema.statics.findByTag = function(tag, callback) {
-    return this.findOne({ tags: tag }, callback);
+    return this.findOne({ tags: tag.trim() }, callback);
 };
 
 playSchema.methods.addTag = function(tag) {
     if (this.tags.indexOf(tag) < 0) {
-        this.tags.push(tag);
+        this.tags.push(tag.trim());
     }
 };
 playSchema.methods.addTags = function(tags) {
@@ -49,6 +53,13 @@ playSchema.methods.addTags = function(tags) {
 };
 
 playSchema.methods.absorbDuplicate = function(duplicate, callback) {
+    this.url = this.url || duplicate.url;
+    this.director = this.director || duplicate.director;
+    this.author = this.author || duplicate.author;
+    this.genre = this.genre || duplicate.genre;
+    this.duration = this.duration || duplicate.duration;
+    this.description = this.description || duplicate.description;
+    this.image = this.image || duplicate.image;
     this.addTags(duplicate.tags);
     this.save(function(err) {
         if (err) return callback(err);
@@ -77,7 +88,7 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.forKids = editRequest.forKids;
     this.opera = editRequest.opera;
     this.ballet = editRequest.ballet;
-    this.tags = editRequest.tags;
+    this.tags = editRequest.tags.map(tag => tag.trim());
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);
     }

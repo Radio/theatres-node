@@ -9,7 +9,7 @@ function mapPlay(title, theatreId, playData, callback) {
         callback(new Error('Play mapper was provided with an empty play key.'));
     }
 
-    let findPlayQuery = Play.findByTag(title).where({theatre: theatreId});
+    let findPlayQuery = Play.findByTag(title.trim()).where({theatre: theatreId});
     findPlayQuery.exec(function(err, play) {
         if (err) return callback(err);
         if (!play) {
