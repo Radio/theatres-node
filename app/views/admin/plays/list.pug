@@ -53,21 +53,43 @@ block content
             td
               a(href='/admin/plays/edit/' + play.key)= play.title
               +playIcons(play)
+              if play.mapAs
+                =' '
+                span.badge.badge-default(title=play.get('mapAs.title')) дубликат
+              if play.hidden
+                =' '
+                span.badge.badge-default скрыт
             td
               if (play.theatre)
                 = play.theatre.title
             td
               if (play.scene)
                 = play.scene.title
-            td.nobr
-              button.btn.btn-sm.btn-outline-danger.mb-xs-2.mr-2(
-                data-action='remove'
-                data-url='/admin/plays/remove/' + play.key
-                data-id=play.id
-                data-return-url=backUrl || '/admin/plays'
-                data-warning='Этот спектакль будет удален из всех расписаний.'
-              ) Удалить
-              a.btn.btn-sm.btn-outline-warning.mb-xs-2(
-                data-action='absorb'
-                href='/admin/plays/absorb/' + play.key
-              ) Поглотить
+            td
+              .btn-group(role="group")
+                button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" data-toggle="dropdown" )
+                  i.fa.fa-gear
+                div.dropdown-menu
+                  button.dropdown-item.text-danger(type='button'
+                    data-action='remove'
+                    data-url='/admin/plays/remove/' + play.key
+                    data-id=play.id
+                    data-return-url=backUrl || '/admin/plays'
+                    data-warning='Этот спектакль будет удален из всех расписаний.'
+                  ) удалить
+                  a.dropdown-item(
+                    data-action='absorb'
+                    href='/admin/plays/absorb/' + play.key
+                  ) поглотить
+                  if play.hidden
+                    button.dropdown-item(type='button'
+                      data-action='unhide'
+                      data-url='/admin/plays/unhide/' + play.key
+                      data-return-url=backUrl || '/admin/plays'
+                    ) показывать
+                  if !play.hidden
+                    button.dropdown-item(type='button'
+                      data-action='hide'
+                      data-url='/admin/plays/hide/' + play.key
+                      data-return-url=backUrl || '/admin/plays'
+                    ) скрывать

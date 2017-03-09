@@ -101,6 +101,13 @@ block content
                       data-id=show.id
                       data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
                     ) удалить
+                    if show.hidden
+                      button.dropdown-item(
+                        type="button"
+                        data-action='unhide'
+                        data-url='/admin/schedule/' + schedule.id + '/show/unhide/' + show.id
+                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                      ) показывать
                     if !show.hidden
                       button.dropdown-item(
                         type="button"
@@ -108,10 +115,3 @@ block content
                         data-url='/admin/schedule/' + schedule.id + '/show/hide/' + show.id
                         data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
                       ) скрывать
-                    else
-                      button.dropdown-item(
-                        type="button"
-                        data-action='unhide'
-                        data-url='/admin/schedule/' + schedule.id + '/show/unhide/' + show.id
-                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
-                      ) показывать

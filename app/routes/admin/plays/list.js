@@ -9,7 +9,7 @@ module.exports = function(router) {
         req.session.playsBackUrl = req.originalUrl;
         let filter = collectFilter(req.query);
         Play.find(filter)
-            .populate('theatre scene')
+            .populate('theatre scene mapAs')
             .sort({title: 1})
             .exec(function (err, plays) {
                 if (err) return next(err);

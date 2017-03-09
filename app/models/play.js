@@ -30,6 +30,7 @@ let playSchema = new Schema({
 
     // A link to another play, that should be used by play mapper.
     mapAs: { type: Schema.Types.ObjectId, ref: 'Play' },
+    hidden: Boolean,
 });
 playSchema.set('toObject', { versionKey: false });
 
@@ -98,7 +99,20 @@ playSchema.methods.edit = function(editRequest, callback) {
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);
     }
+    if (typeof editRequest.hidden !== 'undefined') {
+        this.hidden = editRequest.hidden;
+    }
 
+    this.save(callback);
+};
+
+playSchema.methods.hide = function(callback) {
+    this.hidden = true;
+    this.save(callback);
+};
+
+playSchema.methods.unhide = function(callback) {
+    this.hidden = false;
     this.save(callback);
 };
 

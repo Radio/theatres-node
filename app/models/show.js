@@ -66,7 +66,9 @@ showSchema.methods.edit = function(editRequest, callback) {
         this.hash = editRequest.hash;
     }
     this.manual = editRequest.manual;
-    this.hidden = editRequest.hidden;
+    if (typeof editRequest.hidden !== 'undefined') {
+        this.hidden = editRequest.hidden;
+    }
     this.labels = editRequest.labels;
 
     this.validate(callback);
@@ -81,7 +83,10 @@ showSchema.methods.unhide = function() {
 };
 
 showSchema.methods.isPubliclyVisible = function() {
-    return !this.hidden;
+    if (!this.play instanceof Play) {
+        this.populate('play');
+    }
+    return !this.hidden && !this.play.hidden;
 };
 
 function calculateHash(playId, date) {
