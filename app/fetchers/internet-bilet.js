@@ -58,7 +58,7 @@ let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawD
                 date: date,
                 title: rawShow.title,
                 url: url.resolve(sourceUrl, rawShow.url),
-                image: url.resolve(sourceUrl, rawShow.image),
+                image: url.resolve(sourceUrl, (rawShow.image || '').replace('size1', 'original')),
                 price: priceHelper.normalize(rawShow.price),
                 buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
             };

@@ -1,5 +1,6 @@
 [
     "fetchers/shevchenko",
+    "fetchers/shevchenko-internet-bilet",
     "fetchers/pushkin",
     "fetchers/beautiful-flowers",
     "fetchers/hatob",

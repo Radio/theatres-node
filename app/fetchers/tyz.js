@@ -8,8 +8,6 @@ let fetchHelper = require('helpers/fetch');
 const theatreKey = 'tyz';
 const sourceUrl = 'http://tyz.kharkov.ua';
 
-const defaultScene = 'main';
-
 let fetcher = function(callback) {
 
     const today = new Date();
@@ -33,12 +31,11 @@ let fetcher = function(callback) {
             let $li = $(li);
             let show = {};
 
-            const $titleLink = $li.find('strong a');
             show.theatre = theatreKey;
-            show.scene = defaultScene;
+            show.scene = /МАЛІЙ СЦЕНІ/i.test($li.text()) ? 'small' : 'main';
             show.date = $li.find('time').attr('datetime');
-            show.title = $titleLink.text();
-            show.playUrl = $titleLink.attr('href');
+            show.title = $li.find('>strong').text();
+            show.playUrl = $li.find('strong a').attr('href');
             show.premiere = $li.text().match(/ПРЕМ'ЄРА|премьера/i) !== null;
 
             return show;
@@ -49,7 +46,7 @@ let fetcher = function(callback) {
         let [dateString, timeString] = rawShow.date.split(' ');
         let [year, month, day, hour, minute] = [...dateString.split('-'), ... timeString.split(':')];
         const date = new Date(year, month - 1, day, hour, minute);
-        return {
+        let show = {
             theatre: rawShow.theatre,
             theatreRawData: {
                 title: 'Театр юного зрителя',
@@ -57,11 +54,14 @@ let fetcher = function(callback) {
                 hasFetcher: true,
             },
             title: s.humanize(rawShow.title.replace(/^[«"](.*)[»"]$/, '$1')),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: date,
             scene: rawShow.scene,
             premiere: rawShow.premiere,
         };
+        if (rawShow.playUrl) {
+            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+        }
+        return show;
     }
 };
 

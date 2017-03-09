@@ -30,5 +30,5 @@ block content
               button.btn.btn-sm.btn-outline-danger(
                 data-action='remove'
                 data-url='/admin/users/remove/' + user._id
-                data-return-url='/admin/users'
+                data-return-url=backUrl || '/admin/users'
               ) Удалить

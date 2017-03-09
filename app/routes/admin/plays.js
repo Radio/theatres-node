@@ -29,7 +29,8 @@ router.get(/\/.*/, function(req, res, next) {
 function loadOptionsData(callback) {
     async.parallel({
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
-        scenes: callback => Scene.find({}).sort({title: 1}).exec(callback)
+        scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
+        plays: callback => Play.find({}).populate('theatre').sort({title: 1}).exec(callback)
     }, callback);
 }
 

@@ -18,30 +18,40 @@ let playSchema = new Schema({
     duration: String,
     description: String,
     image: String,
+    tags: [String],
+
+    // flags
     premiere: Boolean,
     musical: Boolean,
     dancing: Boolean,
     forKids: Boolean,
     opera: Boolean,
     ballet: Boolean,
-    tags: [String]
+
+    // A link to another play, that should be used by play mapper.
+    mapAs: { type: Schema.Types.ObjectId, ref: 'Play' },
+    hidden: Boolean,
 });
 playSchema.set('toObject', { versionKey: false });
 
 playSchema.post('remove', function() {
     playSchema.emit('remove', this);
 });
+playSchema.pre('save', function(next) {
+    this.tags = this.tags.map(tag => tag.trim());
+    next();
+});
 
 playSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
 };
 playSchema.statics.findByTag = function(tag, callback) {
-    return this.findOne({ tags: tag }, callback);
+    return this.findOne({ tags: tag.trim() }, callback);
 };
 
 playSchema.methods.addTag = function(tag) {
     if (this.tags.indexOf(tag) < 0) {
-        this.tags.push(tag);
+        this.tags.push(tag.trim());
     }
 };
 playSchema.methods.addTags = function(tags) {
@@ -49,6 +59,13 @@ playSchema.methods.addTags = function(tags) {
 };
 
 playSchema.methods.absorbDuplicate = function(duplicate, callback) {
+    this.url = this.url || duplicate.url;
+    this.director = this.director || duplicate.director;
+    this.author = this.author || duplicate.author;
+    this.genre = this.genre || duplicate.genre;
+    this.duration = this.duration || duplicate.duration;
+    this.description = this.description || duplicate.description;
+    this.image = this.image || duplicate.image;
     this.addTags(duplicate.tags);
     this.save(function(err) {
         if (err) return callback(err);
@@ -77,11 +94,25 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.forKids = editRequest.forKids;
     this.opera = editRequest.opera;
     this.ballet = editRequest.ballet;
-    this.tags = editRequest.tags;
+    this.mapAs = editRequest.mapAs;
+    this.tags = editRequest.tags.map(tag => tag.trim());
     if (oldTitle !== editRequest.title) {
         this.addTags([oldTitle, editRequest.title]);
     }
+    if (typeof editRequest.hidden !== 'undefined') {
+        this.hidden = editRequest.hidden;
+    }
 
+    this.save(callback);
+};
+
+playSchema.methods.hide = function(callback) {
+    this.hidden = true;
+    this.save(callback);
+};
+
+playSchema.methods.unhide = function(callback) {
+    this.hidden = false;
     this.save(callback);
 };
 

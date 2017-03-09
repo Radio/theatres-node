@@ -14,7 +14,7 @@ let showSchema = new Schema({
     price: String,
     url: String,
     buyTicketUrl: String,
-    duplicateOf: Schema.Types.ObjectId,
+    hidden: Boolean,
     manual: Boolean,
     labels: [String]
 });
@@ -39,6 +39,7 @@ showSchema.statics.equal = function(show1, show2) {
         show1.buyTicketUrl === show2.buyTicketUrl &&
         show1.customHash === show2.customHash &&
         (!show1.customHash || (show1.hash === show2.hash)) &&
+        show1.hidden === show2.hidden &&
         show1.manual === show2.manual &&
         show1.labels.join() === show2.labels.join();
 };
@@ -65,17 +66,27 @@ showSchema.methods.edit = function(editRequest, callback) {
         this.hash = editRequest.hash;
     }
     this.manual = editRequest.manual;
+    if (typeof editRequest.hidden !== 'undefined') {
+        this.hidden = editRequest.hidden;
+    }
     this.labels = editRequest.labels;
 
     this.validate(callback);
 };
 
-showSchema.methods.markAsDuplicate = function(originalId) {
-    this.duplicateOf = originalId;
+showSchema.methods.hide = function() {
+    this.hidden = true;
+};
+
+showSchema.methods.unhide = function() {
+    this.hidden = false;
 };
 
 showSchema.methods.isPubliclyVisible = function() {
-    return !this.duplicateOf;
+    if (!this.play instanceof Play) {
+        this.populate('play');
+    }
+    return !this.hidden && !this.play.hidden;
 };
 
 function calculateHash(playId, date) {

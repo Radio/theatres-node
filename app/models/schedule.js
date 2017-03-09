@@ -333,18 +333,32 @@ scheduleSchema.methods.removeShow = function(showId, callback) {
 };
 
 /**
- * Mark show as a duplicate of another show.
+ * Hide show from this schedule.
  *
- * @param {String} duplicateId
- * @param {String} originalId
+ * @param {String} showId
  * @param {Function} callback
  */
-scheduleSchema.methods.markShowAsDuplicate = function(duplicateId, originalId, callback) {
-    let show = this.shows.find(show => String(show._id) === String(duplicateId));
+scheduleSchema.methods.hideShow = function(showId, callback) {
+    let show = this.shows.find(show => String(show._id) === String(showId));
     if (!show) {
         return callback(new Error('There is no show with ID=' + duplicateId + ' in this schedule.'));
     }
-    show.markAsDuplicate(originalId);
+    show.hide();
+    this.save(callback);
+};
+
+/**
+ * Un-mark show as hidden in this schedule.
+ *
+ * @param {String} showId
+ * @param {Function} callback
+ */
+scheduleSchema.methods.unhideShow = function(showId, callback) {
+    let show = this.shows.find(show => String(show._id) === String(showId));
+    if (!show) {
+        return callback(new Error('There is no show with ID=' + duplicateId + ' in this schedule.'));
+    }
+    show.unhide();
     this.save(callback);
 };
 

@@ -22,7 +22,9 @@ class ScheduleBot {
             }
             callback(null, {
                 date: date,
-                shows: schedule.shows.filter(show => date.getTime() === new Date(show.date).setHours(0, 0, 0, 0))
+                shows: schedule.shows.filter(show => {
+                    return show.isPubliclyVisible() && date.getTime() === new Date(show.date).setHours(0, 0, 0, 0)
+                })
             });
         });
     }

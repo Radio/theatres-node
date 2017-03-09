@@ -11,6 +11,7 @@ module.exports = function(router) {
             play: getFormData(req.play, req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
+            plays: req.options.plays,
             backUrl: req.session.playsBackUrl
         });
     });
@@ -30,6 +31,24 @@ module.exports = function(router) {
         req.play.remove(function (err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль «' + req.play.title + '» удален.');
+            res.end();
+        });
+    });
+
+    router.post('/hide/:playKey', function(req, res, next) {
+        if (!req.play) return next();
+        req.play.hide(function (err) {
+            if (err) return next(err);
+            req.flash('success', 'Спектакль «' + req.play.title + '» скрыт из всех расписаний.');
+            res.end();
+        });
+    });
+
+    router.post('/unhide/:playKey', function(req, res, next) {
+        if (!req.play) return next();
+        req.play.unhide(function (err) {
+            if (err) return next(err);
+            req.flash('success', 'Спектакль «' + req.play.title + '» больше не скрыт.');
             res.end();
         });
     });
@@ -77,6 +96,7 @@ module.exports = function(router) {
             opera: !!requestBody.opera,
             ballet: !!requestBody.ballet,
             tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
+            mapAs: requestBody['map-as'] || null
         };
     }
 };
