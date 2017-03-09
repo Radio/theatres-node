@@ -34,7 +34,7 @@ function mapStatic(showsData, callback) {
 
 function mapPlaysAsync(showsData, callback) {
     async.mapSeries(showsData, function (showData, callback) {
-        mapPlay(showData.raw.title, showData.mapped.theatre.id, showData.raw, function (err, play) {
+        mapPlay(showData.raw.title, showData.raw, showData.mapped.theatre, showData.mapped.scene, function (err, play) {
             if (err) return callback(err);
             showData.mapped.play = play;
             callback(null, showData);
