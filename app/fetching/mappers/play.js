@@ -4,18 +4,18 @@ let modelHelper = require('helpers/model');
 let Play = require('models/play');
 let shortid = require('shortid');
 
-function mapPlay(title, theatreId, playData, callback) {
+function mapPlay(title, playData, theatre, scene, callback) {
     if (!title) {
         callback(new Error('Play mapper was provided with an empty play key.'));
     }
 
     let findPlayQuery = Play.findByTag(title.trim())
-        .where({theatre: theatreId})
+        .where({theatre: theatre.id})
         .populate('mapAs');
     findPlayQuery.exec(function(err, play) {
         if (err) return callback(err);
         if (!play) {
-            createPlay(title, playData, function(err, play) {
+            createPlay(title, playData, theatre, scene, function(err, play) {
                 if (err) return callback(err);
                 callback(null, play);
             });
@@ -30,12 +30,12 @@ function mapPlay(title, theatreId, playData, callback) {
 }
 
 
-function createPlay(title, playData, callback) {
+function createPlay(title, playData, theatre, scene, callback) {
     let play = new Play({
         key: modelHelper.generateKey(title),
         title: title,
-        theatre: playData.theatre,
-        scene: playData.scene,
+        theatre: theatre,
+        scene: scene,
         url: playData.playUrl,
         director: playData.director,
         author: playData.author,
