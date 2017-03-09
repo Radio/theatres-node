@@ -14,62 +14,33 @@ let mapTheatre = require('fetching/mappers/theatre');
  * @return {{theatre: Theatre, play: Play, scene: Scene, date: Date}}
  */
 module.exports = function(rawShowsData, callback) {
-    let mappingTuple = async.compose(mapStatic, mapPlaysAsync, mapScenesAsync, mapTheatresAsync);
-    mappingTuple(rawShowsData.map(rawShowData => ({raw: rawShowData, mapped: {}})), function(err, results) {
+    let withMappedStatic = rawShowsData.map(mapStatic);
+    mapPlaysAsync(withMappedStatic, function(err, mapped) {
         if (err) return callback(err);
-        callback(null, results.map(showData => showData.mapped));
+        callback(null, mapped.map(showData => showData.mapped));
     });
 };
 
-function mapStatic(showsData, callback) {
-    callback(null, showsData.map(showData => {
-        ['url', 'date', 'price', 'buyTicketUrl'].forEach(property => {
-            if (typeof showData.raw[property] !== 'undefined') {
-                showData.mapped[property] = showData.raw[property];
-            }
-        });
-        return showData
-    }));
+function mapStatic(rawShowData) {
+    return {raw: rawShowData, mapped: {
+        url: rawShowData.url,
+        date: rawShowData.date,
+        price: rawShowData.price,
+        buyTicketUrl: rawShowData.buyTicketUrl,
+    }};
 }
 
 function mapPlaysAsync(showsData, callback) {
     async.mapSeries(showsData, function (showData, callback) {
-        mapPlay(showData.raw.title, showData.raw, showData.mapped.theatre, showData.mapped.scene, function (err, play) {
-            if (err) return callback(err);
-            showData.mapped.play = play;
-            callback(null, showData);
+        async.parallel({
+            theatre: callback => mapTheatre(showData.raw.theatre, showData.raw.theatreRawData, callback),
+            scene: callback => mapScene(showData.raw.scene, callback),
+        }, function(err, mapped) {
+            mapPlay(showData.raw.title, showData.raw, mapped.theatre, mapped.scene, function (err, play) {
+                if (err) return callback(err);
+                showData.mapped.play = play;
+                callback(null, showData);
+            });
         });
-    }, function (err, results) {
-        if (err) return callback(err);
-        callback(null, results);
-    });
-}
-
-function mapScenesAsync(showsData, callback) {
-    async.mapSeries(showsData, function (showData, callback) {
-        if (!showData.raw.scene) {
-            return callback(null, showData);
-        }
-        mapScene(showData.raw.scene, function (err, scene) {
-            if (err) return callback(err);
-            showData.mapped.scene = scene;
-            callback(null, showData);
-        });
-    }, function (err, results) {
-        if (err) return callback(err);
-        callback(null, results);
-    });
-}
-
-function mapTheatresAsync(showsData, callback) {
-    async.mapSeries(showsData, function (showData, callback) {
-        mapTheatre(showData.raw.theatre, showData.raw.theatreRawData, function (err, theatre) {
-            if (err) return callback(err);
-            showData.mapped.theatre = theatre;
-            callback(null, showData);
-        });
-    }, function (err, results) {
-        if (err) return callback(err);
-        callback(null, results);
-    });
+    }, callback);
 }
