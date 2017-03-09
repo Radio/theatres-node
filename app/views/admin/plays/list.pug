@@ -70,6 +70,7 @@ block content
                 button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" data-toggle="dropdown" )
                   i.fa.fa-gear
                 div.dropdown-menu
+
                   button.dropdown-item.text-danger(type='button'
                     data-action='remove'
                     data-url='/admin/plays/remove/' + play.key
@@ -77,10 +78,11 @@ block content
                     data-return-url=backUrl || '/admin/plays'
                     data-warning='Этот спектакль будет удален из всех расписаний.'
                   ) удалить
-                  a.dropdown-item(
-                    data-action='absorb'
-                    href='/admin/plays/absorb/' + play.key
-                  ) поглотить
+
+                  a.dropdown-item(data-action='absorb' href='/admin/plays/absorb/' + play.key) поглотить
+
+                  a.dropdown-item(data-action='move' href='/admin/plays/move/' + play.key) в другой театр
+
                   if play.hidden
                     button.dropdown-item(type='button'
                       data-action='unhide'

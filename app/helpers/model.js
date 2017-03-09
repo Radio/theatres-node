@@ -1,6 +1,7 @@
 "use strict";
 
 let s = require("underscore.string");
+let mongoose = require('mongoose');
 
 let lettersMap = {
     'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z',
@@ -23,4 +24,16 @@ function generateKey(title) {
         .value();
 }
 
+function getId(candidate) {
+    if (!candidate) {
+        return null;
+    }
+    return candidate instanceof mongoose.Schema.Types.ObjectId ? candidate : candidate._id;
+}
+function sameIds(idA, idB) {
+    return String(getId(idA)) === String(getId(idB));
+}
+
 module.exports.generateKey = generateKey;
+module.exports.getId = getId;
+module.exports.sameIds = sameIds;
