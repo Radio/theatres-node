@@ -83,21 +83,35 @@ block content
                 else
                   = show.play ? show.play.title : '[УДАЛЕН]'
                 +playIcons(show.play)
-                if show.duplicateOf
+
+                if show.hidden
                   =' '
-                  span.badge.badge-default(title=show.duplicateOf) дубликат
+                  span.badge.badge-default скрыт
+
               td= show.play && show.play.theatre ? show.play.theatre.title : '—'
               td= show.scene ? show.scene.title : '—'
               td
-                button.btn.btn-sm.btn-outline-danger.mb-1(
-                  data-action='remove'
-                  data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
-                  data-id=show.id
-                  data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
-                ) удалить
-                button.btn.btn-sm.btn-outline-warning(
-                  data-action='mark-as-duplicate'
-                  data-url='/admin/schedule/' + schedule.id + '/show/mark-as-duplicate/${duplicate-id}'
-                  data-id=show.id
-                  data-return-url='/admin/schedule?month=' + schedule.monthKey
-                ) дубликат
+                .btn-group(role="group")
+                  button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" data-toggle="dropdown" )
+                    i.fa.fa-gear
+                  div.dropdown-menu
+                    button.dropdown-item.text-danger(type="button"
+                      data-action='remove'
+                      data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
+                      data-id=show.id
+                      data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                    ) удалить
+                    if !show.hidden
+                      button.dropdown-item(
+                        type="button"
+                        data-action='hide'
+                        data-url='/admin/schedule/' + schedule.id + '/show/hide/' + show.id
+                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                      ) скрывать
+                    else
+                      button.dropdown-item(
+                        type="button"
+                        data-action='unhide'
+                        data-url='/admin/schedule/' + schedule.id + '/show/unhide/' + show.id
+                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                      ) показывать
