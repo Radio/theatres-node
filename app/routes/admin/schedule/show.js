@@ -85,7 +85,7 @@ module.exports = function(router) {
     function getFormData(show, req) {
         let formData = req.flash('body')[0] || show.toObject({ depopulate: true });
         formData.playUrl = show.get('play.url');
-        formData.theatre = show.get('play.theatre.id');
+        formData.playTheatre = show.get('play.theatre.id');
         return formData;
     }
 
@@ -101,6 +101,7 @@ module.exports = function(router) {
         const customHash = !requestBody['auto-hash'];
         const editRequest = {
             date: moment(requestBody.date, momentDateFormat).toDate(),
+            theatre: requestBody.theatre || null,
             scene: requestBody.scene || null,
             play: requestBody.play,
             price: requestBody.price,

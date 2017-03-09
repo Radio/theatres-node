@@ -89,6 +89,8 @@ block content
                   span.badge.badge-default скрыт
 
               td= show.play && show.play.theatre ? show.play.theatre.title : '—'
+                if show.theatre
+                  = ' (' + show.theatre.title + ')'
               td= show.scene ? show.scene.title : '—'
               td
                 .btn-group(role="group")

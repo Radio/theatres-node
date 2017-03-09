@@ -21,7 +21,7 @@ function monthMiddleware(req, res, next) {
         days: callback => callback(null, dateHelper.getMonthDays(filter.month, filter.year)),
         theatre: callback => filter.theatre ? Theatre.findByKey(filter.theatre, callback) : callback(),
         schedule: callback => Schedule.findByMonthAndYear(filter.month, filter.year)
-            .populate('shows.scene')
+            .populate('shows.scene shows.theatre')
             .populate({
                 path: 'shows.play',
                 populate: [{ path:'scene' }, { path:'theatre' }]
