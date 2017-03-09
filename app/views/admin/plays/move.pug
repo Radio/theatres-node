@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+
+    p
+      a(href=backUrl || '/admin/plays') ← Назад
+
+    include ../flash
+
+    p.alert.alert-info(role="alert")
+      | Этот спектакль будет перенесен в другой театр.
+      br
+      | Для текущего театра останется его копия связанная с оригиналом.
+      br
+      | При последующем сборе расписания она будет использоваться, чтобы правильно найти спектакль.
+
+    form(action='' method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label Текущий театр
+        .col-sm-10
+          p.form-control-static= play.theatre.title
+      .form-group.row
+        label.col-sm-2.col-form-label(for='new-theatre') Новый театр
+        .col-sm-10
+          select.form-control(id='new-theatre' name='new-theatre')
+            option(value='') —
+            each theatre in theatres
+              if (theatre.id !== play.theatre.id)
+                option(value=theatre.id)= theatre.title
+
+      hr
+      button.btn.btn-primary(type='submit') Переместить

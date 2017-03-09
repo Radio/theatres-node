@@ -38,5 +38,6 @@ function loadOptionsData(callback) {
 require('./plays/list')(router);
 require('./plays/edit')(router);
 require('./plays/absorb')(router);
+require('./plays/move')(router);
 
 module.exports = router;
