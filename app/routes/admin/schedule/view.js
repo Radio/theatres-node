@@ -1,6 +1,7 @@
 "use strict";
 
 let Schedule = require('models/schedule');
+let modelHelper = require('helpers/model');
 
 module.exports = function(router) {
     router.get('/', function (req, res, next) {
@@ -41,8 +42,8 @@ module.exports = function(router) {
         }
         return schedule.shows.filter(function (show) {
             const scene = show.scene || show.play.scene;
-            return (!filter.theatre || filter.theatre === String(show.play.theatre.id)) &&
-                (!filter.scene || filter.scene === String(scene.id))
+            return (!filter.theatre || modelHelper.sameIds(filter.theatre, show.play.theatre)) &&
+                (!filter.scene || modelHelper.sameIds(filter.scene, scene))
         });
     }
 
