@@ -70,26 +70,28 @@ let fetcher = function(callback) {
         const mappedYear = mappedMonth >= month ? year : year + 1;
 
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр имени Пушкина',
-                url: baseUrl,
-                hasFetcher: true
-            },
-            title: s.humanize(rawShow.title),
             date: new Date(mappedYear, mappedMonth, rawShow.date.replace(/\D/g, ''), ...rawShow.time.split(':')),
-            scene: rawShow.scene,
-            buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
-            duration: rawShow.duration.replace(/.*?(\d.*)/, '$1').trim(),
-            author: rawShow.author,
-            genre: rawShow.genre,
-            premiere: rawShow.premiere
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр имени Пушкина',
+                    url: baseUrl,
+                    hasFetcher: true
+                },
+                scene: { key: rawShow.scene },
+                title: s.humanize(rawShow.title),
+                duration: rawShow.duration.replace(/.*?(\d.*)/, '$1').trim(),
+                author: rawShow.author,
+                genre: rawShow.genre,
+                premiere: rawShow.premiere,
+            },
+            buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl)
         };
         if (rawShow.image) {
-            show.image = url.resolve(sourceUrl, rawShow.image);
+            show.play.image = url.resolve(sourceUrl, rawShow.image);
         }
         if (rawShow.playUrl) {
-            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+            show.play.url = url.resolve(sourceUrl, rawShow.playUrl);
         }
         return show;
     }

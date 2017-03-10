@@ -114,18 +114,20 @@ let fetcher = function(callback) {
         const mappedYear = mappedMonth >= month ? year : year + 1;
         rawShow.title[0] = s.humanize(rawShow.title[0]);
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'ХАТОБ',
-                url: baseUrl,
-                hasFetcher: true
-            },
-            title: rawShow.title.join(', '),
-            url: url.resolve(sourceUrl, rawShow.url),
-            image: url.resolve(sourceUrl, rawShow.image),
-            scene: rawShow.scene,
-            duration: s.humanize(rawShow.duration),
             dates: [],
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'ХАТОБ',
+                    url: baseUrl,
+                    hasFetcher: true
+                },
+                scene: { key: rawShow.scene },
+                title: rawShow.title.join(', '),
+                image: url.resolve(sourceUrl, rawShow.image),
+                duration: s.humanize(rawShow.duration),
+            },
+            url: url.resolve(sourceUrl, rawShow.url),
         };
         (rawShow.times || []).forEach(function(time) {
             show.dates.push(new Date(mappedYear, mappedMonth, rawShow.date[1], ...time.split(/:|-/)));

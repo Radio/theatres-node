@@ -52,17 +52,19 @@ let pushkin = function(callback) {
             mappedMonth = month;
         }
         return {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Прекрасные цветы',
-                url: sourceUrl,
-                hasFetcher: true,
-                houseSlug: 'teatr-prekrasny-e-tsvety'
-            },
-            scene: rawShow.scene,
-            title: rawShow.title,
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: new Date(year, mappedMonth, rawShow.day, ...defaultTime.split(':')),
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Прекрасные цветы',
+                    url: sourceUrl,
+                    hasFetcher: true,
+                    houseSlug: 'teatr-prekrasny-e-tsvety'
+                },
+                scene: { key: rawShow.scene },
+                title: rawShow.title,
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+            },
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl)
         };
     }

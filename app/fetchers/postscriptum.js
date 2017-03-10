@@ -54,16 +54,18 @@ let fetcher = function(callback) {
 
     function translateRawShow(rawShow) {
         const show = {
-            theatre: rawShow.theatre,
-            scene: rawShow.scene,
-            theatreRawData: {
-                title: 'Post Scriptum',
-                url: sourceUrl,
-                hasFetcher: true
-            },
-            title: s.humanize(rawShow.title.replace(/“|”/g, '')),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
-            dates: []
+            dates: [],
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Post Scriptum',
+                    url: sourceUrl,
+                    hasFetcher: true
+                },
+                scene: { key: rawShow.scene },
+                title: s.humanize(rawShow.title.replace(/“|”/g, '')),
+                url: url.resolve(sourceUrl, rawShow.playUrl)
+            }
         };
         if (rawShow.price.match(/\d/)) {
             show.price = priceHelper.normalize(rawShow.price.replace(/.*?(\d.*)/, '$1').trim())

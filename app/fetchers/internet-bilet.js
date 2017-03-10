@@ -7,7 +7,7 @@ let priceHelper = require('helpers/price');
 let fetchHelper = require('helpers/fetch');
 let dateHelper = require('helpers/date');
 
-let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawData) {
+let internetBiletFetcher = function(sourceUrl, theatreRawData, sceneRawData) {
 
     return function (callback) {
 
@@ -32,8 +32,8 @@ let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawD
                 let $li = $(li);
                 let show = {};
 
-                show.theatre = theatreKey;
-                show.scene = sceneKey;
+                show.theatre = theatreRawData.key;
+                show.scene = sceneRawData.key;
                 show.date = $li.find('.event-date').text();
                 const $titleLink = $li.find('.event-title a');
                 show.title = $titleLink.text();
@@ -52,14 +52,15 @@ let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawD
                 return null;
             }
             return {
-                theatre: rawShow.theatre,
-                theatreRawData: theatreRawData,
-                scene: rawShow.scene,
                 date: date,
-                title: rawShow.title,
-                url: url.resolve(sourceUrl, rawShow.url),
-                image: url.resolve(sourceUrl, (rawShow.image || '').replace('size1', 'original')),
+                play: {
+                    theatre: theatreRawData,
+                    scene: sceneRawData,
+                    title: rawShow.title,
+                    image: url.resolve(sourceUrl, (rawShow.image || '').replace('size1', 'original')),
+                },
                 price: priceHelper.normalize(rawShow.price),
+                url: url.resolve(sourceUrl, rawShow.url),
                 buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
             };
         }
@@ -73,7 +74,8 @@ let internetBiletFetcher = function(theatreKey, sceneKey, sourceUrl, theatreRawD
             }
             const mappedMonth = dateHelper.mapMonth(dateMatch[2].toLowerCase(), 'ru');
             if (mappedMonth < 0) {
-                console.warn('Internet Bilet (' + theatreKey + '): Unable to map month: ' + dateMatch[2].toLowerCase());
+                console.warn('Internet Bilet (' + theatreRawData.key + '): Unable to map month: '
+                    + dateMatch[2].toLowerCase());
                 return null;
             }
             const mappedYear = mappedMonth >= month ? year : year + 1;

@@ -33,12 +33,20 @@ function mapStatic(rawShowData) {
 function mapPlaysAsync(showsData, callback) {
     async.mapSeries(showsData, function (showData, callback) {
         async.parallel({
-            theatre: callback => mapTheatre(showData.raw.theatre, showData.raw.theatreRawData, callback),
-            scene: callback => mapScene(showData.raw.scene, callback),
+            showTheatre: callback => showData.raw.theatre ? mapTheatre(showData.raw.theatre, callback) : callback(),
+            showScene: callback => showData.raw.scene ? mapScene(showData.raw.scene, callback) : callback(),
+            playTheatre: callback => mapTheatre(showData.raw.play.theatre, callback),
+            playScene: callback => mapScene(showData.raw.play.scene, callback),
         }, function(err, mapped) {
-            mapPlay(showData.raw.title, showData.raw, mapped.theatre, mapped.scene, function (err, play) {
+            mapPlay(showData.raw.play, mapped.playTheatre, mapped.playScene, function (err, play) {
                 if (err) return callback(err);
                 showData.mapped.play = play;
+                if (mapped.showTheatre) {
+                    showData.mapped.theatre = mapped.showTheatre;
+                }
+                if (mapped.showScene) {
+                    showData.mapped.scene = mapped.showScene;
+                }
                 callback(null, showData);
             });
         });

@@ -47,19 +47,21 @@ let fetcher = function(callback) {
         let [year, month, day, hour, minute] = [...dateString.split('-'), ... timeString.split(':')];
         const date = new Date(year, month - 1, day, hour, minute);
         let show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр юного зрителя',
-                url: sourceUrl,
-                hasFetcher: true,
-            },
-            title: s.humanize(rawShow.title.replace(/^[«"](.*)[»"]$/, '$1')),
             date: date,
-            scene: rawShow.scene,
-            premiere: rawShow.premiere,
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр юного зрителя',
+                    url: sourceUrl,
+                    hasFetcher: true,
+                },
+                scene: { key: rawShow.scene },
+                title: s.humanize(rawShow.title.replace(/^[«"](.*)[»"]$/, '$1')),
+                premiere: rawShow.premiere,
+            }
         };
         if (rawShow.playUrl) {
-            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+            show.play.url = url.resolve(sourceUrl, rawShow.playUrl);
         }
         return show;
     }

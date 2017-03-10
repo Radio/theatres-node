@@ -4,11 +4,10 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let fetchHelper = require('helpers/fetch');
-let dateHelper = require('helpers/date');
 
 const sourceUrl = 'http://domaktera.kharkiv.ua/afisha';
-const defaultTheatreKey = 'domaktera';
 const defaultTheatreRawData = {
+    key: 'domaktera',
     title: 'Дом Актера',
     url: 'http://domaktera.kharkiv.ua/',
     hasFetcher: true
@@ -65,23 +64,28 @@ let fetcher = function(callback) {
         let [year, month, day, hour, minute] = [...dateString.split('-'), ... timeString.split(':')];
         const date = new Date(year, month - 1, day, hour, minute);
         let theatreKey = s(rawShow.theatre.url).strRightBack('/').value();
-        let theatreRawData = {
-            title: rawShow.theatre.title,
-            url: rawShow.theatre.url,
-            hasFetcher: false,
-            houseSlug: theatreKey,
-        };
+        let theatreRawData;
         if (theatreKey === 'afisha' || !theatreKey) {
-            theatreKey = defaultTheatreKey;
             theatreRawData = defaultTheatreRawData;
+        } else {
+            theatreRawData = {
+                key: theatreKey,
+                title: rawShow.theatre.title,
+                url: rawShow.theatre.url,
+                hasFetcher: false,
+                houseSlug: theatreKey,
+            };
         }
+
         return {
-            theatre: theatreKey,
-            theatreRawData: theatreRawData,
-            title: rawShow.title,
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: date,
-            scene: rawShow.scene,
+            play: {
+                title: rawShow.title,
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+                scene: { key: rawShow.scene },
+                theatre: theatreRawData,
+            },
+            theatre: defaultTheatreRawData,
         };
     }
 };

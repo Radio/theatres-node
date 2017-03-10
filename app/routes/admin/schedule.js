@@ -23,7 +23,7 @@ router.get(/\/.*/, function(req, res, next) {
 
 router.param('scheduleId', function(req, res, next, id) {
     Schedule.findOne({_id: id, actual: true})
-        .populate('shows.scene')
+        .populate('shows.scene shows.theatre')
         .populate({
             path: 'shows.play',
             populate: { path: 'theatre' }

@@ -26,36 +26,40 @@ block content
             value= show.date ? moment(show.date).format(momentDateFormat) : ''
           )
       .form-group.row
-        label.col-sm-2.col-form-label(for='theatre') Театр
-        .col-sm-10
-          select.form-control(id='theatre' name='theatre')
-            option(value='') —
-            each theatre in theatres
-              option(value=theatre.id selected= show.theatre == theatre.id)= theatre.title
-      .form-group.row
         label.col-sm-2.col-form-label(for='play')
           if (show.playUrl)
             a(href=show.playUrl title='открыть' target='_blank') Спектакль ↗
           else
             | Спектакль
-        .col-sm-10
-          select.form-control(id='play' name='play' data-optgroup-dependent-on="#theatre")
+        .col-sm-5
+          select.form-control(id='play' name='play' data-optgroup-dependent-on="#play-theatre")
             option(value='') —
             each theatreInfo, theatreId in plays
               optgroup(label=theatreInfo.title data-dependency-id=theatreId)
                 each play in theatreInfo.plays
                   option(value=play.id selected= show.play == play.id data-scene-id=play.scene.id)
                     =play.title + ' (' + play.scene.title + ')'
+        .col-sm-5
+          select.form-control(id='play-theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= show.playTheatre == theatre.id)= theatre.title
+      .form-group.row
+        label.col-sm-2.col-form-label(for='theatre') Театр (площадка)
+        .col-sm-10
+          select.form-control(id='theatre' name='theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= show.theatre == theatre.id)= theatre.title
+          small.form-text.text-muted Если идет в другом театре
       .form-group.row
         label.col-sm-2.col-form-label(for='scene') Сцена
         .col-sm-10
-          select.form-control(
-            id='scene'
-            name='scene'
-          )
+          select.form-control(id='scene' name='scene')
             option(value='') —
             each scene in scenes
               option(value=scene.id selected= show.scene == scene.id)= scene.title
+          small.form-text.text-muted Если идет на другой сцене
       .form-group.row
         label.col-sm-2.col-form-label(for='price') Стоимость
         .col-sm-10

@@ -2,11 +2,13 @@
 
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+let Theatre = require('models/theatre');
 let Scene = require('models/scene');
 let Play = require('models/play');
 
 let showSchema = new Schema({
     play: {type: Schema.Types.ObjectId, ref: 'Play', required: true},
+    theatre: {type: Schema.Types.ObjectId, ref: 'Theatre'},
     scene: {type: Schema.Types.ObjectId, ref: 'Scene'},
     date: {type: Date, required: true},
     hash: String,
@@ -33,6 +35,7 @@ showSchema.pre('save', function(next) {
  */
 showSchema.statics.equal = function(show1, show2) {
     return show1.play === show2.play &&
+        show1.theatre === show2.theatre &&
         show1.scene === show2.scene &&
         show1.date.getTime() === show2.date.getTime() &&
         show1.price === show2.price &&
@@ -56,6 +59,7 @@ showSchema.methods.updateHash = function() {
 
 showSchema.methods.edit = function(editRequest, callback) {
     this.date = editRequest.date;
+    this.theatre = editRequest.theatre;
     this.scene = editRequest.scene;
     this.play = editRequest.play;
     this.price = editRequest.price;

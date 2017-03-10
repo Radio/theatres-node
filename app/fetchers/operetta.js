@@ -96,28 +96,30 @@ let fetcher = function(callback) {
             return null;
         }
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр музыкальной комедии',
-                url: baseUrl,
-                hasFetcher: true
-            },
             date: date,
-            title: s.humanize(rawShow.title),
-            scene: rawShow.scene,
-            premiere: rawShow.premiere,
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр музыкальной комедии',
+                    url: baseUrl,
+                    hasFetcher: true
+                },
+                title: s.humanize(rawShow.title),
+                scene: { key: rawShow.scene },
+                premiere: rawShow.premiere,
+            }
         };
         if (rawShow.playUrl) {
-            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+            show.play.url = url.resolve(sourceUrl, rawShow.playUrl);
         }
         if (rawShow.image) {
-            show.image = url.resolve(sourceUrl, rawShow.image);
+            show.play.image = url.resolve(sourceUrl, rawShow.image);
         }
         if (rawShow.director) {
-            show.director = rawShow.director.replace(/премьера!?/i, '').trim();
+            show.play.director = rawShow.director.replace(/премьера!?/i, '').trim();
         }
         if (rawShow.genre) {
-            show.genre = rawShow.genre.trim();
+            show.play.genre = rawShow.genre.trim();
         }
         return show;
     }

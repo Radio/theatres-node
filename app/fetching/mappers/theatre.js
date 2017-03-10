@@ -4,19 +4,16 @@ let Theatre = require('models/theatre');
 
 let localTheatresCache = {};
 
-function mapTheatre(theatreKey, theatreData, callback) {
+function mapTheatre(theatreData, callback) {
+    const theatreKey = theatreData.key;
     if (!theatreKey) {
-        callback(new Error('Theatre mapper was provided with an empty theatre key.'));
-    }
-    function resolveTheatre(theatre) {
-        localTheatresCache[theatreKey] = theatre;
-        callback(null, localTheatresCache[theatreKey])
+        callback(new Error('Theatre mapper has been provided with an empty theatre key.'));
     }
     if (typeof localTheatresCache[theatreKey] === 'undefined') {
         Theatre.findByKeyOrHouseSlug(theatreKey, function(err, theatre) {
             if (err) return callback(err);
             if (!theatre) {
-                createTheatre(theatreKey, theatreData, function(err, theatre) {
+                createTheatre(theatreData, function(err, theatre) {
                     if (err) return callback(err);
                     resolveTheatre(theatre);
                 });
@@ -27,17 +24,19 @@ function mapTheatre(theatreKey, theatreData, callback) {
         return;
     }
 
-    resolveTheatre(localTheatresCache[theatreKey]);
+    return resolveTheatre(localTheatresCache[theatreKey]);
+
+    function resolveTheatre(theatre) {
+        localTheatresCache[theatreKey] = theatre;
+        callback(null, localTheatresCache[theatreKey])
+    }
 }
 
 
-function createTheatre(theatreKey, theatreData, callback) {
-    let theatre = new Theatre({
-        key: theatreKey,
-        title: theatreKey
-    });
-    if (theatreData) {
-        theatre.set(theatreData);
+function createTheatre(theatreData, callback) {
+    let theatre = new Theatre(theatreData);
+    if (!theatre.title) {
+        theatre.set('title', theatreData.key);
     }
     theatre.save(function(err) {
         if (err) return callback(err);

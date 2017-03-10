@@ -27,7 +27,7 @@ module.exports = function(router) {
 
     function loadSchedule(filter, callback) {
         return Schedule.findOne(filter)
-            .populate('shows.scene')
+            .populate('shows.scene shows.theatre')
             .populate({
                 path: 'shows.play',
                 populate: { path: 'theatre' }
