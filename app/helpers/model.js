@@ -28,7 +28,10 @@ function getId(candidate) {
     if (!candidate) {
         return null;
     }
-    return candidate instanceof mongoose.Schema.Types.ObjectId ? candidate : candidate._id;
+    if (typeof candidate === 'string') {
+        return candidate;
+    }
+    return candidate instanceof mongoose.Types.ObjectId ? candidate : candidate._id;
 }
 function sameIds(idA, idB) {
     return String(getId(idA)) === String(getId(idB));
