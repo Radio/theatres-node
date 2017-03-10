@@ -67,18 +67,20 @@ let fetcher = function(callback) {
         }
         const mappedYear = dateMatch[4];
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'ЦИC «Новая Сцена»',
-                url: baseUrl,
-                hasFetcher: true,
-            },
-            title: rawShow.title,
-            scene: rawShow.scene,
             date: new Date(mappedYear, mappedMonth, mappedDay, ...mappedTime.split(':')),
-            image: url.resolve(sourceUrl, rawShow.image),
-            url: url.resolve(sourceUrl, rawShow.url),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'ЦИC «Новая Сцена»',
+                    url: baseUrl,
+                    hasFetcher: true,
+                },
+                scene: { key: rawShow.scene },
+                title: rawShow.title,
+                image: url.resolve(sourceUrl, rawShow.image),
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+            },
+            url: url.resolve(sourceUrl, rawShow.url)
         };
         if (rawShow.buyTicketUrl) {
             show.buyTicketUrl = url.resolve(sourceUrl, rawShow.buyTicketUrl);

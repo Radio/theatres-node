@@ -276,6 +276,12 @@ scheduleSchema.methods.addOrUpdateOneShow = function(show) {
         if (show.url) {
             this.shows[sameHashIndex].url = show.url;
         }
+        if (show.theatre) {
+            this.shows[sameHashIndex].theatre = show.theatre;
+        }
+        if (show.scene) {
+            this.shows[sameHashIndex].scene = show.scene;
+        }
         return this.shows[sameHashIndex];
     } else {
         this.shows.push(show);

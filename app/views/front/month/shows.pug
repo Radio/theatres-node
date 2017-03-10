@@ -28,8 +28,8 @@ each show in date.shows
             meta(itemprop='address', content='Kharkiv, Ukraine')
           span(itemprop='performer', itemscope='', itemtype='http://schema.org/TheaterGroup')
             link(itemprop='url', href=show.play.theatre.url)
-            meta(itemprop='name', content=show.play.theatre.title + (show.play.theatre.houseSlug ? ', Дом Актера' : ''))
-            = show.play.theatre.title + (show.play.theatre.houseSlug ? ', Дом Актера' : '')
+            meta(itemprop='name', content=show.play.theatre.title)
+            = show.play.theatre.title
 
           span.show-separator= ' · '
           span.nobr= scene.title

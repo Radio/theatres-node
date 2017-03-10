@@ -64,19 +64,21 @@ let fetcher = function(callback) {
         }
         const mappedYear = mappedMonth >= month ? year : year + 1;
         return {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр 19',
-                url: baseUrl,
-                hasFetcher: true,
-            },
-            title: rawShow.title,
             date: new Date(mappedYear, mappedMonth, rawShow.day, ...rawShow.time.split(':')),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
-            genre: rawShow.genre,
-            scene: mapScene(rawShow.scene),
-            premiere: rawShow.premiere,
-            duration: rawShow.duration,
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр 19',
+                    url: baseUrl,
+                    hasFetcher: true,
+                },
+                scene: { key: mapScene(rawShow.scene) },
+                title: rawShow.title,
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+                genre: rawShow.genre,
+                premiere: rawShow.premiere,
+                duration: rawShow.duration,
+            },
             buyTicketUrl: url.resolve(sourceUrl, rawShow.buyTicketUrl),
         };
     }

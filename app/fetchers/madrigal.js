@@ -61,22 +61,24 @@ let fetcher = function(callback) {
             return null;
         }
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Мадригал',
-                url: baseUrl,
-                hasFetcher: true,
-            },
-            scene: rawShow.scene,
-            title: s.humanize(rawShow.title),
             date: date,
-            price: priceHelper.normalize(rawShow.price),
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Мадригал',
+                    url: baseUrl,
+                    hasFetcher: true,
+                },
+                scene: { key: rawShow.scene },
+                title: s.humanize(rawShow.title),
+            },
+            price: priceHelper.normalize(rawShow.price)
         };
         if (rawShow.playUrl) {
-            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+            show.play.url = url.resolve(sourceUrl, rawShow.playUrl);
         }
         if (rawShow.image) {
-            show.image = url.resolve(sourceUrl, rawShow.image);
+            show.play.image = url.resolve(sourceUrl, rawShow.image);
         }
         if (rawShow.buyTicketUrl) {
             show.buyTicketUrl = url.resolve(sourceUrl, rawShow.buyTicketUrl);

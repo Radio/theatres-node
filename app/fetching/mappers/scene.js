@@ -4,19 +4,16 @@ let Scene = require('models/scene');
 
 let localScenesCache = {};
 
-function mapScene(sceneKey, callback) {
+function mapScene(sceneData, callback) {
+    const sceneKey = sceneData.key;
     if (!sceneKey) {
-        callback(new Error('Scene mapper was provided with an empty scene key.'));
-    }
-    function resolveScene(scene) {
-        localScenesCache[sceneKey] = scene;
-        callback(null, localScenesCache[sceneKey])
+        callback(new Error('Scene mapper has been provided with an empty scene key.'));
     }
     if (typeof localScenesCache[sceneKey] === 'undefined') {
         Scene.findByKey(sceneKey, function(err, scene) {
             if (err) return callback(err);
             if (!scene) {
-                createScene(sceneKey, function(err, scene) {
+                createScene(sceneData, function(err, scene) {
                     if (err) return callback(err);
                     resolveScene(scene);
                 });
@@ -27,15 +24,20 @@ function mapScene(sceneKey, callback) {
         return;
     }
 
-    resolveScene(localScenesCache[sceneKey]);
+    return resolveScene(localScenesCache[sceneKey]);
+
+    function resolveScene(scene) {
+        localScenesCache[sceneKey] = scene;
+        callback(null, localScenesCache[sceneKey])
+    }
 }
 
 
-function createScene(sceneKey, callback) {
-    let scene = new Scene({
-        key: sceneKey,
-        title: sceneKey
-    });
+function createScene(sceneData, callback) {
+    let scene = new Scene(sceneData);
+    if (!scene.title) {
+        scene.set('title', sceneData.key);
+    }
     scene.save(function(err) {
         if (err) return callback(err);
         callback(null, scene);

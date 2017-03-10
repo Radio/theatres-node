@@ -49,24 +49,25 @@ let fetcher = function(callback) {
     }
 
     function translateRawShow(rawShow) {
-        const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр «Может быть»',
-                url: baseUrl,
-                hasFetcher: true,
-            },
-            title: rawShow.title.replace(/«|»/g, '').trim(),
-            scene: rawShow.scene,
+        return {
             dates: rawShow.dates.map(function(dateString) {
                 let date = new Date(dateString);
-                date.setHours(19, 0);
+                date.setHours(...defaultTime.split(':'));
                 return date;
             }),
-            image: url.resolve(sourceUrl, rawShow.image),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр «Может быть»',
+                    url: baseUrl,
+                    hasFetcher: true,
+                },
+                scene: { key: rawShow.scene },
+                title: rawShow.title.replace(/[«»]/g, '').trim(),
+                image: url.resolve(sourceUrl, rawShow.image),
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+            }
         };
-        return show;
     }
 };
 

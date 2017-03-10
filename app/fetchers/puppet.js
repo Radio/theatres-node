@@ -67,26 +67,28 @@ let fetcher = function(callback) {
         const mappedYear = mappedMonth >= month ? year : year + 1;
 
         const show = {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр кукол',
-                url: baseUrl,
-                hasFetcher: true
-            },
             dates: [],
-            title: s.humanize(rawShow.title),
-            scene: rawShow.scene,
-            duration: rawShow.duration.replace(/.*?(\d.*)/, '$1').trim(),
-            author: rawShow.author,
-            genre: rawShow.genre,
-            premiere: rawShow.premiere,
-            forKids: rawShow.forKids
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр кукол',
+                    url: baseUrl,
+                    hasFetcher: true
+                },
+                scene: { key: rawShow.scene },
+                title: s.humanize(rawShow.title),
+                duration: rawShow.duration.replace(/.*?(\d.*)/, '$1').trim(),
+                author: rawShow.author,
+                genre: rawShow.genre,
+                premiere: rawShow.premiere,
+                forKids: rawShow.forKids
+            }
         };
         if (rawShow.image) {
-            show.image = url.resolve(sourceUrl, rawShow.image);
+            show.play.image = url.resolve(sourceUrl, rawShow.image);
         }
         if (rawShow.playUrl) {
-            show.playUrl = url.resolve(sourceUrl, rawShow.playUrl);
+            show.play.url = url.resolve(sourceUrl, rawShow.playUrl);
         }
         rawShow.time.match(/\d+:\d+/g).forEach(function(time) {
             show.dates.push(new Date(mappedYear, mappedMonth, mappedDay, ...time.split(':')))

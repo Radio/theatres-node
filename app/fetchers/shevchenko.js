@@ -71,22 +71,24 @@ let fetcher = function(callback) {
     function translateRawShow(rawShow) {
         const dateParts = /(\d+).+(\d\d)[.:](\d\d)/u.exec(rawShow.date);
         return {
-            theatre: rawShow.theatre,
-            theatreRawData: {
-                title: 'Театр имени Шевченко',
-                url: baseUrl,
-                hasFetcher: true
-            },
-            title: rawShow.title.replace(/\s+/, ' '),
-            playUrl: url.resolve(sourceUrl, rawShow.playUrl),
             date: dateParts ?
                 new Date(rawShow.year, rawShow.month, dateParts[1], dateParts[2], dateParts[3], 0) :
                 null,
-            scene: sceneMap[rawShow.scene] || defaultScene,
+            play: {
+                theatre: {
+                    key: rawShow.theatre,
+                    title: 'Театр имени Шевченко',
+                    url: baseUrl,
+                    hasFetcher: true
+                },
+                scene: { key: sceneMap[rawShow.scene] || defaultScene },
+                title: rawShow.title.replace(/\s+/, ' '),
+                url: url.resolve(sourceUrl, rawShow.playUrl),
+                premiere: rawShow.premiere,
+            },
             price: /\d/.test(rawShow.price) ?
                 priceHelper.normalize(s.strRight(rawShow.price, 'квиток коштує ')) :
-                null,
-            premiere: rawShow.premiere
+                null
         };
     }
 };
