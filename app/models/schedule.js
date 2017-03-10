@@ -297,12 +297,13 @@ scheduleSchema.methods.addOrUpdateOneShow = function(show) {
  * @param {Function} callback
  */
 scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
-    let showIndex = this.shows.findIndex(show => String(show._id) === String(showId));
-    if (showIndex < 0) {
+    let showInSchedule = this.shows.find(show => String(show._id) === String(showId));
+    if (!showInSchedule) {
         return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
-    let show = new Show({_id: showId});
     let schedule = this;
+    // Create a clone of show in order to leave schedule unmodified when the show is modified (for correct diff).
+    let show = new Show(showInSchedule.toObject({depopulate: true}));
     show.edit(editRequest, function(err) {
         if (err) return callback(err);
         schedule.addOrUpdateShowsAndSave([show], callback);
