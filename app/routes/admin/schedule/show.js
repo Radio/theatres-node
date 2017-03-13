@@ -37,7 +37,7 @@ module.exports = function(router) {
             title: 'Расписание — Добавить',
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
-            show: getFormData(new Show(), req),
+            show: getFormData(new Show({ customHash: false, manual: true }), req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             labels: req.options.labels,
