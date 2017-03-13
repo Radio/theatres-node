@@ -4,6 +4,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let Show = require('models/show');
 let Play = require('models/play');
+let modelHelper = require('helpers/model');
 let versioned = require('models/schedule/versioned');
 
 let scheduleSchema = new Schema({
@@ -259,7 +260,7 @@ scheduleSchema.methods.sortShows = function() {
  * @return {Object} Show document
  */
 scheduleSchema.methods.addOrUpdateOneShow = function(show) {
-    const sameShowIndex = this.shows.findIndex((existingShow) => existingShow._id === show._id);
+    const sameShowIndex = this.shows.findIndex((existingShow) => modelHelper.sameIds(existingShow._id, show._id));
     if (sameShowIndex >= 0) {
         this.shows[sameShowIndex] = show;
         return this.shows[sameShowIndex];
