@@ -119,7 +119,7 @@ module.exports = function(token) {
                 lines.push(
                     '*' + moment(show.date).format('HH:mm') + '*' +
                     ' ' + (url ? ' [' + show.play.title + '](' + url + ')' : show.play.title) +
-                    ' (' + show.play.theatre.title + ')'
+                    ' (' + show.play.theatre.title + (show.theatre ? ', ' + show.theatre.title : '') + ')'
                 );
             });
             return lines.join("\n");

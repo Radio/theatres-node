@@ -32,7 +32,7 @@ class ScheduleBot {
 
 function findSchedule(date, callback) {
     return Schedule.findByMonthAndYear(date.getMonth(), date.getFullYear())
-        .populate('shows.scene')
+        .populate('shows.scene shows.theatre')
         .populate({
             path: 'shows.play',
             populate: [{ path:'scene' }, { path:'theatre' }]
