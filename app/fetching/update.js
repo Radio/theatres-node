@@ -1,7 +1,7 @@
 "use strict";
 
 let async = require('async');
-let Schedule = require('models/schedule');
+let Schedule = require('domain/models/schedule');
 
 /**
  * Update the schedule records with the new shows.

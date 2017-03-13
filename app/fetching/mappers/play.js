@@ -1,7 +1,7 @@
 "use strict";
 
 let modelHelper = require('helpers/model');
-let Play = require('models/play');
+let Play = require('domain/models/play');
 let shortid = require('shortid');
 
 function mapPlay(playData, theatre, scene, callback) {
