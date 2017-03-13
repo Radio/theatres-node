@@ -50,7 +50,7 @@ playSchema.statics.findByTag = function(tag, callback) {
 };
 
 playSchema.methods.addTag = function(tag) {
-    if (this.tags.indexOf(tag) < 0) {
+    if (this.tags.indexOf(tag.trim()) < 0) {
         this.tags.push(tag.trim());
     }
 };
@@ -96,8 +96,9 @@ playSchema.methods.edit = function(editRequest, callback) {
     this.ballet = editRequest.ballet;
     this.mapAs = editRequest.mapAs;
     this.tags = editRequest.tags.map(tag => tag.trim());
-    if (oldTitle !== editRequest.title) {
-        this.addTags([oldTitle, editRequest.title]);
+    this.addTag(editRequest.title.trim());
+    if (oldTitle && oldTitle !== editRequest.title) {
+        this.addTag(oldTitle.trim());
     }
     if (typeof editRequest.hidden !== 'undefined') {
         this.hidden = editRequest.hidden;
