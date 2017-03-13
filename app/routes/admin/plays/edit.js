@@ -25,6 +25,26 @@ module.exports = function(router) {
         });
     });
 
+    router.get('/create', function(req, res) {
+        res.render('admin/plays/edit', {
+            title: 'Спектакли — Новый',
+            play: getFormData(new Play, req),
+            theatres: req.options.theatres,
+            scenes: req.options.scenes,
+            plays: req.options.plays,
+            backUrl: req.session.playsBackUrl
+        });
+    });
+
+    router.post('/create', function(req, res, next) {
+        let play = new Play();
+        play.edit(buildEditRequest(req.body), function(err) {
+            if (err) return next(err);
+            req.flash('success', 'Спектакль сохранен.');
+            res.redirect(req.session.playsBackUrl || '/admin/plays');
+        });
+    });
+
     router.delete('/remove/:playKey', function(req, res, next) {
         if (!req.play) return next();
         if (req.play.id !== req.body.id) return next();
@@ -50,26 +70,6 @@ module.exports = function(router) {
             if (err) return next(err);
             req.flash('success', 'Спектакль «' + req.play.title + '» больше не скрыт.');
             res.end();
-        });
-    });
-
-
-    router.get('/create', function(req, res) {
-        res.render('admin/plays/edit', {
-            title: 'Спектакли — Новый',
-            play: getFormData(new Play, req),
-            theatres: req.options.theatres,
-            scenes: req.options.scenes,
-            backUrl: req.session.playsBackUrl
-        });
-    });
-
-    router.post('/create', function(req, res, next) {
-        let play = new Play();
-        play.edit(buildEditRequest(req.body), function(err) {
-            if (err) return next(err);
-            req.flash('success', 'Спектакль сохранен.');
-            res.redirect(req.session.playsBackUrl || '/admin/plays');
         });
     });
 
