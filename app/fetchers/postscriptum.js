@@ -93,7 +93,7 @@ let fetcher = function(callback) {
             console.warn('PS: Unable to map month: ' + rawShow.date[2].toLowerCase());
             return null;
         }
-        const mappedYear = mappedMonth > month ? year : year + 1;
+        const mappedYear = mappedMonth >= month ? year : year + 1;
         let dates = [];
         if (days.length === 1 || times.length > 1) {
             times.forEach(function (time) {
