@@ -21,4 +21,5 @@ module.exports = function(router) {
             res.redirect('/admin/plays/edit/' + req.play.key);
         });
     });
+
 };

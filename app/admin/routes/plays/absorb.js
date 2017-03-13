@@ -7,7 +7,7 @@ module.exports = function(router) {
 
     router.get('/absorb/:playKey', function(req, res, next) {
         if (!req.play) return next();
-        Play.find({ theatre: req.play.theatre.id}).sort({ title: 1 }).exec(function(err, plays) {
+        Play.findByTheatre(req.play.theatre.id).sort({ title: 1 }).exec(function(err, plays) {
             if (err) return next(err);
             res.render('plays/absorb', {
                 title: 'Спектакли — ' + req.play.title + ' — Поглотить',

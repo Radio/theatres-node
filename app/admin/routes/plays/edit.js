@@ -1,6 +1,8 @@
 "use strict";
 
 let Play = require('domain/models/play');
+let edit = require('admin/commands/plays/edit');
+let create = require('admin/commands/plays/create');
 
 module.exports = function(router) {
 
@@ -18,9 +20,9 @@ module.exports = function(router) {
 
     router.post('/edit/:playKey', function(req, res, next) {
         if (!req.play) return next();
-        req.play.edit(buildEditRequest(req.body), function (err) {
+        edit(req.play, buildEditRequest(req), function (err) {
             if (err) return next(err);
-            req.flash('success', 'Спектакль сохранен.');
+            req.flash('success', 'Спектакль изменен.');
             res.redirect(req.session.playsBackUrl || '/admin/plays');
         });
     });
@@ -37,38 +39,51 @@ module.exports = function(router) {
     });
 
     router.post('/create', function(req, res, next) {
-        let play = new Play();
-        play.edit(buildEditRequest(req.body), function(err) {
+        create(buildEditRequest(req), function(err, play) {
             if (err) return next(err);
-            req.flash('success', 'Спектакль сохранен.');
+            req.flash('success', 'Спектакль создан.');
             res.redirect(req.session.playsBackUrl || '/admin/plays');
         });
     });
 
     function getFormData(play, req) {
-        return req.flash('body')[0] || play.toObject({depopulate: true});
+        let dto = req.flash('body')[0];
+        if (!dto) {
+            dto = play.toObject({ depopulate: true });
+            delete dto._id;
+            return dto;
+        }
+        dto.forKids = dto['for-kids'];
+        dto.mapAs = dto['map-as'];
+        dto.tags = multilineTagsToArray(dto.tags);
+        return dto;
     }
-    function buildEditRequest(requestBody) {
+
+    function buildEditRequest(req) {
         return {
-            key: requestBody.key,
-            title: requestBody.title,
-            theatre: requestBody.theatre,
-            scene: requestBody.scene,
-            url: requestBody.url,
-            director: requestBody.director,
-            author: requestBody.author,
-            genre: requestBody.genre,
-            duration: requestBody.duration,
-            description: requestBody.description,
-            image: requestBody.image,
-            premiere: !!requestBody.premiere,
-            musical: !!requestBody.musical,
-            dancing: !!requestBody.dancing,
-            forKids: !!requestBody['for-kids'],
-            opera: !!requestBody.opera,
-            ballet: !!requestBody.ballet,
-            tags: requestBody.tags.replace(/\r\n/g, "\n").split("\n"),
-            mapAs: requestBody['map-as'] || null
+            key: req.body.key,
+            title: req.body.title,
+            theatre: req.body.theatre,
+            scene: req.body.scene,
+            url: req.body.url,
+            director: req.body.director,
+            author: req.body.author,
+            genre: req.body.genre,
+            duration: req.body.duration,
+            description: req.body.description,
+            image: req.body.image,
+            premiere: !!req.body.premiere,
+            musical: !!req.body.musical,
+            dancing: !!req.body.dancing,
+            forKids: !!req.body['for-kids'],
+            opera: !!req.body.opera,
+            ballet: !!req.body.ballet,
+            tags: multilineTagsToArray(req.body.tags),
+            mapAs: req.body['map-as'] || null
         };
+    }
+
+    function multilineTagsToArray(multilineTags) {
+        return multilineTags.replace(/\r\n/g, "\n").split("\n");
     }
 };

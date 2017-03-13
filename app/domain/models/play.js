@@ -45,8 +45,11 @@ playSchema.pre('save', function(next) {
 playSchema.statics.findByKey = function(key, callback) {
     return this.findOne({ key: key }, callback);
 };
-playSchema.statics.findByTag = function(tag, callback) {
-    return this.findOne({ tags: tag.trim() }, callback);
+playSchema.statics.findByTag = function(tag, theatreId, callback) {
+    return this.findOne({ tags: tag.trim(), theatre: theatreId }, callback);
+};
+playSchema.statics.findByTheatre = function(theatreId, callback) {
+    return this.find({ theatre: theatreId}, callback);
 };
 
 playSchema.methods.addTag = function(tag) {
@@ -56,55 +59,6 @@ playSchema.methods.addTag = function(tag) {
 };
 playSchema.methods.addTags = function(tags) {
     tags.forEach(tag => this.addTag(tag));
-};
-
-playSchema.methods.absorbDuplicate = function(duplicate, callback) {
-    this.url = this.url || duplicate.url;
-    this.director = this.director || duplicate.director;
-    this.author = this.author || duplicate.author;
-    this.genre = this.genre || duplicate.genre;
-    this.duration = this.duration || duplicate.duration;
-    this.description = this.description || duplicate.description;
-    this.image = this.image || duplicate.image;
-    this.addTags(duplicate.tags);
-    this.save(function(err) {
-        if (err) return callback(err);
-        duplicate.remove(callback);
-    });
-};
-
-playSchema.methods.edit = function(editRequest, callback) {
-
-    const oldTitle = this.title;
-
-    this.key = editRequest.key;
-    this.title = editRequest.title;
-    this.theatre = editRequest.theatre;
-    this.scene = editRequest.scene;
-    this.url = editRequest.url;
-    this.director = editRequest.director;
-    this.author = editRequest.author;
-    this.genre = editRequest.genre;
-    this.duration = editRequest.duration;
-    this.description = editRequest.description;
-    this.image = editRequest.image;
-    this.premiere = editRequest.premiere;
-    this.musical = editRequest.musical;
-    this.dancing = editRequest.dancing;
-    this.forKids = editRequest.forKids;
-    this.opera = editRequest.opera;
-    this.ballet = editRequest.ballet;
-    this.mapAs = editRequest.mapAs;
-    this.tags = editRequest.tags.map(tag => tag.trim());
-    this.addTag(editRequest.title.trim());
-    if (oldTitle && oldTitle !== editRequest.title) {
-        this.addTag(oldTitle.trim());
-    }
-    if (typeof editRequest.hidden !== 'undefined') {
-        this.hidden = editRequest.hidden;
-    }
-
-    this.save(callback);
 };
 
 playSchema.methods.hide = function(callback) {

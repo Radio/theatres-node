@@ -1,10 +1,13 @@
 "use strict";
 
+const hide = require('admin/commands/plays/hide');
+const unhide = require('admin/commands/plays/unhide');
+
 module.exports = function(router) {
 
     router.post('/hide/:playKey', function(req, res, next) {
         if (!req.play) return next();
-        req.play.hide(function (err) {
+        hide(req.play, function (err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль «' + req.play.title + '» скрыт из всех расписаний.');
             res.end();
@@ -13,7 +16,7 @@ module.exports = function(router) {
 
     router.post('/unhide/:playKey', function(req, res, next) {
         if (!req.play) return next();
-        req.play.unhide(function (err) {
+        unhide(req.play, function (err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль «' + req.play.title + '» больше не скрыт.');
             res.end();
