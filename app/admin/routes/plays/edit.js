@@ -1,8 +1,8 @@
 "use strict";
 
 let Play = require('domain/models/play');
-let edit = require('admin/commands/plays/edit');
-let create = require('admin/commands/plays/create');
+let edit = require('admin/commands/play/edit');
+let create = require('admin/commands/play/create');
 
 module.exports = function(router) {
 

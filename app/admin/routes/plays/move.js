@@ -1,6 +1,6 @@
 "use strict";
 
-let move = require('admin/commands/plays/move');
+let move = require('admin/commands/play/move');
 
 module.exports = function(router) {
 

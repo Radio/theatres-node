@@ -1,7 +1,7 @@
 "use strict";
 
-const hide = require('admin/commands/plays/hide');
-const unhide = require('admin/commands/plays/unhide');
+const hide = require('admin/commands/play/hide');
+const unhide = require('admin/commands/play/unhide');
 
 module.exports = function(router) {
 

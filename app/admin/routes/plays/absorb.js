@@ -1,7 +1,7 @@
 "use strict";
 
 let Play = require('domain/models/play');
-let absorb = require('admin/commands/plays/absorb');
+let absorb = require('admin/commands/play/absorb');
 
 module.exports = function(router) {
 
@@ -24,7 +24,7 @@ module.exports = function(router) {
             absorb(original, req.play, function(err) {
                 if (err) return next(err);
                 req.flash('success', 'Спектакль поглощен.');
-                res.redirect('/admin/plays/edit/' + original.key);
+                res.redirect('/admin/play/edit/' + original.key);
             });
         });
     });

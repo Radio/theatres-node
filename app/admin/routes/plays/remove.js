@@ -1,6 +1,6 @@
 "use strict";
 
-const remove = require('admin/commands/plays/remove');
+const remove = require('admin/commands/play/remove');
 
 module.exports = function(router) {
 

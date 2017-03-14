@@ -1,6 +1,6 @@
 "use strict";
 
-const list = require('admin/commands/plays/list');
+const list = require('admin/commands/play/list');
 
 module.exports = function(router) {
 
