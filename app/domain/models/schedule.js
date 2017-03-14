@@ -197,6 +197,6 @@ scheduleSchema.methods.findShow = function(showId) {
     return this.shows.find((show) => modelHelper.sameIds(show._id, showId));
 };
 
-scheduleSchema = versioned(scheduleSchema);
+scheduleSchema.plugin(versioned);
 
 module.exports = mongoose.model('Schedule', scheduleSchema);
