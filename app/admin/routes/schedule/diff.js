@@ -1,6 +1,6 @@
 "use strict";
 
-const listDiffVersions = require('admin/commands/schedule/diff/versions/list');
+const listVersions = require('admin/commands/schedule/versions/list');
 const viewDiff = require('admin/commands/schedule/diff/view');
 
 module.exports = function(router) {
@@ -10,7 +10,7 @@ module.exports = function(router) {
 
         if (req.query.month) {
             const [month, year] = req.query.month.split('-');
-            listDiffVersions(month - 1, year, function(err, versions) {
+            listVersions(month - 1, year, function(err, versions) {
                 if (err) return next(err);
                 if (!versions) return next();
                 res.render('schedule/diff/choose', {
