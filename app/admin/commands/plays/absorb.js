@@ -12,7 +12,7 @@ const modelHelper = require('helpers/model');
  * @param {Function} callback
  */
 module.exports = function(original, duplicate, callback) {
-    if (modelHelper.sameIds(duplicate.theatre, original.theatre)) {
+    if (!modelHelper.sameIds(duplicate.theatre, original.theatre)) {
         return callback(new Error('Можно поглотить только спектаклем из того-же театра.'));
     }
     absorbDuplicate(original, duplicate, function(err) {
