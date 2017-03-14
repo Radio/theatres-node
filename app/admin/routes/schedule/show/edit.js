@@ -3,6 +3,9 @@
 let moment = require('moment');
 let Show = require('domain/models/show');
 
+const editShow = require('admin/commands/schedule/show/edit');
+const addShow = require('admin/commands/schedule/show/add');
+
 const momentDateFormat = 'DD.MM.YYYY HH:mm';
 
 module.exports = function(router) {
@@ -24,7 +27,7 @@ module.exports = function(router) {
 
     router.post('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
-        req.schedule.editShow(req.show._id, buildShowEditRequest(req.body), function(err) {
+        editShow(req.schedule, req.show._id, buildShowEditRequest(req.body), function(err) {
             if (err) return next(err);
             req.flash('success', 'Расписание обновлено.');
             res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
@@ -48,19 +51,12 @@ module.exports = function(router) {
 
     router.post('/:scheduleId/show/add', function(req, res, next) {
         if (!req.schedule) return next();
-        req.schedule.addShow(buildShowEditRequest(req.body), function(err) {
+        addShow(req.schedule, buildShowEditRequest(req.body), function(err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль добавлен в расписание.');
             res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
         });
     });
-
-    function getFormData(show, req) {
-        let formData = req.flash('body')[0] || show.toObject({ depopulate: true });
-        formData.playUrl = show.get('play.url');
-        formData.playTheatre = show.get('play.theatre.id');
-        return formData;
-    }
 
     function groupPlaysByTheatre(plays) {
         return plays.reduce(function(groupped, play) {
@@ -70,10 +66,29 @@ module.exports = function(router) {
         }, {})
     }
 
+    function getFormData(show, req) {
+        let dto = req.flash('body')[0];
+        if (!dto) {
+            dto = show.toObject({ depopulate: true });
+            dto.playUrl = show.get('play.url');
+            dto.playTheatre = show.get('play.theatre.id');
+            delete dto._id;
+            return dto;
+        }
+        if (dto.date) {
+            dto.date = dateStringToObject(dto.date) || dto.date;
+        }
+        dto.playUrl = show.get('play.url');
+        dto.playTheatre = show.get('play.theatre.id');
+        dto.buyTicketUrl = dto['buy-ticket-url'];
+        dto.labels = commaSeparatedLabelsToArray(dto.labels);
+        return dto;
+    }
+
     function buildShowEditRequest(requestBody) {
         const customHash = !requestBody['auto-hash'];
         const editRequest = {
-            date: moment(requestBody.date, momentDateFormat).toDate(),
+            date: dateStringToObject(requestBody.date),
             theatre: requestBody.theatre || null,
             scene: requestBody.scene || null,
             play: requestBody.play,
@@ -82,11 +97,18 @@ module.exports = function(router) {
             buyTicketUrl: requestBody['buy-ticket-url'],
             customHash: customHash,
             manual: !!requestBody.manual,
-            labels: requestBody.labels.split(',').map(label => label.trim())
+            labels: commaSeparatedLabelsToArray(requestBody.labels)
         };
         if (customHash) {
             editRequest.hash = requestBody.hash;
         }
         return editRequest;
+    }
+    function dateStringToObject(dateString) {
+        const dateMoment = moment(dateString, momentDateFormat);
+        return dateMoment.isValid() ? dateMoment.toDate() : null;
+    }
+    function commaSeparatedLabelsToArray(commaSeparatedLabels) {
+        return commaSeparatedLabels.split(',').map(label => label.trim());
     }
 };

@@ -17,13 +17,17 @@ block content
       .form-group.row
         label.col-sm-2.col-form-label(for='date') Дата/время
         .col-sm-10
+          -
+            var dateValue = show.date ?
+              (typeof show.date === 'string' ? show.date : moment(show.date).format(momentDateFormat))
+              : ''
           input.form-control(
             type='text' id='date' name='date'
             data-datetimepicker
             data-date-format='dd.mm.yyyy hh:ii'
             data-start-date=moment({day: 1, month: schedule.month, year: schedule.year}).format(momentDateFormat)
             data-end-date=moment({month: schedule.month, year: schedule.year}).endOf('month').format(momentDateFormat)
-            value= show.date ? moment(show.date).format(momentDateFormat) : ''
+            value=dateValue
           )
       .form-group.row
         label.col-sm-2.col-form-label(for='play')

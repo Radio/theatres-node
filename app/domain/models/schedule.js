@@ -291,39 +291,25 @@ scheduleSchema.methods.addOrUpdateOneShow = function(show) {
 };
 
 /**
- * Edit single show and save schedule.
+ * Update single show and save schedule.
  *
- * @param {String} showId
- * @param {Object} editRequest
+ * @param {Object} show
  * @param {Function} callback
  */
-scheduleSchema.methods.editShow = function(showId, editRequest, callback) {
-    let showInSchedule = this.shows.find(show => String(show._id) === String(showId));
-    if (!showInSchedule) {
-        return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
-    }
-    let schedule = this;
-    // Create a clone of show in order to leave schedule unmodified when the show is modified (for correct diff).
-    let show = new Show(showInSchedule.toObject({depopulate: true}));
-    show.edit(editRequest, function(err) {
-        if (err) return callback(err);
-        schedule.addOrUpdateShowsAndSave([show], callback);
-    });
+scheduleSchema.methods.updateShow = function(show, callback) {
+    // todo: this method could add show if it is missing
+    this.addOrUpdateShowsAndSave([show], callback);
 };
 
 /**
  * Add single show and save schedule.
  *
- * @param {Object} editRequest
+ * @param {Object} show
  * @param {Function} callback
  */
-scheduleSchema.methods.addShow = function(editRequest, callback) {
-    let show = new Show();
-    let schedule = this;
-    show.edit(editRequest, function(err) {
-        if (err) return callback(err);
-        schedule.addOrUpdateShowsAndSave([show], callback);
-    });
+scheduleSchema.methods.addShow = function(show, callback) {
+    // todo: this method could update existing show
+    this.addOrUpdateShowsAndSave([show], callback);
 };
 
 /**
