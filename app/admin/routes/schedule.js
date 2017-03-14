@@ -12,6 +12,7 @@ const Scene = require('domain/models/scene');
 const Play = require('domain/models/play');
 
 const viewToEdit = require('admin/commands/schedule/view-to-edit');
+const listLabels = require('admin/commands/schedule/labels/list');
 
 router.get(/\/.*/, function(req, res, next) {
     loadOptionsData(function (err, options) {
@@ -46,7 +47,7 @@ function loadOptionsData(callback) {
         theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
         scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
         plays: callback => Play.find({}).populate('theatre scene').sort({title: 1}).exec(callback),
-        labels: callback => Schedule.getActualLabels(callback),
+        labels: callback => listLabels(callback),
         months: callback => callback(null, Array.from(monthOptions(passedMonths, followingMonths)))
     }, callback);
 }

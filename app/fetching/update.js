@@ -1,7 +1,9 @@
 "use strict";
 
-let async = require('async');
-let Schedule = require('domain/models/schedule');
+const async = require('async');
+const Show = require('domain/models/show');
+const resolve = require('fetching/commands/schedule/resolve');
+const update = require('fetching/commands/schedule/update');
 
 /**
  * Update the schedule records with the new shows.
@@ -14,9 +16,9 @@ let Schedule = require('domain/models/schedule');
 module.exports = function(mappedShowsData, callback) {
     let groupedShowsData = groupByMonth(mappedShowsData);
     async.each(groupedShowsData, function(monthlyScheduleData, callback) {
-        Schedule.resolve(monthlyScheduleData.month, monthlyScheduleData.year, function(err, schedule) {
+        resolve(monthlyScheduleData.month, monthlyScheduleData.year, function(err, schedule) {
             if (err) return callback(err);
-            schedule.replaceShowsAndSave(monthlyScheduleData.shows, callback);
+            update(schedule, monthlyScheduleData.shows, callback);
         });
     }, callback);
 };
@@ -36,7 +38,7 @@ let groupByMonth = function(mappedShowsData) {
                 year: showData.date.getFullYear(),
                 shows: []
             };
-        grouped[monthKey].shows.push(showData);
+        grouped[monthKey].shows.push(new Show(showData));
         return grouped;
     }, {});
 };

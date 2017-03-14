@@ -28,37 +28,8 @@ scheduleSchema.pre('save', function(next) {
 });
 
 Play.schema.on('remove', function(play) {
-    mongoose.model('Schedule').update(
-        { },
-        { $pull: { shows: { play: play._id } } },
-        { multi: true }
-    ).exec();
+    mongoose.model('Schedule').removePlay(play._id, function(err) { /* well, nothing */ });
 });
-
-/**
- * Resolve schedule by given month and year.
- * If schedule doesn't exist it will be created.
- *
- * @param {Number} month
- * @param {Number} year
- * @param {Function} callback
- */
-scheduleSchema.statics.resolve = function(month, year, callback) {
-    let Schedule = this;
-    this.findByMonthAndYear(month, year)
-        .exec(function(err, schedule) {
-            if (err) return callback(err);
-            if (!schedule) {
-                schedule = Schedule.createForMonthAndYear(month, year, callback);
-                schedule.save(function(err) {
-                    if (err) return callback(err);
-                    callback(null, schedule);
-                });
-                return;
-            }
-            callback(null, schedule);
-        });
-};
 
 /**
  * Find schedule by given month and year.
@@ -113,26 +84,17 @@ scheduleSchema.statics.replacePlay = function(oldPlayId, newPlayId, callback) {
 };
 
 /**
- * Retrieve labels from all shows in actual schedules.
+ * Remove shows with given play id from all schedules.
  *
+ * @param {String} playId
  * @param {Function} callback
- *
- * @return {Aggregate|Promise}
  */
-scheduleSchema.statics.getActualLabels = function(callback) {
-    return this.aggregate([
-        { $match: { actual: true } },
-        { $unwind: "$shows" },
-        { $unwind: "$shows.labels" },
-        { $project: { "label": "$shows.labels" } },
-        { $group: { _id: 'all', labels: { $addToSet: '$label' } } }
-    ], function(err, result) {
-        if (err) return callback(err);
-        if (!result || result.length === 0) {
-            return callback(null, []);
-        }
-        callback(null, result[0].labels);
-    });
+scheduleSchema.statics.removePlay = function(playId, callback) {
+    this.update(
+        { },
+        { $pull: { shows: { play: playId } } },
+        { multi: true }
+    ).exec(callback);
 };
 
 /**
@@ -143,162 +105,19 @@ scheduleSchema.methods.updateUpdated = function() {
 };
 
 /**
- * Updates the schedule with provided shows.
- * Remove existing shops if they are not listed in newShops.
- *
- * @param {[Object]} newShowsData
- */
-scheduleSchema.methods.replaceShows = function(newShowsData) {
-    const today = new Date();
-    let removalCandidates = this.shows.filter(show => !show.manual && show.date > today).map(show => show.hash);
-    let schedule = this;
-    let newHashes = newShowsData.map(function(newShowData) {
-        const show = schedule.addOrUpdateOneShow(newShowData instanceof Show ? newShowData : new Show(newShowData));
-        return show.hash;
-    });
-    let hashesToRemove =  removalCandidates.filter(hash => newHashes.indexOf(hash) < 0);
-    hashesToRemove.forEach(function(hashToRemove) {
-        schedule.removeShowByHash(hashToRemove)
-    });
-    this.sortShows();
-};
-
-/**
- * Updates the schedule with provided shows.
- * Remove existing shops if they are not listed in newShops.
- * Save the schedule.
- *
- * @param {[Object]} newShowsData
- * @param {Function} callback
- */
-scheduleSchema.methods.replaceShowsAndSave = function(newShowsData, callback) {
-    this.replaceShows(newShowsData);
-    this.save(callback);
-};
-
-/**
- * Update the schedule with new shows.
- * Do not remove existing shops if they are not listed in newShops.
- *
- * @param {[Object]} newShowsData
- */
-scheduleSchema.methods.addOrUpdateShows = function(newShowsData) {
-    let schedule = this;
-    newShowsData.forEach(function(newShowData) {
-        schedule.addOrUpdateOneShow(newShowData instanceof Show ? newShowData : new Show(newShowData));
-    });
-    this.sortShows();
-};
-
-/**
- * Update the schedule with new shows.
- * Do not remove existing shops if they are not listed in newShops.
- * Save the schedule.
- *
- * @param {[Object]} newShowsData
- * @param {Function} callback
- */
-scheduleSchema.methods.addOrUpdateShowsAndSave = function(newShowsData, callback) {
-    this.addOrUpdateShows(newShowsData);
-    this.save(callback);
-};
-
-/**
- * Remove shows by ids.
- *
- * @param {[String]} showsIds
- */
-scheduleSchema.methods.removeShows = function(showsIds) {
-    let schedule = this;
-    showsIds.forEach(function(showId) {
-        let showIndex = schedule.shows.findIndex(show => String(show._id) === String(showId));
-        if (showIndex >= 0) {
-            schedule.shows.splice(showIndex, 1);
-        }
-    });
-};
-
-/**
- * Remove shows by ids.
- * Save the schedule.
- *
- * @param {[String]} showsIds
- * @param {Function} callback
- */
-scheduleSchema.methods.removeShowsAndSave = function(showsIds, callback) {
-    this.removeShows(showsIds);
-    this.save(callback);
-};
-
-/**
- * Remove show by hash.
- *
- * @param {String} hashToRemove
- */
-scheduleSchema.methods.removeShowByHash = function(hashToRemove) {
-    const index = this.shows.findIndex(function(show) {
-        return show.hash === hashToRemove;
-    });
-    if (index >= 0) {
-        this.shows.splice(index, 1);
-    }
-};
-
-/**
- * Sort shows by date.
- */
-scheduleSchema.methods.sortShows = function() {
-    this.shows.sort((show1, show2) => show1.date - show2.date ||
-            String(show1.play._id || show1.play).localeCompare(String(show2.play._id || show2.play)));
-};
-
-/**
- * Update certain show data or add a new show to schedule.
- *
- * @param {object} show A plain object representing the show.
- *
- * @return {Object} Show document
- */
-scheduleSchema.methods.addOrUpdateOneShow = function(show) {
-    const sameShowIndex = this.shows.findIndex((existingShow) => modelHelper.sameIds(existingShow._id, show._id));
-    if (sameShowIndex >= 0) {
-        this.shows[sameShowIndex] = show;
-        return this.shows[sameShowIndex];
-    }
-    show.updateHash();
-    const sameHashIndex = this.shows.findIndex((existingShow) => existingShow.hash === show.hash);
-    if (sameHashIndex >= 0) {
-        if (show.buyTicketUrl) {
-            this.shows[sameHashIndex].buyTicketUrl = show.buyTicketUrl;
-        }
-        if (show.price) {
-            this.shows[sameHashIndex].price = show.price;
-        }
-        if (show.url) {
-            this.shows[sameHashIndex].url = show.url;
-        }
-        if (show.theatre) {
-            this.shows[sameHashIndex].theatre = show.theatre;
-        }
-        if (show.scene) {
-            this.shows[sameHashIndex].scene = show.scene;
-        }
-        return this.shows[sameHashIndex];
-    } else {
-        this.shows.push(show);
-        return show;
-    }
-};
-
-/**
  * Update single show and save schedule.
  *
  * @param {Object} show
  * @param {Function} callback
  */
 scheduleSchema.methods.updateShow = function(show, callback) {
-    // todo: this method could add show if it is missing
-    this.addOrUpdateShowsAndSave([show], callback);
+    const showIndex = this.findShowIndex(show._id);
+    if (showIndex < 0) {
+        return callback(new Error('There is no show with ID=' + show._id + ' in this schedule.'));
+    }
+    this.shows[showIndex] = show;
+    this.sortShows();
+    this.save(callback);
 };
 
 /**
@@ -308,8 +127,13 @@ scheduleSchema.methods.updateShow = function(show, callback) {
  * @param {Function} callback
  */
 scheduleSchema.methods.addShow = function(show, callback) {
-    // todo: this method could update existing show
-    this.addOrUpdateShowsAndSave([show], callback);
+    const sameShowIndex = this.findShowIndex(show._id);
+    if (sameShowIndex >= 0) {
+        return callback(new Error('There is already a show with ID=' + show._id + ' in this schedule.'));
+    }
+    this.shows.push(show);
+    this.sortShows();
+    this.save(callback);
 };
 
 /**
@@ -319,11 +143,12 @@ scheduleSchema.methods.addShow = function(show, callback) {
  * @param {Function} callback
  */
 scheduleSchema.methods.removeShow = function(showId, callback) {
-    let showIndex = this.shows.findIndex(show => String(show._id) === String(showId));
+    let showIndex = this.findShowIndex(showId);
     if (showIndex < 0) {
         return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
-    this.removeShowsAndSave([showId], callback);
+    this.shows.splice(showIndex, 1);
+    this.save(callback);
 };
 
 /**
@@ -333,9 +158,9 @@ scheduleSchema.methods.removeShow = function(showId, callback) {
  * @param {Function} callback
  */
 scheduleSchema.methods.hideShow = function(showId, callback) {
-    let show = this.shows.find(show => String(show._id) === String(showId));
+    let show = this.findShow(showId);
     if (!show) {
-        return callback(new Error('There is no show with ID=' + duplicateId + ' in this schedule.'));
+        return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
     show.hide();
     this.save(callback);
@@ -348,12 +173,28 @@ scheduleSchema.methods.hideShow = function(showId, callback) {
  * @param {Function} callback
  */
 scheduleSchema.methods.unhideShow = function(showId, callback) {
-    let show = this.shows.find(show => String(show._id) === String(showId));
+    let show = this.findShow(showId);
     if (!show) {
-        return callback(new Error('There is no show with ID=' + duplicateId + ' in this schedule.'));
+        return callback(new Error('There is no show with ID=' + showId + ' in this schedule.'));
     }
     show.unhide();
     this.save(callback);
+};
+
+/**
+ * Sort shows by date.
+ */
+scheduleSchema.methods.sortShows = function() {
+    this.shows.sort((show1, show2) => show1.date - show2.date ||
+    String(show1.play._id || show1.play).localeCompare(String(show2.play._id || show2.play)));
+};
+
+scheduleSchema.methods.findShowIndex = function(showId) {
+    return this.shows.findIndex((show) => modelHelper.sameIds(show._id, showId));
+};
+
+scheduleSchema.methods.findShow = function(showId) {
+    return this.shows.find((show) => modelHelper.sameIds(show._id, showId));
 };
 
 scheduleSchema = versioned(scheduleSchema);
