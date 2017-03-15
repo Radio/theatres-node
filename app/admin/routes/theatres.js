@@ -75,7 +75,6 @@ function buildEditRequest(requestBody) {
     return {
         key: requestBody.key,
         title: requestBody.title,
-        abbreviation: requestBody.abbreviation,
         url: requestBody.url,
         houseSlug: requestBody['house-slug'],
         hasFetcher: requestBody['has-fetcher'],
