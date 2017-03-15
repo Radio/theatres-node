@@ -10,7 +10,7 @@ const listTheatres = require('admin/commands/theatre/list');
 const listScenes = require('admin/commands/scene/list');
 
 router.param('playKey', function(req, res, next, key) {
-    view(function(err, play) {
+    view(key, function(err, play) {
         if (err) return next(err);
         req.play = play;
         next();
