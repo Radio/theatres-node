@@ -12,7 +12,7 @@ function editPlay(play, editRequest, callback) {
 
     play.key = editRequest.key;
     if (!play.key) {
-        play.key = modelHelper.generateKey(play.title);
+        play.key = modelHelper.generateKey(editRequest.title);
     }
     play.title = editRequest.title;
     play.theatre = editRequest.theatre;
