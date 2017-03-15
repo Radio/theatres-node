@@ -4,7 +4,13 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const passportStrategy = require('./authentication/authentication-strategy-local');
 const serializationStrategy = require('./authentication/serialization-strategy');
-const handleValidationError = require('./validation-error-handler');
+const validationErrorHandler = require('./error-handlers/validation');
+const mongoErrorHandler = require('./error-handlers/mongo');
+
+const errorHandlersMap = {
+    'ValidationError': validationErrorHandler,
+    'MongoError': mongoErrorHandler,
+};
 
 module.exports = function(app) {
     passport.use(passportStrategy);
@@ -30,8 +36,8 @@ module.exports = function(app) {
     app.use('/admin', require('admin/routes'));
 
     app.use(function(err, req, res, next) {
-        if (err instanceof Error && err.name === 'ValidationError') {
-            return handleValidationError(err, req, res);
+        if (err instanceof Error && err.name && errorHandlersMap[err.name]) {
+            return errorHandlersMap[err.name](err, req, res);
         }
         next(err);
     });
