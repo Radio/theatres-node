@@ -19,7 +19,7 @@ function buildConditions(filter) {
         conditions.scene = filter.scene;
     }
     if (filter.query) {
-        const regexCondition = { '$regex': new RegExp(escapeStringRegexp(filterQuery.query), 'i') };
+        const regexCondition = { '$regex': new RegExp(escapeStringRegexp(filter.query), 'i') };
         conditions['$or'] = [{ title: regexCondition }, { key: regexCondition }];
     }
     return conditions;
