@@ -1,0 +1,118 @@
+extends ../../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+      p
+        | #{s.capitalize(moment({year: schedule.year, month: schedule.month}).format('MMMM YYYY'))}
+
+    p
+      a(href=backUrl || '/admin/schedule?month=' + schedule.monthKey)
+        | ← Назад
+
+    include ../../flash
+
+    form(action='' method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='date') Дата/время
+        .col-sm-10
+          -
+            var dateValue = show.date ?
+              (typeof show.date === 'string' ? show.date : moment(show.date).format(momentDateFormat))
+              : ''
+          input.form-control(
+            type='text' id='date' name='date'
+            data-datetimepicker
+            data-date-format='dd.mm.yyyy hh:ii'
+            data-start-date=moment({day: 1, month: schedule.month, year: schedule.year}).format(momentDateFormat)
+            data-end-date=moment({month: schedule.month, year: schedule.year}).endOf('month').format(momentDateFormat)
+            value=dateValue
+          )
+      .form-group.row
+        label.col-sm-2.col-form-label(for='play')
+          if (show.playUrl)
+            a(href=show.playUrl title='открыть' target='_blank') Спектакль ↗
+          else
+            | Спектакль
+        .col-sm-5
+          select.form-control(id='play' name='play' data-optgroup-dependent-on="#play-theatre")
+            option(value='') —
+            each theatreInfo, theatreId in plays
+              optgroup(label=theatreInfo.title data-dependency-id=theatreId)
+                each play in theatreInfo.plays
+                  option(value=play.id selected= show.play == play.id data-scene-id=play.scene.id)
+                    =play.title + ' (' + play.scene.title + ')'
+        .col-sm-5
+          select.form-control(id='play-theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= show.playTheatre == theatre.id)= theatre.title
+      .form-group.row
+        label.col-sm-2.col-form-label(for='theatre') Театр (площадка)
+        .col-sm-10
+          select.form-control(id='theatre' name='theatre')
+            option(value='') —
+            each theatre in theatres
+              option(value=theatre.id selected= show.theatre == theatre.id)= theatre.title
+          small.form-text.text-muted Если идет в другом театре
+      .form-group.row
+        label.col-sm-2.col-form-label(for='scene') Сцена
+        .col-sm-10
+          select.form-control(id='scene' name='scene')
+            option(value='') —
+            each scene in scenes
+              option(value=scene.id selected= show.scene == scene.id)= scene.title
+          small.form-text.text-muted Если идет на другой сцене
+      .form-group.row
+        label.col-sm-2.col-form-label(for='price') Стоимость
+        .col-sm-10
+          input.form-control(type='text' id='price' name='price' value=show.price)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='url')
+          if (show.url)
+            a(href=show.url title='открыть' target='_blank') Url ↗
+          else
+            | Url
+        .col-sm-10
+          input.form-control(type='text' id='url' name='url' value=show.url)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='buy-ticket-url')
+          if (show.buyTicketUrl)
+            a(href=show.buyTicketUrl title='открыть' target='_blank') Купить билет (Url) ↗
+          else
+            | Купить билет (Url)
+        .col-sm-10
+          input.form-control(type='text' id='buy-ticket-url' name='buy-ticket-url' value=show.buyTicketUrl)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='labels') Лейблы
+        .col-sm-10
+          input.form-control.tokenfield(
+            type='text' id='labels' name='labels' value=show.labels.join(',')
+            data-tokenfield-source=labels.join(',')
+          )
+      if (show._id && show.date)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='title') ID
+          .col-sm-10
+            p.form-control-static= show._id
+      .form-group.row
+        label.col-sm-2.col-form-label(for='hash') Хеш
+        .col-sm-10
+          p#hash-static(hidden=show.customHash).form-control-static= show.hash
+          input.form-control(type='text' id='hash' name='hash' value=show.hash
+            disabled=!show.customHash
+            hidden=!show.customHash
+          )
+      .form-group.row
+        .form-check.offset-sm-2.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='auto-hash' value='1' checked=!show.customHash)
+            |  Высчитывать хеш автоматически
+      .form-group.row
+        .form-check.offset-sm-2.col
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='manual' value='1' checked=show.manual)
+            |  Не удалять при автоматическом обновлении
+      hr
+      button.btn.btn-primary(type='submit') Сохранить
