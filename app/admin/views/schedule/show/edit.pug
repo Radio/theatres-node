@@ -36,7 +36,12 @@ block content
           else
             | Спектакль
         .col-sm-5
-          select.form-control(id='play' name='play' data-optgroup-dependent-on="#play-theatre")
+          select.form-control(
+            id='play'
+            name='play'
+            data-optgroup-dependent-on="#play-theatre"
+            data-on-empty-dependecy='all'
+          )
             option(value='') —
             each theatreInfo, theatreId in plays
               optgroup(label=theatreInfo.title data-dependency-id=theatreId)
@@ -45,7 +50,7 @@ block content
                     =play.title + ' (' + play.scene.title + ')'
         .col-sm-5
           select.form-control(id='play-theatre')
-            option(value='') —
+            option(value='') — все театры —
             each theatre in theatres
               option(value=theatre.id selected= show.playTheatre == theatre.id)= theatre.title
       .form-group.row
