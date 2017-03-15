@@ -24,7 +24,7 @@ module.exports = function(router) {
             absorb(original, req.play, function(err) {
                 if (err) return next(err);
                 req.flash('success', 'Спектакль поглощен.');
-                res.redirect('/admin/play/edit/' + original.key);
+                res.redirect('/admin/plays/edit/' + original.key);
             });
         });
     });
