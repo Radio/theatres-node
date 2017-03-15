@@ -1,6 +1,7 @@
 "use strict";
 
 const Show = require('domain/models/show');
+const edit = require('admin/commands/show/edit');
 
 /**
  * Edit single show and save schedule.
@@ -17,7 +18,7 @@ module.exports = (schedule, showId, editRequest, callback) => {
     }
     // Create a clone of show in order to leave schedule unmodified when the show is modified (for correct diff).
     let show = new Show(showInSchedule.toObject({depopulate: true}));
-    show.edit(editRequest, function(err) {
+    edit(show, editRequest, function(err) {
         if (err) return callback(err);
         schedule.updateShow(show, callback);
     });

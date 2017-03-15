@@ -2,8 +2,8 @@
 
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let Scene = require('domain/models/scene');
-let Theatre = require('domain/models/theatre');
+let Scene = require('./scene');
+let Theatre = require('./theatre');
 
 let playSchema = new Schema({
     key: { type: String, required: true, unique: true },

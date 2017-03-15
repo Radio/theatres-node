@@ -1,6 +1,7 @@
 "use strict";
 
 const Show = require('domain/models/show');
+const edit = require('admin/commands/show/edit');
 
 /**
  * Add single show and save schedule.
@@ -11,7 +12,7 @@ const Show = require('domain/models/show');
  */
 module.exports = (schedule, addRequest, callback) => {
     let show = new Show();
-    show.edit(addRequest, function(err) {
+    edit(show, addRequest, function(err) {
         if (err) return callback(err);
         schedule.addShow(show, callback);
     });

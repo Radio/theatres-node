@@ -1,7 +1,7 @@
 "use strict";
 
 let mongoose = require('mongoose');
-let Show = require('domain/models/show');
+let Show = require('../../show');
 
 module.exports = function(scheduleSchema, options) {
 

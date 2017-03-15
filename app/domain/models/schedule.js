@@ -2,10 +2,10 @@
 
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let Show = require('domain/models/show');
-let Play = require('domain/models/play');
+let Show = require('./show');
+let Play = require('./play');
+let versioned = require('./plugins/schedule/versioned');
 let modelHelper = require('helpers/model');
-let versioned = require('domain/models/plugins/schedule/versioned');
 
 let scheduleSchema = new Schema({
     shows: [Show.schema],

@@ -2,10 +2,11 @@
 
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let Theatre = require('domain/models/theatre');
-let Scene = require('domain/models/scene');
-let Play = require('domain/models/play');
-let versioned = require('domain/models/plugins/show/versioned');
+let Theatre = require('./theatre');
+let Scene = require('./scene');
+let Play = require('./play');
+let versioned = require('./plugins/show/versioned');
+let modelHelper = require('helpers/model');
 
 let showSchema = new Schema({
     play: {type: Schema.Types.ObjectId, ref: 'Play', required: true},
@@ -32,32 +33,7 @@ showSchema.methods.updateHash = function() {
     if (this.customHash && this.hash) {
         return;
     }
-    this.hash = calculateHash(
-        (this.play instanceof Play) ? this.play.id : String(this.play),
-        this.date
-    );
-};
-
-showSchema.methods.edit = function(editRequest, callback) {
-    // todo: move to command
-    this.date = editRequest.date;
-    this.theatre = editRequest.theatre;
-    this.scene = editRequest.scene;
-    this.play = editRequest.play;
-    this.price = editRequest.price;
-    this.url = editRequest.url;
-    this.buyTicketUrl = editRequest.buyTicketUrl;
-    this.customHash = editRequest.customHash;
-    if (this.customHash) {
-        this.hash = editRequest.hash;
-    }
-    this.manual = editRequest.manual;
-    if (typeof editRequest.hidden !== 'undefined') {
-        this.hidden = editRequest.hidden;
-    }
-    this.labels = editRequest.labels;
-
-    this.validate(callback);
+    this.hash = calculateHash(modelHelper.getId(this.play), this.date);
 };
 
 showSchema.methods.hide = function() {
