@@ -1,7 +1,7 @@
 "use strict";
 
-let express = require('express');
-let router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }

@@ -1,7 +1,7 @@
 "use strict";
 
-let moment = require('moment');
-let Show = require('domain/models/show');
+const moment = require('moment');
+const Show = require('domain/models/show');
 
 const editShow = require('admin/commands/schedule/show/edit');
 const addShow = require('admin/commands/schedule/show/add');
@@ -16,7 +16,7 @@ module.exports = function(router) {
             title: 'Расписание — ' + req.show.play.title,
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
-            show: getFormData(req.show, req),
+            show: getFormData(req, req.show),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             labels: req.options.labels,
@@ -27,7 +27,7 @@ module.exports = function(router) {
 
     router.post('/:scheduleId/show/edit/:showId', function(req, res, next) {
         if (!req.schedule || !req.show) return next();
-        editShow(req.schedule, req.show._id, buildShowEditRequest(req.body), function(err) {
+        editShow(req.schedule, req.show._id, buildShowEditRequest(req), function(err) {
             if (err) return next(err);
             req.flash('success', 'Расписание обновлено.');
             res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
@@ -40,7 +40,7 @@ module.exports = function(router) {
             title: 'Расписание — Добавить',
             momentDateFormat: momentDateFormat,
             schedule: req.schedule,
-            show: getFormData(new Show({ customHash: false, manual: true }), req),
+            show: getFormData(req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             labels: req.options.labels,
@@ -51,7 +51,7 @@ module.exports = function(router) {
 
     router.post('/:scheduleId/show/add', function(req, res, next) {
         if (!req.schedule) return next();
-        addShow(req.schedule, buildShowEditRequest(req.body), function(err) {
+        addShow(req.schedule, buildShowEditRequest(req), function(err) {
             if (err) return next(err);
             req.flash('success', 'Спектакль добавлен в расписание.');
             res.redirect(req.session.scheduleBackUrl || '/admin/schedule/?month=' + req.schedule.monthKey);
@@ -66,41 +66,43 @@ module.exports = function(router) {
         }, {})
     }
 
-    function getFormData(show, req) {
+    function getFormData(req, show) {
         let dto = req.flash('body')[0];
         if (!dto) {
-            dto = show.toObject({ depopulate: true });
+            if (!show) {
+                return { customHash: false, manual: true };
+            }
+            dto = show.toObject({depopulate: true});
             dto.playUrl = show.get('play.url');
             dto.playTheatre = show.get('play.theatre.id');
-            delete dto._id;
             return dto;
         }
         if (dto.date) {
             dto.date = dateStringToObject(dto.date) || dto.date;
         }
-        dto.playUrl = show.get('play.url');
-        dto.playTheatre = show.get('play.theatre.id');
+        dto.playUrl = show ? show.get('play.url') : null;
+        dto.playTheatre = show ? show.get('play.theatre.id') : null;
         dto.buyTicketUrl = dto['buy-ticket-url'];
         dto.labels = commaSeparatedLabelsToArray(dto.labels);
         return dto;
     }
 
-    function buildShowEditRequest(requestBody) {
-        const customHash = !requestBody['auto-hash'];
+    function buildShowEditRequest(req) {
+        const customHash = !req.body['auto-hash'];
         const editRequest = {
-            date: dateStringToObject(requestBody.date),
-            theatre: requestBody.theatre || null,
-            scene: requestBody.scene || null,
-            play: requestBody.play,
-            price: requestBody.price,
-            url: requestBody.url,
-            buyTicketUrl: requestBody['buy-ticket-url'],
+            date: dateStringToObject(req.body.date),
+            theatre: req.body.theatre || null,
+            scene: req.body.scene || null,
+            play: req.body.play,
+            price: req.body.price,
+            url: req.body.url,
+            buyTicketUrl: req.body['buy-ticket-url'],
             customHash: customHash,
-            manual: !!requestBody.manual,
-            labels: commaSeparatedLabelsToArray(requestBody.labels)
+            manual: !!req.body.manual,
+            labels: commaSeparatedLabelsToArray(req.body.labels)
         };
         if (customHash) {
-            editRequest.hash = requestBody.hash;
+            editRequest.hash = req.body.hash;
         }
         return editRequest;
     }

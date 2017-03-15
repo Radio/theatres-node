@@ -1,6 +1,5 @@
 "use strict";
 
-let Play = require('domain/models/play');
 let edit = require('admin/commands/play/edit');
 let create = require('admin/commands/play/create');
 
@@ -10,7 +9,7 @@ module.exports = function(router) {
         if (!req.play) return next();
         res.render('plays/edit', {
             title: 'Спектакли — ' + req.play.title,
-            play: getFormData(req.play, req),
+            play: getFormData(req, req.play),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             plays: req.options.plays,
@@ -30,7 +29,7 @@ module.exports = function(router) {
     router.get('/create', function(req, res) {
         res.render('plays/edit', {
             title: 'Спектакли — Новый',
-            play: getFormData(new Play, req),
+            play: getFormData(req),
             theatres: req.options.theatres,
             scenes: req.options.scenes,
             plays: req.options.plays,
@@ -46,12 +45,10 @@ module.exports = function(router) {
         });
     });
 
-    function getFormData(play, req) {
+    function getFormData(req, play) {
         let dto = req.flash('body')[0];
         if (!dto) {
-            dto = play.toObject({ depopulate: true });
-            delete dto._id;
-            return dto;
+            return play ? play.toObject({ depopulate: true }) : {};
         }
         dto.forKids = dto['for-kids'];
         dto.mapAs = dto['map-as'];

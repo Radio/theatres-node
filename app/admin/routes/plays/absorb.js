@@ -1,7 +1,7 @@
 "use strict";
 
-let Play = require('domain/models/play');
-let absorb = require('admin/commands/play/absorb');
+const Play = require('domain/models/play');
+const absorb = require('admin/commands/play/absorb');
 
 module.exports = function(router) {
 

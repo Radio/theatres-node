@@ -1,21 +1,20 @@
 "use strict";
 
-let async = require('async');
-let express = require('express');
-let router = express.Router({mergeParams: true});
+const async = require('async');
+const express = require('express');
+const router = express.Router({mergeParams: true});
 
-let Play = require('domain/models/play');
-let Theatre = require('domain/models/theatre');
-let Scene = require('domain/models/scene');
+const view = require('admin/commands/play/view');
+const listPlays = require('admin/commands/play/list');
+const listTheatres = require('admin/commands/theatre/list');
+const listScenes = require('admin/commands/scene/list');
 
 router.param('playKey', function(req, res, next, key) {
-    Play.findByKey(key)
-        .populate('theatre scene')
-        .exec(function(err, play) {
-            if (err) return next(err);
-            req.play = play;
-            next();
-        });
+    view(function(err, play) {
+        if (err) return next(err);
+        req.play = play;
+        next();
+    });
 });
 
 router.get(/\/.*/, function(req, res, next) {
@@ -28,9 +27,9 @@ router.get(/\/.*/, function(req, res, next) {
 
 function loadOptionsData(callback) {
     async.parallel({
-        theatres: callback => Theatre.find({}).sort({title: 1}).exec(callback),
-        scenes: callback => Scene.find({}).sort({title: 1}).exec(callback),
-        plays: callback => Play.find({}).populate('theatre').sort({title: 1}).exec(callback)
+        theatres: callback => listTheatres(callback),
+        scenes: callback => listScenes(callback),
+        plays: callback => listPlays({}, callback)
     }, callback);
 }
 

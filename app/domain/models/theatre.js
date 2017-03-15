@@ -1,7 +1,7 @@
 "use strict";
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 let theatreSchema = new Schema({
     key: { type: String, required: true, unique: true },
@@ -22,17 +22,6 @@ theatreSchema.statics.findByKeyOrHouseSlug = function(key, callback) {
 
 theatreSchema.methods.isInHouse = function() {
     return !!this.houseSlug;
-};
-
-theatreSchema.methods.edit = function(editRequest, callback) {
-    // todo: move to admin command
-    this.title = editRequest.title;
-    this.key = editRequest.key;
-    this.url = editRequest.url;
-    this.houseSlug = editRequest.houseSlug;
-    this.hasFetcher = editRequest.hasFetcher;
-
-    this.save(callback);
 };
 
 module.exports = mongoose.model('Theatre', theatreSchema);

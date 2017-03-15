@@ -1,12 +1,16 @@
 "use strict";
 
-let express = require('express');
-let router = express.Router({mergeParams: true});
+const express = require('express');
+const router = express.Router({mergeParams: true});
 
-let User = require('domain/models/user');
+const list = require('admin/commands/user/list');
+const view = require('admin/commands/user/view');
+const edit = require('admin/commands/user/edit');
+const create = require('admin/commands/user/create');
+const remove = require('admin/commands/user/remove');
 
 router.param('userId', function(req, res, next, id) {
-    User.findOne({ _id: id }, function(err, user) {
+    view(function(err, user) {
         if (err) return next(err);
         req.userToEdit = user;
         next();
@@ -14,7 +18,7 @@ router.param('userId', function(req, res, next, id) {
 });
 
 router.get('/', function(req, res, next) {
-    User.find({}).sort({ name: 1 }).exec(function(err, users) {
+    list(function(err, users) {
         if (err) return next(err);
         res.render('users/list', {
             title: 'Пользователи',
@@ -27,13 +31,13 @@ router.get('/edit/:userId', function(req, res, next) {
     if (!req.userToEdit) return next();
     res.render('users/edit', {
         title: 'Пользователи — ' + req.userToEdit.name,
-        user: getFormData(req.userToEdit, req)
+        user: getFormData(req, req.userToEdit)
     });
 });
 
 router.post('/edit/:userId', function(req, res, next) {
     if (!req.userToEdit) return next();
-    req.userToEdit.edit(buildEditRequest(req.body), function(err) {
+    edit(req.userToEdit, buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Пользователь сохранен.');
         res.redirect('/admin/users');
@@ -42,7 +46,7 @@ router.post('/edit/:userId', function(req, res, next) {
 
 router.delete('/remove/:userId', function(req, res, next) {
     if (!req.userToEdit) return next();
-    req.userToEdit.remove(function (err) {
+    remove(req.userToEdit, function (err) {
         if (err) return next(err);
         req.flash('success', 'Пользователь удален.');
         res.end();
@@ -50,34 +54,31 @@ router.delete('/remove/:userId', function(req, res, next) {
 });
 
 router.get('/create', function(req, res, next) {
-    let user = new User();
     res.render('users/edit', {
         title: 'Пользователи — Новая',
-        user: getFormData(user, req)
+        user: getFormData(req)
     });
 });
 
 router.post('/create', function(req, res, next) {
-    let user = new User();
-    user.edit(buildEditRequest(req.body), function(err) {
+    create(buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Пользователь сохранен.');
         res.redirect('/admin/users');
     });
 });
 
-function getFormData(user, req) {
-    return req.flash('body')[0] || user.toObject({depopulate: true});
+function getFormData(req, user) {
+    return req.flash('body')[0] || (user ? user.toObject({ depopulate: true }) : {});
 }
 
-function buildEditRequest(requestBody) {
-
+function buildEditRequest(req) {
     let request = {
-        email: requestBody.email,
-        name: requestBody.name,
+        email: req.body.email,
+        name: req.body.name,
     };
-    if (requestBody['new-password']) {
-        request.password = requestBody['new-password'];
+    if (req.body['new-password']) {
+        request.password = req.body['new-password'];
     }
     return request;
 }

@@ -1,11 +1,11 @@
 "use strict";
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let Show = require('./show');
-let Play = require('./play');
-let versioned = require('./plugins/schedule/versioned');
-let modelHelper = require('helpers/model');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const Show = require('./show');
+const Play = require('./play');
+const versioned = require('./plugins/schedule/versioned');
+const modelHelper = require('helpers/model');
 
 let scheduleSchema = new Schema({
     shows: [Show.schema],

@@ -31,7 +31,7 @@ router.get('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
     res.render('theatres/edit', {
         title: 'Театры — ' + req.theatre.title,
-        theatre: getFormData(req.theatre, req)
+        theatre: getFormData(req, req.theatre)
     });
 });
 
@@ -71,10 +71,8 @@ router.post('/create', function(req, res, next) {
 
 function getFormData(req, theatre) {
     let dto = req.flash('body')[0];
-    if (!dto && theatre) {
-        dto = theatre.toObject({ depopulate: true });
-        delete dto._id;
-        return dto;
+    if (!dto) {
+        return theatre ? theatre.toObject({ depopulate: true }) : {};
     }
     dto.houseSlug = dto['house-slug'];
     dto.hasFetcher = dto['has-fetcher'];

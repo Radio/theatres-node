@@ -1,9 +1,9 @@
 "use strict";
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let Scene = require('./scene');
-let Theatre = require('./theatre');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const Scene = require('./scene');
+const Theatre = require('./theatre');
 
 let playSchema = new Schema({
     key: { type: String, required: true, unique: true },

@@ -1,12 +1,16 @@
 "use strict";
 
-let express = require('express');
-let router = express.Router({mergeParams: true});
+const express = require('express');
+const router = express.Router({ mergeParams: true });
 
-let Scene = require('domain/models/scene');
+const list = require('admin/commands/scene/list');
+const view = require('admin/commands/scene/view');
+const edit = require('admin/commands/scene/edit');
+const create = require('admin/commands/scene/create');
+const remove = require('admin/commands/scene/remove');
 
 router.param('sceneKey', function(req, res, next, key) {
-    Scene.findByKey(key, function(err, scene) {
+    view(key, function(err, scene) {
         if (err) return next(err);
         req.scene = scene;
         next();
@@ -14,7 +18,7 @@ router.param('sceneKey', function(req, res, next, key) {
 });
 
 router.get('/', function(req, res, next) {
-    Scene.find({}).sort({title: 1}).exec(function(err, scenes) {
+    list(function(err, scenes) {
         if (err) return next(err);
         res.render('scenes/list', {
             title: 'Сцены',
@@ -27,13 +31,13 @@ router.get('/edit/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
     res.render('scenes/edit', {
         title: 'Сцены — ' + req.scene.title,
-        scene: getFormData(req.scene, req)
+        scene: getFormData(req, req.scene)
     });
 });
 
 router.post('/edit/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
-    req.scene.edit(buildEditRequest(req.body), function(err) {
+    edit(req.scene, buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Сцена сохранена.');
         res.redirect('/admin/scenes');
@@ -43,7 +47,7 @@ router.post('/edit/:sceneKey', function(req, res, next) {
 router.delete('/remove/:sceneKey', function(req, res, next) {
     if (!req.scene) return next();
     if (req.scene.id !== req.body.id) return next();
-    req.scene.remove(function (err) {
+    remove(req.scene, function (err) {
         if (err) return next(err);
         req.flash('success', 'Сцена удалена.');
         res.end();
@@ -51,30 +55,28 @@ router.delete('/remove/:sceneKey', function(req, res, next) {
 });
 
 router.get('/create', function(req, res, next) {
-    let scene = new Scene();
     res.render('scenes/edit', {
         title: 'Сцены — Новая',
-        scene: getFormData(scene, req)
+        scene: getFormData(req)
     });
 });
 
 router.post('/create', function(req, res, next) {
-    let scene = new Scene();
-    scene.edit(buildEditRequest(req.body), function(err) {
+    create(buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Сцена сохранена.');
         res.redirect('/admin/scenes');
     });
 });
 
-function getFormData(scene, req) {
-    return req.flash('body')[0] || scene.toObject({depopulate: true});
+function getFormData(req, scene) {
+    return req.flash('body')[0] || (scene ? scene.toObject({ depopulate: true }) : {});
 }
 
-function buildEditRequest(requestBody) {
+function buildEditRequest(req) {
     return {
-        key: requestBody.key,
-        title: requestBody.title,
+        key: req.body.key,
+        title: req.body.title,
     };
 }
 

@@ -1,14 +1,13 @@
 "use strict";
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 let userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password_hash: { type: String, required: true },
-    // hash_salt: { type: String, required: true },
     name: { type: String, required: true }
 });
 userSchema.set('toObject', {
@@ -28,19 +27,13 @@ userSchema.methods.verifyPassword = function (password, callback) {
     bcrypt.compare(password, this.password_hash, callback);
 };
 
-userSchema.methods.edit = function(editRequest, callback) {
-    this.email = editRequest.email;
-    this.name = editRequest.name;
-    if (editRequest.password) {
-        const user = this;
-        bcrypt.hash(editRequest.password, saltRounds, function(err, hash) {
-            if (err) return callback(err);
-            user.password_hash = hash;
-            user.save(callback);
-        });
-        return;
-    }
-    this.save(callback);
+userSchema.methods.changePassword = function(newPassword, callback) {
+    const user = this;
+    bcrypt.hash(newPassword, saltRounds, function(err, hash) {
+        if (err) return callback(err);
+        user.password_hash = hash;
+        user.save(callback);
+    });
 };
 
 module.exports = mongoose.model('User', userSchema);

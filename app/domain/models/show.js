@@ -1,12 +1,12 @@
 "use strict";
 
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let Theatre = require('./theatre');
-let Scene = require('./scene');
-let Play = require('./play');
-let versioned = require('./plugins/show/versioned');
-let modelHelper = require('helpers/model');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const Theatre = require('./theatre');
+const Scene = require('./scene');
+const Play = require('./play');
+const versioned = require('./plugins/show/versioned');
+const modelHelper = require('helpers/model');
 
 let showSchema = new Schema({
     play: {type: Schema.Types.ObjectId, ref: 'Play', required: true},
