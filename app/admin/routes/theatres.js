@@ -1,12 +1,16 @@
 "use strict";
 
-let express = require('express');
-let router = express.Router({mergeParams: true});
+const express = require('express');
+const router = express.Router({ mergeParams: true });
 
-let Theatre = require('domain/models/theatre');
+const list = require('admin/commands/theatre/list');
+const view = require('admin/commands/theatre/view');
+const edit = require('admin/commands/theatre/edit');
+const create = require('admin/commands/theatre/create');
+const remove = require('admin/commands/theatre/remove');
 
 router.param('theatreKey', function(req, res, next, key) {
-    Theatre.findByKey(key, function(err, theatre) {
+    view(key, function(err, theatre) {
         if (err) return next(err);
         req.theatre = theatre;
         next();
@@ -14,7 +18,7 @@ router.param('theatreKey', function(req, res, next, key) {
 });
 
 router.get('/', function(req, res, next) {
-    Theatre.find({}).sort({title: 1}).exec(function(err, theatres) {
+    list(function(err, theatres) {
         if (err) return next(err);
         res.render('theatres/list', {
             title: 'Театры',
@@ -33,7 +37,7 @@ router.get('/edit/:theatreKey', function(req, res, next) {
 
 router.post('/edit/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
-    req.theatre.edit(buildEditRequest(req.body), function(err) {
+    edit(req.theatre, buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Театр сохранен.');
         res.redirect('/admin/theatres');
@@ -43,41 +47,47 @@ router.post('/edit/:theatreKey', function(req, res, next) {
 router.delete('/remove/:theatreKey', function(req, res, next) {
     if (!req.theatre) return next();
     if (req.theatre.id !== req.body.id) return next();
-    req.theatre.remove(function (err) {
+    remove(req.theatre, function (err) {
         if (err) return next(err);
         req.flash('success', 'Театр удален.');
         res.end();
     });
 });
 
-router.get('/create', function(req, res, next) {
-    let theatre = new Theatre();
+router.get('/create', function(req, res) {
     res.render('theatres/edit', {
         title: 'Театры — Новый',
-        theatre: getFormData(theatre, req)
+        theatre: getFormData(req)
     });
 });
 
 router.post('/create', function(req, res, next) {
-    let theatre = new Theatre();
-    theatre.edit(buildEditRequest(req.body), function(err) {
+    create(buildEditRequest(req), function(err) {
         if (err) return next(err);
         req.flash('success', 'Театр сохранен.');
         res.redirect('/admin/theatres');
     });
 });
 
-function getFormData(theatre, req) {
-    return req.flash('body')[0] || theatre.toObject({depopulate: true});
+function getFormData(req, theatre) {
+    let dto = req.flash('body')[0];
+    if (!dto && theatre) {
+        dto = theatre.toObject({ depopulate: true });
+        delete dto._id;
+        return dto;
+    }
+    dto.houseSlug = dto['house-slug'];
+    dto.hasFetcher = dto['has-fetcher'];
+    return dto;
 }
 
-function buildEditRequest(requestBody) {
+function buildEditRequest(req) {
     return {
-        key: requestBody.key,
-        title: requestBody.title,
-        url: requestBody.url,
-        houseSlug: requestBody['house-slug'],
-        hasFetcher: requestBody['has-fetcher'],
+        key: req.body.key,
+        title: req.body.title,
+        url: req.body.url,
+        houseSlug: req.body['house-slug'],
+        hasFetcher: req.body['has-fetcher'],
     };
 }
 
