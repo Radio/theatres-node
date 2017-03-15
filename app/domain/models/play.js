@@ -6,11 +6,25 @@ const Scene = require('./scene');
 const Theatre = require('./theatre');
 
 let playSchema = new Schema({
-    key: { type: String, required: true, unique: true },
-    // title: {type: String, set: setTitle },
-    title: { type: String, required: true },
-    theatre: { type: Schema.Types.ObjectId, ref: 'Theatre', required: true },
-    scene: { type: Schema.Types.ObjectId, ref: 'Scene', required: true },
+    key: {
+        type: String,
+        required: [true, 'Key is required'],
+        unique: true
+    },
+    title: {
+        type: String,
+        required: [true, 'Title is required'],
+    },
+    theatre: {
+        type: Schema.Types.ObjectId,
+        ref: 'Theatre',
+        required: [true, 'Theatre is required'],
+    },
+    scene: {
+        type: Schema.Types.ObjectId,
+        ref: 'Scene',
+        required: [true, 'Scene is required'],
+    },
     url: String,
     director: String,
     author: String,

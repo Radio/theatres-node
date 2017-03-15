@@ -60,8 +60,8 @@ module.exports = function(router) {
         return {
             key: req.body.key,
             title: req.body.title,
-            theatre: req.body.theatre,
-            scene: req.body.scene,
+            theatre: req.body.theatre || null,
+            scene: req.body.scene || null,
             url: req.body.url,
             director: req.body.director,
             author: req.body.author,
