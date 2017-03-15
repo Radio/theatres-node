@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+
+    include flash
+
+    .row.justify-content-center
+      .col-2
+        a.d-block.py-5.btn.btn-secondary(href='/admin/theatres') Театры
+      .col-2
+        a.d-block.py-5.btn.btn-secondary(href='/admin/scenes') Сцены
+      .col-2
+        a.d-block.py-5.btn.btn-secondary(href='/admin/plays') Спектакли
+      .col-2
+        a.d-block.py-5.btn.btn-secondary(href='/admin/schedule') Расписание

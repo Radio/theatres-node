@@ -72,6 +72,7 @@
     $('[data-optgroup-dependent-on]').each(function() {
         let $element = $(this);
         let $master = $($element.data('optgroup-dependent-on'));
+        let onEmpty = $element.data('on-empty-dependecy');
 
         $element.data('original-value', $element.val());
         let $optgroups = $element.find('optgroup').detach();
@@ -81,7 +82,11 @@
 
         function filterOptgroup() {
             $element.find('optgroup').detach();
-            $element.append($optgroups.filter('[data-dependency-id="' + $master.val() + '"]'));
+            if (onEmpty === 'all' && !$master.val()) {
+                $element.append($optgroups);
+            } else {
+                $element.append($optgroups.filter('[data-dependency-id="' + $master.val() + '"]'));
+            }
             if ($element.has('option[value="' + $element.data('original-value') + '"]').length) {
                 $element.val($element.data('original-value'));
                 return;

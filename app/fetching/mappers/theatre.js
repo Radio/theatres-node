@@ -1,6 +1,6 @@
 "use strict";
 
-let Theatre = require('models/theatre');
+let Theatre = require('domain/models/theatre');
 
 let localTheatresCache = {};
 

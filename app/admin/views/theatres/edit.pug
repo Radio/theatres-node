@@ -1,0 +1,51 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+
+    p
+      a(href='/admin/theatres') ← Назад
+
+    include ../flash
+
+    form(action='' method='post')
+      if (theatre._id)
+        .form-group.row
+          label.col-sm-2.col-form-label(for='title') ID
+          .col-sm-10
+            p.form-control-static= theatre._id
+      .form-group.row
+        label.col-sm-2.col-form-label(for='title') Название
+        .col-sm-10
+          input.form-control(type='text' id='title' name='title' value=theatre.title)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='key') Ключ
+        .col-sm-10
+          input.form-control(type='text' id='key' name='key' value=theatre.key)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='url')
+          if (theatre.url)
+            a(href=theatre.url title='открыть' target='_blank') Url ↗
+          else
+            | Url
+        .col-sm-10
+          input.form-control(type='text' id='url' name='url' value=theatre.url)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='house-slug') Ключ для «Дома актеров»
+        .col-sm-10
+          input.form-control(type='text' id='house-slug' name='house-slug' value=theatre.houseSlug)
+      .form-group.row
+        label.col-sm-2.col-form-label Есть фетчер?
+        .col-sm-10
+          .form-check.form-check-inline
+            label.form-check-label
+              input.form-check-input(type='radio' name='has-fetcher' value='1' checked=theatre.hasFetcher)
+              |  Да
+          .form-check.form-check-inline
+            label.form-check-label
+              input.form-check-input(type='radio' name='has-fetcher' value='0' checked=!theatre.hasFetcher)
+              |  Нет
+      hr
+      button.btn.btn-primary(type='submit') Сохранить

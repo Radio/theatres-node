@@ -1,6 +1,6 @@
 "use strict";
 
-let Scene = require('models/scene');
+let Scene = require('domain/models/scene');
 
 let localScenesCache = {};
 

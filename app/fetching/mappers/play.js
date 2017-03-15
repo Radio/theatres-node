@@ -1,7 +1,7 @@
 "use strict";
 
 let modelHelper = require('helpers/model');
-let Play = require('models/play');
+let Play = require('domain/models/play');
 let shortid = require('shortid');
 
 function mapPlay(playData, theatre, scene, callback) {
@@ -10,8 +10,7 @@ function mapPlay(playData, theatre, scene, callback) {
         callback(new Error('Play mapper was provided with an empty play key.'));
     }
 
-    let findPlayQuery = Play.findByTag(title)
-        .where({theatre: theatre.id})
+    let findPlayQuery = Play.findByTag(title, theatre.id)
         .populate('mapAs');
     findPlayQuery.exec(function(err, play) {
         if (err) return callback(err);

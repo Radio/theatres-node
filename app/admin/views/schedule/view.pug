@@ -1,0 +1,119 @@
+extends ../layout
+
+block content
+  .container
+    .jumbotron
+      +title(title)
+      p
+        - selectedMonthDate = moment({ month: filter.month, year: filter.year })
+        | #{s.capitalize(selectedMonthDate.format('MMMM YYYY'))}
+        | &nbsp;&nbsp;&middot;&nbsp;&nbsp;
+        if (schedule)
+          +pluralizePlaysNumber(schedule.shows.length)
+        else
+          | нет расписания
+
+    include ../flash
+
+    nav#filter-nav.nav.mb-3.py-2.px-3.bg-faded
+      form.mr-auto
+        div.form-inline
+          select.form-control.form-control-sm.mb-2.mr-sm-2(
+            id='filter-month'
+            name='month-key'
+          )
+            each month in months
+              option(value=month.key selected=filter.monthKey==month.key data-starting-value=month.actual)= month.value
+
+          select.form-control.form-control-sm.mb-2.mr-sm-2(id='filter-version' name='version')
+            each version in versions
+              - var versionKey = version.actual ? '' : version.version
+              option(value=versionKey selected= filter.version == versionKey data-starting-value=!versionKey)
+                = 'версия ' + version.version + (version.actual ? ' (актуальная)' : '')
+        div.form-inline
+          select.form-control.form-control-sm.mr-sm-2.mb-2.mb-sm-0(id='filter-theatre' name='theatre')
+            option(value='') — театр —
+            each theatre in theatres
+              option(value=theatre.id selected= filter.theatre == theatre.id)= theatre.title
+
+          select.form-control.form-control-sm.mr-sm-2(id='filter-scene' name='scene')
+            option(value='') — сцена —
+            each scene in scenes
+              option(value=scene.id selected= filter.scene == scene.id)= scene.title
+
+          button.btn.btn-sm.btn-outline-warning.mb-2.mr-sm-2.mb-sm-0.my-2.my-sm-0(
+            type='button'
+            data-action='reset-filters'
+            hidden
+          ) Сбросить
+
+      if (schedule)
+        div.pl-2
+          a.btn.btn-sm.btn-primary.mb-2(
+            href='/admin/schedule/diff?month=' + schedule.monthKey + '&a=' + schedule.id
+          ) Сравнить
+          br
+          a.btn.btn-sm.btn-primary(href='/admin/schedule/' + schedule.id + '/show/add') Добавить
+
+    if (!schedule)
+      .alert.alert-warning(role="alert") На этот месяц расписания нет.
+    else
+      if (!schedule.actual)
+        .alert.alert-warning(role="alert")
+          | Это <strong>не актуальная</strong> версия расписания.&nbsp;
+          a.btn.btn-sm.btn-secondary(href='?month=' + filter.monthKey +
+            '&theatre=' + filter.theatre + '&scene=' + filter.scene + '&version='
+          ) Смотреть актуальную
+      table.table
+        thead
+          tr
+            th Дата/время ↓
+            th Спектакль
+            th Театр
+            th Сцена
+            th(width=100)
+        tbody
+          each show in schedule.shows
+            tr
+              td #{moment(show.date).format('D MMM HH:mm')}
+              td
+                if schedule.actual
+                  a(href='/admin/schedule/' + schedule.id + '/show/edit/' + show.id)
+                    = show.play ? show.play.title : '[УДАЛЕН]'
+                else
+                  = show.play ? show.play.title : '[УДАЛЕН]'
+                +playIcons(show.play)
+
+                if show.hidden
+                  =' '
+                  span.badge.badge-default скрыт
+
+              td= show.play && show.play.theatre ? show.play.theatre.title : '—'
+                if show.theatre
+                  = ' (' + show.theatre.title + ')'
+              td= show.scene ? show.scene.title : '—'
+              td
+                .btn-group(role="group")
+                  button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" data-toggle="dropdown" )
+                    i.fa.fa-gear
+                  div.dropdown-menu
+                    button.dropdown-item.text-danger(type="button"
+                      data-action='remove'
+                      data-url='/admin/schedule/' + schedule.id + '/show/remove/' + show.id
+                      data-id=show.id
+                      data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                    ) удалить
+                    if show.hidden
+                      button.dropdown-item(
+                        type="button"
+                        data-action='unhide'
+                        data-url='/admin/schedule/' + schedule.id + '/show/unhide/' + show.id
+                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                      ) показывать
+                    if !show.hidden
+                      button.dropdown-item(
+                        type="button"
+                        data-action='hide'
+                        data-url='/admin/schedule/' + schedule.id + '/show/hide/' + show.id
+                        data-return-url=backUrl || '/admin/schedule?month=' + schedule.monthKey
+                      ) скрывать
