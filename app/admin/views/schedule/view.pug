@@ -87,6 +87,9 @@ block content
                 if show.hidden
                   =' '
                   span.badge.badge-default скрыт
+                if show.play.hidden
+                  =' '
+                  span.badge.badge-default спектакль скрыт
 
               td= show.play && show.play.theatre ? show.play.theatre.title : '—'
                 if show.theatre
