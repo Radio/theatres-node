@@ -5,7 +5,7 @@ let Schema = mongoose.Schema;
 let Show = require('domain/models/show');
 let Play = require('domain/models/play');
 let modelHelper = require('helpers/model');
-let versioned = require('domain/models/schedule/versioned');
+let versioned = require('domain/models/plugins/schedule/versioned');
 
 let scheduleSchema = new Schema({
     shows: [Show.schema],

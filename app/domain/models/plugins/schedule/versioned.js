@@ -132,18 +132,23 @@ module.exports = function(scheduleSchema, options) {
         if (!snapshot.shows || !currentSnapshot.shows) {
             return false;
         }
+
         if (snapshot.shows.length !== currentSnapshot.shows.length) {
             return false;
         }
+
         const allShowsEqual = snapshot.shows.reduce(function (result, show) {
             if (!result) {
                 return false;
             }
-            const sameShowIndex = currentSnapshot.shows.findIndex(currentShow => Show.equal(show, currentShow));
+            const sameShowIndex = currentSnapshot.shows.findIndex(currentShow => Show.sameShows(show, currentShow));
             return sameShowIndex >= 0;
         }, true);
+        if (!allShowsEqual) {
+            return false;
+        }
 
-        return allShowsEqual;
+        return true;
     }
 
     /**

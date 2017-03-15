@@ -5,6 +5,7 @@ let Schema = mongoose.Schema;
 let Theatre = require('domain/models/theatre');
 let Scene = require('domain/models/scene');
 let Play = require('domain/models/play');
+let versioned = require('domain/models/plugins/show/versioned');
 
 let showSchema = new Schema({
     play: {type: Schema.Types.ObjectId, ref: 'Play', required: true},
@@ -27,26 +28,6 @@ showSchema.pre('save', function(next) {
     next();
 });
 
-/**
- * Compare two shows based on comparable properties.
- * @param {Object} show1
- * @param {Object} show2
- * @return {Boolean}
- */
-showSchema.statics.equal = function(show1, show2) {
-    return show1.play === show2.play &&
-        show1.theatre === show2.theatre &&
-        show1.scene === show2.scene &&
-        show1.date.getTime() === show2.date.getTime() &&
-        show1.price === show2.price &&
-        show1.buyTicketUrl === show2.buyTicketUrl &&
-        show1.customHash === show2.customHash &&
-        (!show1.customHash || (show1.hash === show2.hash)) &&
-        show1.hidden === show2.hidden &&
-        show1.manual === show2.manual &&
-        show1.labels.join() === show2.labels.join();
-};
-
 showSchema.methods.updateHash = function() {
     if (this.customHash && this.hash) {
         return;
@@ -58,6 +39,7 @@ showSchema.methods.updateHash = function() {
 };
 
 showSchema.methods.edit = function(editRequest, callback) {
+    // todo: move to command
     this.date = editRequest.date;
     this.theatre = editRequest.theatre;
     this.scene = editRequest.scene;
@@ -94,13 +76,11 @@ showSchema.methods.isPubliclyVisible = function() {
 };
 
 function calculateHash(playId, date) {
-    return hash([date.toISOString(), String(playId)].join('-'));
+    // I used md5 previously, but since play ID is already a hash and date ISO string has fixed length,
+    // their concatenation fits for me. And it is more readable.
+    return [date.toISOString(), String(playId)].join('-');
 }
 
-function hash(string) {
-    // I used md5 previously, but since play ID is already a hash and date ISO string has fixed length
-    // their concatenation fits for me. And it is more descriptive.
-    return string;
-}
+showSchema.plugin(versioned);
 
 module.exports = mongoose.model('Show', showSchema);
