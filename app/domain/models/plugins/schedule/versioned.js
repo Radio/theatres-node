@@ -128,7 +128,7 @@ module.exports = function(scheduleSchema, options) {
      * @return {Boolean}
      */
     function scheduleEqualsToSnapshot(schedule, snapshot) {
-        const currentSnapshot = this.makeSnapshot(schedule);
+        const currentSnapshot = schedule.makeSnapshot(schedule);
         if (!snapshot.shows || !currentSnapshot.shows) {
             return false;
         }
