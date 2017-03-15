@@ -25,7 +25,11 @@ block content
         .col-sm-10
           input.form-control(type='text' id='key' name='key' value=theatre.key)
       .form-group.row
-        label.col-sm-2.col-form-label(for='url') Url
+        label.col-sm-2.col-form-label(for='url')
+          if (theatre.url)
+            a(href=theatre.url title='открыть' target='_blank') Url ↗
+          else
+            | Url
         .col-sm-10
           input.form-control(type='text' id='url' name='url' value=theatre.url)
       .form-group.row
