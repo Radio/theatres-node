@@ -1,7 +1,6 @@
 "use strict";
 
 const moment = require('moment');
-const Show = require('domain/models/show');
 
 const editShow = require('admin/commands/schedule/show/edit');
 const addShow = require('admin/commands/schedule/show/add');
@@ -93,7 +92,7 @@ module.exports = function(router) {
             date: dateStringToObject(req.body.date),
             theatre: req.body.theatre || null,
             scene: req.body.scene || null,
-            play: req.body.play,
+            play: req.body.play || null,
             price: req.body.price,
             url: req.body.url,
             buyTicketUrl: req.body['buy-ticket-url'],

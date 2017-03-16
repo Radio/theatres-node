@@ -2,4 +2,4 @@
 
 const User = require('domain/models/user');
 
-module.exports = (key, callback) => User.findByKey(key, callback);
+module.exports = (id, callback) => User.findById(id, callback);

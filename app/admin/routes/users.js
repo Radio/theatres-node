@@ -10,7 +10,7 @@ const create = require('admin/commands/user/create');
 const remove = require('admin/commands/user/remove');
 
 router.param('userId', function(req, res, next, id) {
-    view(function(err, user) {
+    view(id, function(err, user) {
         if (err) return next(err);
         req.userToEdit = user;
         next();
