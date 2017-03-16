@@ -46,7 +46,7 @@ module.exports = function(scheduleSchema, options) {
         if (!this.snapshot || !this.createRevision) {
             return;
         }
-        this.constructor.createRevision(this.snapshot, function (err, revision) { /* nothing to do */ });
+        createRevision(this.snapshot, function (err, revision) { /* nothing to do */ });
         delete this.createRevision;
         this.snapshot = makeSnapshot(doc);
     });
@@ -128,7 +128,7 @@ module.exports = function(scheduleSchema, options) {
      * @return {Boolean}
      */
     function scheduleEqualsToSnapshot(schedule, snapshot) {
-        const currentSnapshot = schedule.makeSnapshot(schedule);
+        const currentSnapshot = makeSnapshot(schedule);
         if (!snapshot.shows || !currentSnapshot.shows) {
             return false;
         }
