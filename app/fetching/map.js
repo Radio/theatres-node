@@ -27,6 +27,7 @@ function mapStatic(rawShowData) {
         date: rawShowData.date,
         price: rawShowData.price,
         buyTicketUrl: rawShowData.buyTicketUrl,
+        labels: rawShowData.labels || [],
     }};
 }
 

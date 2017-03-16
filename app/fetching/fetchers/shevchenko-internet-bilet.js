@@ -1,6 +1,6 @@
 "use strict";
 
-let internetBiletFetcher = require('./internet-bilet');
+let internetBiletFetcher = require('./factories/internet-bilet');
 
 const sourceUrl = 'https://internet-bilet.ua/event-rooms/item.html?room_id=47';
 const sceneRawData = {

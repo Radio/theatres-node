@@ -73,7 +73,7 @@ block content
             th Сцена
             th(width=100)
         tbody
-          each show in schedule.shows
+          each show in filteredShows
             tr
               td #{moment(show.date).format('D MMM HH:mm')}
               td
