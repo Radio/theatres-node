@@ -1,10 +1,10 @@
 "use strict";
 
-let internetBiletFetcher = require('./internet-bilet');
+let internetBiletFetcher = require('./factories/internet-bilet');
 
 const sourceUrl = 'https://internet-bilet.ua/event-rooms/item.html?room_id=384';
 const playSceneData = {
-    key: 'kamernaya-scena-ds-mudrogo'
+    key: 'chamber'
 };
 const playTheatreData = {
     key: 'mdt',

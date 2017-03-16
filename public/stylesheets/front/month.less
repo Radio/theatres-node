@@ -9,16 +9,31 @@
         top: 0;
         left: 0;
         width: 100%;
+        padding-top: 5px;
+        padding-bottom: 5px;
 
         text-align: left;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
 
         h1 {
             font-size: 1.5em;
-            margin: 5px 0;
+            margin: 0;
 
             > span {
                 display: inline;
+            }
+        }
+
+        .telegram-bot-link {
+            position: absolute;
+            right: 20px;
+            top: 5px;
+            background: url(../images/telegram-icon.png) no-repeat scroll transparent left center;
+            font-size: 1.2em;
+            border: 0 none !important;
+            padding-left: 36px;
+            @media (max-width: 575px) {
+                top: 20px;
             }
         }
     }

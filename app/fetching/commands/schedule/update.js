@@ -47,7 +47,7 @@ function addOrUpdateOneShow(schedule, show) {
     show.updateHash();
     const sameHashIndex = schedule.shows.findIndex((existingShow) => existingShow.hash === show.hash);
     if (sameHashIndex >= 0) {
-        ['buyTicketUrl', 'price', 'url', 'theatre', 'scene'].forEach(property => {
+        ['buyTicketUrl', 'price', 'url', 'theatre', 'scene', 'labels'].forEach(property => {
             if (show[property]) {
                 schedule.shows[sameHashIndex][property] = show[property];
             }

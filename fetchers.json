@@ -13,5 +13,10 @@
     "fetching/fetchers/operetta",
     "fetching/fetchers/madrigal",
     "fetching/fetchers/moget",
-    "fetching/fetchers/mdt"
+    "fetching/fetchers/mdt-chamber-scene",
+    "fetching/fetchers/mdt-main-scene",
+    "fetching/fetchers/room-t",
+    "fetching/fetchers/lukomorje",
+    "fetching/fetchers/diy",
+    "fetching/fetchers/manual"
 ]

@@ -4,8 +4,8 @@ let s = require('underscore.string');
 let url = require('url');
 let cheerio = require('cheerio');
 let priceHelper = require('helpers/price');
-let fetchHelper = require('../helper');
 let dateHelper = require('helpers/date');
+let fetchHelper = require('../../helper');
 
 let internetBiletFetcher = function(sourceUrl, playTheatreData, playSceneData, showTheatreData, showSceneData) {
 
