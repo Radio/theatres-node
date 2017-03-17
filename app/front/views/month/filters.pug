@@ -25,6 +25,7 @@ div
           a(href='https://t.me/maxgopey') @maxgopey
 
     .col-12.col-md-6.col-lg-12
+
       .filter-block.play-ages
         .form-check
           label.form-check-label
@@ -34,6 +35,16 @@ div
           label.form-check-label
             input.form-check-input(type='checkbox' name='for-kids' checked=true)
             |  для детей
+
+      .filter-block.show-time
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='time-eve' checked=true)
+            |  вечерние
+        .form-check
+          label.form-check-label
+            input.form-check-input(type='checkbox' name='time-day' checked=true)
+            |  дневные
 
       .filter-block.play-types
         .form-check
@@ -57,23 +68,23 @@ div
             input.form-check-input(type='checkbox' name='other' checked=true)
             |  другие
 
-      .filter-block.scenes
-        .form-check
-          label.form-check-label
-            input.form-check-input(type='checkbox' name='scene-big' checked=true)
-            |  на основной сцене
-        .form-check
-          label.form-check-label
-            input.form-check-input(type='checkbox' name='scene-small' checked=true)
-            |  на малой сцене
-        .form-check
-          label.form-check-label
-            input.form-check-input(type='checkbox' name='scene-exp' checked=true)
-            |  на экспериментальной сцене
-        .form-check
-          label.form-check-label
-            input.form-check-input(type='checkbox' name='scene-other' checked=true)
-            |  на других сценах
+      //.filter-block.scenes
+      //  .form-check
+      //    label.form-check-label
+      //      input.form-check-input(type='checkbox' name='scene-big' checked=true)
+      //      |  на основной сцене
+      //  .form-check
+      //    label.form-check-label
+      //      input.form-check-input(type='checkbox' name='scene-small' checked=true)
+      //      |  на малой сцене
+      //  .form-check
+      //    label.form-check-label
+      //      input.form-check-input(type='checkbox' name='scene-exp' checked=true)
+      //      |  на экспериментальной сцене
+      //  .form-check
+      //    label.form-check-label
+      //      input.form-check-input(type='checkbox' name='scene-other' checked=true)
+      //      |  на других сценах
 
       .filter-block.hidden-md
         p

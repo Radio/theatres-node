@@ -75,6 +75,8 @@ function monthMiddleware(req, res, next) {
         show.play.premiere && classes.push('premiere');
         show.play.forKids ? classes.push('for-kids') : classes.push('for-adults');
 
+        show.date.getHours() < 16 ? classes.push('time-day') : classes.push('time-eve');
+
         classes.push('theatre-' + show.play.theatre.key);
 
         let scene = show.scene || show.play.scene;
