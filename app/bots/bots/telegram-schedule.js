@@ -8,27 +8,32 @@ let s = require('underscore.string');
 let botHelper = require('../helper');
 let dateHelper = require('helpers/date');
 
-module.exports = function(token) {
+module.exports = function(token, appMetricaToken) {
 
     let bot = new TelegramBot(token);
+    let botan = require('botanio')(appMetricaToken);
 
     const scheduleBot = new ScheduleBot();
     const chatState = new ChatState();
 
     bot.onText(/\/start/, (message) => {
         bot.sendMessage(message.chat.id, messages.start(), {parse_mode: 'markdown'});
+        botan.track(message, 'Start');
     });
 
     bot.onText(/\/help/, (message) => {
         bot.sendMessage(message.chat.id, messages.help(), {parse_mode: 'markdown'});
+        botan.track(message, 'Help');
     });
 
     bot.onText(/\/(today|сегодня)/, (message) => {
         sendMessageWithScheduleForDate(message.chat.id, new Date());
+        botan.track(message, 'Today');
     });
 
     bot.onText(/\/(tomorrow|завтра)/, (message) => {
         sendMessageWithScheduleForDate(message.chat.id, moment().add(1, 'day').toDate());
+        botan.track(message, 'Tomorrow');
     });
 
     bot.onText(/\/(date|день)\s*(.*)/, (message, match) => {
@@ -37,10 +42,12 @@ module.exports = function(token) {
             let today = moment();
             sendMonthDaysKeyboard(message.chat.id, today.month());
             chatState.set(message.chat.id, {month: today.month()});
+            botan.track(message, 'Exact date');
             return;
         }
         const posterDate = botHelper.parsePosterDate(dateString);
         sendMessageWithScheduleForDate(message.chat.id, posterDate.toDate());
+        botan.track(message, 'Date choosing');
     });
 
     bot.onText(/^\d+$/, (message, match) => {
@@ -52,20 +59,24 @@ module.exports = function(token) {
         let posterDate = moment(momentParameters);
         if (!posterDate.isValid()) {
             bot.sendMessage(message.chat.id, messages.confused(), {reply_markup: {remove_keyboard: true}});
+            botan.track(message, 'Invalid date');
             return;
         }
         sendMessageWithScheduleForDate(message.chat.id, posterDate.toDate());
+        botan.track(message, 'Chosen date');
     });
 
     bot.onText(new RegExp('(' + dateHelper.getMonthsNames('ru').join('|') + ')', 'i'), (message, match) => {
         const month = dateHelper.mapMonth(match[1].toLowerCase(), 'ru');
         sendMonthDaysKeyboard(message.chat.id, month);
         chatState.set(message.chat.id, {month: month});
+        botan.track(message, 'Chosen month');
     });
 
     bot.onText(/отмена/, (message) => {
         chatState.clear(message.chat.id);
         bot.sendMessage(message.chat.id, 'ok', {reply_markup: {remove_keyboard: true}});
+        botan.track(message, 'Cancel');
     });
 
     bot.on('callback_query', query => {
@@ -74,6 +85,7 @@ module.exports = function(token) {
         }
         let [year, month, day] = query.data.split('-');
         sendMessageWithScheduleForDate(query.message.chat.id, moment([year, month - 1, day]).toDate());
+        botan.track(query.message, 'Next/Previous day');
     });
 
     const messages = {
