@@ -22,7 +22,7 @@ block content
                   (today.isSame(date, 'day') ? ' today' : '')
                 data-day=date.date()
               )
-                .col-2
+                .col-12.col-sm-2
                   p.day-number
                     span.day-number-number= date.format('D')
                     | &nbsp;
@@ -31,7 +31,7 @@ block content
                       span.hidden-md-up= date.format('ddd')
                       if today.isSame(date, 'day')
                         span.hidden-xs  (сегодня)
-                .shows.col-10
+                .shows.col-12.col-sm-10
                   include month/shows
 
       include month/footer
