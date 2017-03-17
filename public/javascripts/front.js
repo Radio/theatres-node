@@ -103,6 +103,10 @@
         actions.toggleFilter('scene', event.target.name, event.target.checked);
         actions.applyFilter();
     });
+    $('.filter-block.show-time [type="checkbox"]').click(function(event) {
+        actions.toggleFilter('time', event.target.name, event.target.checked);
+        actions.applyFilter();
+    });
     $(document).ready(function() {
         if ($.isEmptyObject(filter)) {
             $('.filter-block.play-ages [type="checkbox"]').each(function() {
@@ -114,6 +118,9 @@
             $('.filter-block.scenes [type="checkbox"]').each(function() {
                 actions.toggleFilter('scene', this.name, this.checked);
             });
+            $('.filter-block.show-time [type="checkbox"]').each(function() {
+                actions.toggleFilter('time', this.name, this.checked);
+            });
         } else {
             $('.filter-block.play-ages [type="checkbox"]').each(function () {
                 this.checked = (filter.age || []).indexOf(this.name) >= 0;
@@ -123,6 +130,9 @@
             });
             $('.filter-block.scenes [type="checkbox"]').each(function() {
                 this.checked = (filter.scene || []).indexOf(this.name) >= 0;
+            });
+            $('.filter-block.show-time [type="checkbox"]').each(function() {
+                this.checked = (filter.time || []).indexOf(this.name) >= 0;
             });
         }
         actions.applyFilter();
