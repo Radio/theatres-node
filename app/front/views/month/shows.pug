@@ -3,14 +3,14 @@ each show in date.shows
   - var scene = show.scene || show.play.scene;
   .show-row(class=showFilterClasses(show))
     .row.show-info.show-brief(itemscope='' itemtype='http://schema.org/TheaterEvent')
-      .show-time.col-md-1
+      .show-time.col-2.col-md-1
         time(
           datetime=showDateMoment.format('YYYY-MM-DDTHH:mmZZ')
           itemprop='startDate'
           content=showDateMoment.format('YYYY-MM-DDTHH:mmZZ')
         )
           = showDateMoment.format('H:mm')
-      .show-brief.col-md-11
+      .show-brief.col-10.col-md-11
         h4.show-title
           a(href=(show.url || show.play.url || '#') itemprop='url' content=(show.url || show.play.url || '#'))
             span(itemprop='name')= show.play.title
