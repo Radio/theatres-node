@@ -1,6 +1,13 @@
 (function($, viewport) {
     "use strict";
 
+    // bootstrap toolkit utilizes visible-* classes which were replaced
+    // with .hidden-*-up and .hidden-*-down in Bootstrap 4.
+    viewport.breakpoints.xs.addClass('hidden-sm-up');
+    viewport.breakpoints.sm.addClass('hidden-xs-down hidden-md-up');
+    viewport.breakpoints.md.addClass('hidden-sm-down hidden-lg-up');
+    viewport.breakpoints.lg.addClass('hidden-md-down');
+
     let scrolledToDay;
     let filter = localStorage ? JSON.parse(localStorage.getItem('filter')) || {} : {};
     let actions = {
