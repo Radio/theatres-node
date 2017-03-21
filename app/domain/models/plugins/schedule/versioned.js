@@ -63,6 +63,7 @@ module.exports = function(scheduleSchema, options) {
         return this.findOne({ month: month, year: year, actual: true }, callback);
     };
 
+    const parentCreateForMonthAndYear = scheduleSchema.statics.createForMonthAndYear;
     /**
      * Create actual schedule for given month and year.
      *
@@ -77,7 +78,6 @@ module.exports = function(scheduleSchema, options) {
         schedule.actual = true;
         return schedule;
     };
-    const parentCreateForMonthAndYear = scheduleSchema.statics.createForMonthAndYear;
 
     /**
      * Update 'updated' field with current date if actual is true.
