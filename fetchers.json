@@ -4,6 +4,7 @@
     "fetching/fetchers/pushkin",
     "fetching/fetchers/beautiful-flowers",
     "fetching/fetchers/hatob",
+    "fetching/fetchers/hatob-internet-bilet",
     "fetching/fetchers/domaktera",
     "fetching/fetchers/postscriptum",
     "fetching/fetchers/puppet",
@@ -17,6 +18,8 @@
     "fetching/fetchers/mdt-main-scene",
     "fetching/fetchers/room-t",
     "fetching/fetchers/lukomorje",
+    "fetching/fetchers/karabas",
+
     "fetching/fetchers/diy",
     "fetching/fetchers/manual"
 ]
