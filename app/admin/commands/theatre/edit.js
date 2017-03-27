@@ -5,6 +5,7 @@ module.exports = (theatre, editRequest, callback) => {
     theatre.key = editRequest.key;
     theatre.url = editRequest.url;
     theatre.houseSlug = editRequest.houseSlug;
+    theatre.karabasHallId = editRequest.karabasHallId;
     theatre.hasFetcher = editRequest.hasFetcher;
 
     theatre.save(callback);

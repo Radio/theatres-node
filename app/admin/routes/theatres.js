@@ -75,6 +75,7 @@ function getFormData(req, theatre) {
         return theatre ? theatre.toObject({ depopulate: true }) : {};
     }
     dto.houseSlug = dto['house-slug'];
+    dto.karabasHallId = dto['karabas-hall-id'];
     dto.hasFetcher = dto['has-fetcher'];
     return dto;
 }
@@ -85,6 +86,7 @@ function buildEditRequest(req) {
         title: req.body.title,
         url: req.body.url,
         houseSlug: req.body['house-slug'],
+        karabasHallId: req.body['karabas-hall-id'],
         hasFetcher: req.body['has-fetcher'],
     };
 }

@@ -68,7 +68,11 @@ let fetcher = function(callback) {
             }
         };
         if (rawShow.price.match(/\d/)) {
-            show.price = priceHelper.normalize(rawShow.price.replace(/.*?(\d.*)/, '$1').trim())
+            let priceLines = rawShow.price.match(/\d+\s*(грн|грив)/g);
+            if (priceLines) {
+                let prices = priceLines.map(priceLine => parseInt(priceLine)).sort();
+                show.price = (prices.length > 1 ? prices[0] + '–' + prices[prices.length - 1] : prices[0]) + ' грн';
+            }
         }
 
         show.dates = parseDates(rawShow.date.trim());
