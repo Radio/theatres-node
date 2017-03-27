@@ -9,7 +9,8 @@ module.exports = function(router) {
         res.render('plays/move', {
             title: 'Спектакли — ' + req.play.title + ' — В другой театр',
             play: req.play,
-            theatres: req.options.theatres
+            theatres: req.options.theatres,
+            backUrl: req.session.playsBackUrl
         });
     });
 

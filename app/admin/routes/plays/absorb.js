@@ -12,7 +12,8 @@ module.exports = function(router) {
             res.render('plays/absorb', {
                 title: 'Спектакли — ' + req.play.title + ' — Поглотить',
                 play: req.play,
-                candidates: plays
+                candidates: plays,
+                backUrl: req.session.playsBackUrl
             });
         });
     });
