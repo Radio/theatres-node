@@ -39,6 +39,7 @@ function mapPlaysAsync(showsData, callback) {
             playTheatre: callback => mapTheatre(showData.raw.play.theatre, callback),
             playScene: callback => mapScene(showData.raw.play.scene, callback),
         }, function(err, mapped) {
+            if (err) return callback(err);
             mapPlay(showData.raw.play, mapped.playTheatre, mapped.playScene, function (err, play) {
                 if (err) return callback(err);
                 showData.mapped.play = play;
