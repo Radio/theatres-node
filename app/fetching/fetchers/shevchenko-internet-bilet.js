@@ -13,4 +13,4 @@ const theatreRawData = {
     hasFetcher: true,
 };
 
-module.exports.fetch = internetBiletFetcher(sourceUrl, theatreRawData, sceneRawData);
+module.exports.fetch = internetBiletFetcher(sourceUrl, theatreRawData, sceneRawData, theatreRawData);
