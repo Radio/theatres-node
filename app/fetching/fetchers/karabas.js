@@ -70,7 +70,11 @@ let fetcher = function(callback) {
                 },
                 scene: { key: rawShow.scene },
                 title: rawShow.title.trim(),
-            }
+            },
+            theatre: {
+                karabasHallId: rawShow.hallId,
+                title: rawShow.hallTitle
+            },
         };
         if (rawShow.image) {
             show.play.image = url.resolve(sourceUrl, rawShow.image.replace(/\/48\//g, '/1024/'));
