@@ -48,7 +48,7 @@ showSchema.methods.isPubliclyVisible = function() {
     if (!this.play instanceof Play) {
         this.populate('play');
     }
-    return !this.hidden && !this.play.hidden;
+    return !this.hidden && !this.play.hidden && !this.play.mapAs;
 };
 
 function calculateHash(playId, date) {
