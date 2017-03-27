@@ -14,6 +14,7 @@ const scenesMap = {
     'Основная сцена': 'main',
     'Малая сцена': 'small',
     'Центр культуры Киевского района (ДК Связи)': 'dk-sviazi',
+    'на сцене Харьковского ДК "Металлист"': 'dk-metalist',
 };
 
 let fetcher = function(callback) {
@@ -72,7 +73,10 @@ let fetcher = function(callback) {
                     url: baseUrl,
                     hasFetcher: true,
                 },
-                scene: { key: mapScene(rawShow.scene) },
+                scene: {
+                    key: mapScene(rawShow.scene),
+                    title: rawShow.scene
+                },
                 title: rawShow.title,
                 url: url.resolve(sourceUrl, rawShow.playUrl),
                 genre: rawShow.genre,
