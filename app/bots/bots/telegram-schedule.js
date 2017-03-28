@@ -7,6 +7,7 @@ let moment = require('moment');
 let s = require('underscore.string');
 let botHelper = require('../helper');
 let dateHelper = require('helpers/date');
+let modelHelper = require('helpers/model');
 
 module.exports = function(token, appMetricaToken) {
 
@@ -128,10 +129,14 @@ module.exports = function(token, appMetricaToken) {
             let lines = [`*Расписание на ${dateMoment.format('D MMMM YYYY')}*`];
             shows.forEach(show => {
                 let url = show.url || show.play.url;
+                let theatreTitle = show.play.theatre.title;
+                if (show.theatre && !modelHelper.sameIds(show.theatre, show.play.theatre)) {
+                    theatreTitle += ', ' + show.theatre.title;
+                }
                 lines.push(
                     '*' + moment(show.date).format('HH:mm') + '*' +
                     ' ' + (url ? ' [' + show.play.title + '](' + url + ')' : show.play.title) +
-                    ' (' + show.play.theatre.title + (show.theatre ? ', ' + show.theatre.title : '') + ')'
+                    ' (' + theatreTitle + ')'
                 );
             });
             return lines.join("\n");
