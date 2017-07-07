@@ -31,7 +31,7 @@ let fetcher = function(callback) {
             monthToParse = 11 - monthToParse;
             yearToParse += 1;
         }
-        fetchHelper.getContent(sourceUrl + (monthToParse + 1), 'WINDOWS-1251', function(err, content) {
+        fetchHelper.getContent(sourceUrl + (monthToParse + 1), function(err, content) {
             if (err) return callback(err);
             callback(null, getSchedule(content, monthToParse, yearToParse));
         });
