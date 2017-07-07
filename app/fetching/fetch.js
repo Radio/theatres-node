@@ -33,7 +33,10 @@ module.exports = function(fetchersNames, finish) {
 let fetchRawShowsData = function(fetchersNames, callback) {
     let fetchers = fetchersNames.map(fetcherName => callback => require(fetcherName).fetch(callback));
     async.parallel(fetchers, function(err, schedules) {
-        if (err) return callback(err);
+        if (err) {
+            // return callback(err);
+            callback(null, []);
+        }
         callback(null, Array.prototype.concat.apply([], schedules));
     });
 };
